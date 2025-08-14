@@ -1,247 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iceberg</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iceberg — AI‑Powered Real Estate Intelligence</title>
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #000000;
-            color: #ffffff;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+  <!-- Serif for headline, sans for UI/body -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-        /* Navigation */
-        .nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px 40px;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+  <style>
+    :root{
+      --bg:#0b0b0b;       /* deep charcoal */
+      --text:#f6f6f6;     /* near-white text */
+      --muted:#bdbdbd;    /* subheadline */
+      --btn-bg:#ffffff;   /* CTA background */
+      --btn-text:#0b0b0b; /* CTA text */
+      --maxw:1120px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
 
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+    /* Top bar */
+    .nav{
+      height:72px; display:flex; align-items:center;
+      padding:0 24px; max-width:var(--maxw); margin:0 auto;
+    }
+    .brand{font-weight:600; font-size:20px; letter-spacing:.2px}
 
-        .logo {
-            font-size: 28px;
-            font-weight: 400;
-            color: #ffffff;
-            letter-spacing: -0.5px;
-        }
+    /* Hero */
+    .hero{
+      min-height:calc(100vh - 72px);
+      display:flex; align-items:center; justify-content:center;
+      padding:72px 24px 64px; position:relative; overflow:hidden;
+    }
+    /* Soft radial gradient to echo Harvey vibe */
+    .hero::before{
+      content:""; position:absolute; inset:-20% -20% 0 -20%;
+      background:
+        radial-gradient(60% 60% at 50% 35%, rgba(255,255,255,.06), transparent 65%),
+        radial-gradient(50% 50% at 50% 100%, rgba(255,255,255,.03), transparent 60%);
+      pointer-events:none; mix-blend-mode:screen; opacity:.6;
+    }
+    .hero-inner{position:relative; width:100%; max-width:860px; text-align:center}
 
-        .nav-links {
-            display: flex;
-            gap: 40px;
-            align-items: center;
-        }
+    .headline{
+      font-family:"Playfair Display", Georgia, serif; /* serif only here */
+      font-weight:700; line-height:1.06;
+      font-size:clamp(44px, 7vw, 84px);
+      margin:0 0 18px; letter-spacing:.2px;
+    }
+    .sub{
+      font-size:clamp(16px, 2.2vw, 20px);
+      color:var(--muted); margin:0 0 32px;
+    }
+    .cta{
+      display:inline-block; padding:14px 22px; border-radius:12px;
+      background:var(--btn-bg); color:var(--btn-text);
+      text-decoration:none; font-weight:600;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 10px 24px rgba(0,0,0,.35);
+      transition:transform .06s ease, opacity .2s ease, box-shadow .2s ease;
+    }
+    .cta:hover{ transform:translateY(1px); opacity:.97; box-shadow:0 12px 28px rgba(0,0,0,.4) }
+    .cta:active{ transform:translateY(2px); opacity:.94 }
 
-        .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 400;
-            transition: color 0.2s ease;
-            position: relative;
-        }
-
-        .nav-link:hover {
-            color: #ffffff;
-        }
-
-        .nav-link.has-dropdown::after {
-            content: '▼';
-            font-size: 10px;
-            margin-left: 6px;
-            opacity: 0.6;
-        }
-
-        .login-btn {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 400;
-            padding: 8px 16px;
-            border-radius: 6px;
-            transition: background-color 0.2s ease;
-        }
-
-        .login-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 100px 40px 60px;
-            text-align: center;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero-title {
-            font-size: clamp(64px, 10vw, 120px);
-            font-weight: 400;
-            line-height: 0.9;
-            margin-bottom: 40px;
-            color: #ffffff;
-            letter-spacing: -2px;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(18px, 2.5vw, 24px);
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 60px;
-            line-height: 1.4;
-            font-weight: 400;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 16px 32px;
-            background-color: #ffffff;
-            color: #000000;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .cta-button:hover {
-            background-color: rgba(255, 255, 255, 0.9);
-            transform: translateY(-1px);
-        }
-
-        .cta-button:active {
-            transform: translateY(0);
-        }
-
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .nav {
-                padding: 16px 20px;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .logo {
-                font-size: 24px;
-            }
-
-            .hero {
-                padding: 80px 20px 40px;
-            }
-
-            .hero-title {
-                font-size: clamp(48px, 12vw, 80px);
-                line-height: 1.0;
-                margin-bottom: 30px;
-            }
-
-            .hero-subtitle {
-                font-size: 18px;
-                margin-bottom: 40px;
-            }
-
-            .cta-button {
-                padding: 14px 28px;
-                font-size: 15px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .nav {
-                padding: 12px 16px;
-            }
-
-            .hero {
-                padding: 70px 16px 30px;
-            }
-
-            .hero-title {
-                font-size: clamp(36px, 15vw, 64px);
-            }
-        }
-
-        /* Subtle background texture */
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-    </style>
+    @media (max-width:600px){
+      .nav{height:64px}
+      .hero{padding-top:56px}
+    }
+  </style>
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-content">
-            <div class="logo">Iceberg</div>
-            <div class="nav-links">
-                <a href="#" class="nav-link has-dropdown">Platform</a>
-                <a href="#" class="nav-link has-dropdown">Solutions</a>
-                <a href="#" class="nav-link">Customers</a>
-                <a href="#" class="nav-link">Security</a>
-                <a href="#" class="nav-link has-dropdown">Company</a>
-                <a href="#" class="login-btn">Login</a>
-            </div>
-        </div>
-    </nav>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">
-                Professional<br>
-                Class AI
-            </h1>
-            <p class="hero-subtitle">
-                Domain-specific AI for real estate professionals, investment managers, and the Fortune 500.
-            </p>
-            <a href="mailto:patrick@icebergre.ai?subject=Iceberg%20Demo%20Request" class="cta-button">
-                Request a Demo
-            </a>
-        </div>
-    </section>
+  <header class="nav">
+    <div class="brand">Iceberg</div>
+  </header>
+
+  <main class="hero">
+    <div class="hero-inner">
+      <h1 class="headline">AI‑Powered Real Estate Intelligence</h1>
+      <p class="sub">Domain‑specific AI intelligence and tools for managers, investors, brokers, and analysts.</p>
+      <a class="cta" href="mailto:patrick@icebergre.ai?subject=Iceberg%20Demo%20Request">Request a Demo</a>
+      <!-- Or wire to Calendly:
+      <a class="cta" href="https://calendly.com/your-handle/iceberg-demo" target="_blank" rel="noopener">Request a Demo</a>
+      -->
+    </div>
+  </main>
+
 </body>
 </html>
