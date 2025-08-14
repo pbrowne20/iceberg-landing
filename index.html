@@ -1,65 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ICEBERG AI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iceberg — AI-Powered Real Estate Intelligence</title>
+
+  <!-- Fonts: modern serif for headline + clean sans for UI -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --blue:#2563eb; --purple:#7c3aed; --bg:#f8fafc; --text:#1a1a1a;
+      --bg:#0b0b0b;
+      --text:#f6f6f6;
+      --muted:#bdbdbd;
+      --brand:#ffffff;       /* brand text color in header */
+      --btn-bg:#ffffff;      /* CTA background */
+      --btn-text:#0b0b0b;    /* CTA text */
+      --maxw:1120px;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    /* Top bar */
-    .topbar{
-      position:fixed; top:0; left:0; right:0; height:64px;
-      display:flex; align-items:center; padding:0 24px;
-      background:linear-gradient(90deg, var(--blue), var(--purple));
-      color:#fff; z-index:10;
-      box-shadow:0 6px 16px rgba(0,0,0,.08);
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     }
-    .brand{font-weight:700; letter-spacing:.2px}
+
+    /* Top navigation (brand only for now) */
+    .nav{
+      height:72px; display:flex; align-items:center;
+      padding:0 24px; max-width:var(--maxw); margin:0 auto;
+    }
+    .brand{
+      font-weight:600; letter-spacing:.2px; color:var(--brand);
+      font-size:20px;
+    }
+
     /* Hero */
     .hero{
-      min-height:100vh; display:flex; align-items:flex-start; justify-content:center;
-      padding:120px 24px 48px; /* pushes content slightly down from top */
-      text-align:center;
+      min-height:calc(100vh - 72px);
+      display:flex; align-items:center; justify-content:center;
+      padding:72px 24px 64px;
     }
-    .hero-inner{max-width:900px; margin-top:48px;}
-    .headline{font-size: clamp(34px, 6vw, 56px); line-height:1.1; font-weight:700; margin:0 0 16px}
-    .sub{font-size: clamp(16px, 2.4vw, 20px); opacity:.9; margin:0 0 28px}
+    .hero-inner{
+      width:100%; max-width:820px; text-align:center;
+    }
+    .headline{
+      font-family:"Playfair Display", Georgia, serif;
+      font-weight:700; line-height:1.05;
+      font-size: clamp(44px, 7vw, 84px);
+      margin:0 0 20px;
+      letter-spacing:.2px;
+    }
+    .sub{
+      font-size: clamp(16px, 2.2vw, 20px);
+      color:var(--muted);
+      margin:0 0 32px;
+    }
     .cta{
-      display:inline-block; padding:14px 22px; border-radius:10px;
-      background:var(--blue); color:#fff; font-weight:600; text-decoration:none;
-      transition:transform .05s ease, background .2s ease;
-      box-shadow:0 8px 20px rgba(37,99,235,.25);
+      display:inline-block; padding:14px 22px;
+      border-radius:12px; text-decoration:none;
+      background:var(--btn-bg); color:var(--btn-text);
+      font-weight:600; border:1px solid rgba(255,255,255,.08);
+      transition:transform .06s ease, box-shadow .2s ease, opacity .2s ease;
+      box-shadow:0 10px 24px rgba(0,0,0,.35);
     }
-    .cta:hover{background:#1e4bb8}
-    .cta:active{transform:translateY(1px)}
-    /* Mobile spacing */
-    @media (max-width:640px){
-      .topbar{height:56px}
-      .hero{padding-top:112px}
+    .cta:hover{ transform:translateY(1px); opacity:.96 }
+    .cta:active{ transform:translateY(2px); opacity:.92 }
+
+    /* Optional: subtle vignette so center pops like the reference */
+    .vignette:before{
+      content:""; position:fixed; inset:0; pointer-events:none;
+      background:radial-gradient(60% 60% at 50% 35%, rgba(255,255,255,.06), transparent 65%),
+                 radial-gradient(50% 50% at 50% 100%, rgba(255,255,255,.03), transparent 60%);
+      mix-blend-mode:screen; opacity:.6;
+    }
+
+    /* Small screens spacing tweak */
+    @media (max-width:600px){
+      .nav{height:64px}
+      .hero{padding-top:56px}
     }
   </style>
 </head>
-<body>
+<body class="vignette">
 
   <!-- Top-left brand -->
-  <div class="topbar">
+  <header class="nav">
     <div class="brand">Iceberg</div>
-  </div>
+  </header>
 
-  <!-- Hero -->
-  <section class="hero">
+  <!-- Center hero -->
+  <main class="hero">
     <div class="hero-inner">
-      <h1 class="headline">AI-Powered Real Estate Intelligence</h1>
-      <p class="sub">Domain-specific AI intelligence and tools for managers, investors, brokers, and analysts</p>
-      <a class="cta" href="mailto:patrick@icebergre.ai?subject=ICEBERG%20Demo%20Request">Request a Demo</a>
-      <!-- Alternative: <a class="cta" href="https://app.icebergre.ai" target="_blank">Request a Demo</a> -->
+      <h1 class="headline">AI‑Powered Real Estate Intelligence</h1>
+      <p class="sub">Domain‑specific AI intelligence and tools for managers, investors, brokers, and analysts.</p>
+      <a class="cta" href="mailto:patrick@icebergre.ai?subject=Iceberg%20Demo%20Request">Request a Demo</a>
+      <!-- Or wire to Calendly:
+           <a class="cta" href="https://calendly.com/your-handle/iceberg-demo" target="_blank" rel="noopener">Request a Demo</a>
+      -->
     </div>
-  </section>
+  </main>
 
 </body>
 </html>
