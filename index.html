@@ -3,128 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ICEBERG AI - Real Estate Intelligence</title>
+  <title>ICEBERG AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      background-color: #f8fafc;
-      color: #1a1a1a;
+    :root{
+      --blue:#2563eb; --purple:#7c3aed; --bg:#f8fafc; --text:#1a1a1a;
     }
-    header {
-      padding: 1.5rem 2rem;
-      background: linear-gradient(90deg, #2563eb, #7c3aed);
-      color: white;
-      text-align: center;
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    /* Top bar */
+    .topbar{
+      position:fixed; top:0; left:0; right:0; height:64px;
+      display:flex; align-items:center; padding:0 24px;
+      background:linear-gradient(90deg, var(--blue), var(--purple));
+      color:#fff; z-index:10;
+      box-shadow:0 6px 16px rgba(0,0,0,.08);
     }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: 700;
+    .brand{font-weight:700; letter-spacing:.2px}
+    /* Hero */
+    .hero{
+      min-height:100vh; display:flex; align-items:flex-start; justify-content:center;
+      padding:120px 24px 48px; /* pushes content slightly down from top */
+      text-align:center;
     }
-    header p {
-      margin-top: 0.5rem;
-      font-size: 1rem;
-      opacity: 0.9;
+    .hero-inner{max-width:900px; margin-top:48px;}
+    .headline{font-size: clamp(34px, 6vw, 56px); line-height:1.1; font-weight:700; margin:0 0 16px}
+    .sub{font-size: clamp(16px, 2.4vw, 20px); opacity:.9; margin:0 0 28px}
+    .cta{
+      display:inline-block; padding:14px 22px; border-radius:10px;
+      background:var(--blue); color:#fff; font-weight:600; text-decoration:none;
+      transition:transform .05s ease, background .2s ease;
+      box-shadow:0 8px 20px rgba(37,99,235,.25);
     }
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2rem;
-      text-align: center;
-    }
-    .cta-buttons {
-      margin-top: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      align-items: center;
-    }
-    .cta-buttons a, .cta-buttons button {
-      background-color: #2563eb;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
-    }
-    .cta-buttons a:hover, .cta-buttons button:hover {
-      background-color: #1e4bb8;
-    }
-    form {
-      margin-top: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      max-width: 350px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    input[type="email"] {
-      padding: 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    input[type="submit"] {
-      background-color: #7c3aed;
-      color: white;
-      padding: 0.75rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    input[type="submit"]:hover {
-      background-color: #652cc1;
-    }
-    img.mockup {
-      margin-top: 3rem;
-      max-width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.875rem;
-      color: #555;
+    .cta:hover{background:#1e4bb8}
+    .cta:active{transform:translateY(1px)}
+    /* Mobile spacing */
+    @media (max-width:640px){
+      .topbar{height:56px}
+      .hero{padding-top:112px}
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>ICEBERG AI</h1>
-    <p>AI-powered REIT & Data Center Intelligence in Plain English</p>
-  </header>
+  <!-- Top-left brand -->
+  <div class="topbar">
+    <div class="brand">Iceberg</div>
+  </div>
 
-  <main>
-    <h2>Instant insights from complex real estate data</h2>
-    <p>ICEBERG AI transforms public REIT and data center filings into structured intelligence you can query in natural language — empowering faster investment decisions.</p>
-
-    <div class="cta-buttons">
-      <a href="https://app.icebergre.ai" target="_blank">🚀 Try Live Demo</a>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="headline">AI-Powered Real Estate Intelligence</h1>
+      <p class="sub">Domain-specific AI intelligence and tools for managers, investors, brokers, and analysts</p>
+      <a class="cta" href="mailto:patrick@icebergre.ai?subject=ICEBERG%20Demo%20Request">Request a Demo</a>
+      <!-- Alternative: <a class="cta" href="https://app.icebergre.ai" target="_blank">Request a Demo</a> -->
     </div>
-
-    <form action="https://formspree.io/f/your-form-id" method="POST">
-      <input type="email" name="email" placeholder="Your email for beta access" required>
-      <input type="submit" value="Join Beta">
-    </form>
-
-    <img src="mockup-placeholder.png" alt="App screenshot" class="mockup" />
-
-  </main>
-
-  <footer>
-    &copy; 2025 ICEBERG AI. All rights reserved.
-  </footer>
+  </section>
 
 </body>
 </html>
