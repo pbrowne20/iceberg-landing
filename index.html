@@ -12,10 +12,10 @@
     :root{
       --bg:#0b0b0b;       /* deep charcoal */
       --text:#f6f6f6;     /* near-white text */
-      --muted:#bdbdbd;    /* subheadline */
+      --muted:#bdbdbd;    /* subheadline color */
       --btn-bg:#ffffff;   /* CTA background */
       --btn-text:#0b0b0b; /* CTA text */
-      --maxw:1120px;
+      --maxw:1220px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -25,20 +25,31 @@
       -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     }
 
-    /* Top bar */
+    /* ===== Sticky Top Navigation ===== */
+    .nav-wrap{
+      position:sticky; top:0; z-index:50;
+      background:rgba(11,11,11,.92);
+      backdrop-filter:saturate(140%) blur(6px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
     .nav{
-      height:72px; display:flex; align-items:center;
-      padding:0 24px; max-width:var(--maxw); margin:0 auto;
+      height:72px; display:flex; align-items:center; justify-content:space-between;
+      max-width:var(--maxw); margin:0 auto; padding:0 40px; /* pulls brand closer to left edge */
     }
     .brand{font-weight:600; font-size:20px; letter-spacing:.2px}
+    .menu{display:flex; gap:28px}
+    .menu a{
+      color:var(--text); text-decoration:none; font-weight:500; font-size:15px;
+      opacity:.92; transition:opacity .2s ease;
+    }
+    .menu a:hover{opacity:.7}
 
-    /* Hero */
+    /* ===== Hero ===== */
     .hero{
       min-height:calc(100vh - 72px);
       display:flex; align-items:center; justify-content:center;
       padding:72px 24px 64px; position:relative; overflow:hidden;
     }
-    /* Soft radial gradient to echo Harvey vibe */
     .hero::before{
       content:""; position:absolute; inset:-20% -20% 0 -20%;
       background:
@@ -47,16 +58,12 @@
       pointer-events:none; mix-blend-mode:screen; opacity:.6;
     }
     .hero-inner{position:relative; width:100%; max-width:860px; text-align:center}
-
     .headline{
-      font-family:"Playfair Display", Georgia, serif; /* serif only here */
-      font-weight:700; line-height:1.06;
-      font-size:clamp(44px, 7vw, 84px);
-      margin:0 0 18px; letter-spacing:.2px;
+      font-family:"Playfair Display", Georgia, serif; font-weight:700; line-height:1.06;
+      font-size:clamp(44px, 7vw, 84px); margin:0 0 18px; letter-spacing:.2px;
     }
     .sub{
-      font-size:clamp(16px, 2.2vw, 20px);
-      color:var(--muted); margin:0 0 32px;
+      font-size:clamp(16px, 2.2vw, 20px); color:var(--muted); margin:0 0 32px;
     }
     .cta{
       display:inline-block; padding:14px 22px; border-radius:12px;
@@ -69,18 +76,35 @@
     .cta:hover{ transform:translateY(1px); opacity:.97; box-shadow:0 12px 28px rgba(0,0,0,.4) }
     .cta:active{ transform:translateY(2px); opacity:.94 }
 
-    @media (max-width:600px){
+    /* ===== Mobile tweaks ===== */
+    @media (max-width:900px){
+      .menu{gap:20px}
+      .nav{padding:0 20px}
+    }
+    @media (max-width:640px){
       .nav{height:64px}
+      .menu{display:none} /* keep it minimal on small screens for now */
       .hero{padding-top:56px}
     }
   </style>
 </head>
 <body>
 
-  <header class="nav">
-    <div class="brand">Iceberg</div>
-  </header>
+  <!-- Sticky Nav -->
+  <div class="nav-wrap">
+    <header class="nav">
+      <div class="brand">Iceberg</div>
+      <nav class="menu" aria-label="Primary">
+        <a href="#">IcebergIC</a>
+        <a href="#">IcebergIR</a>
+        <a href="#">IcebergREIT</a>
+        <a href="#">IcebergBENCHMARK</a>
+        <a href="#">IcebergCUSTOM</a>
+      </nav>
+    </header>
+  </div>
 
+  <!-- Hero -->
   <main class="hero">
     <div class="hero-inner">
       <h1 class="headline">AI‑Powered Real Estate Intelligence</h1>
