@@ -34,15 +34,49 @@
     }
     .nav{
       height:72px; display:flex; align-items:center; justify-content:space-between;
-      max-width:var(--maxw); margin:0 auto; padding:0 40px; /* pulls brand closer to left edge */
+      max-width:var(--maxw); margin:0 auto; padding:0 40px;
     }
     .brand{font-weight:600; font-size:20px; letter-spacing:.2px}
     .menu{display:flex; gap:28px}
-    .menu a{
-      color:var(--text); text-decoration:none; font-weight:500; font-size:15px;
-      opacity:.92; transition:opacity .2s ease;
+    
+    /* ===== Dropdown Menu Items ===== */
+    .menu-item{
+      position:relative;
     }
-    .menu a:hover{opacity:.7}
+    .menu-item > a{
+      color:var(--text); text-decoration:none; font-weight:500; font-size:15px;
+      opacity:.92; transition:opacity .2s ease; display:flex; align-items:center; gap:4px;
+    }
+    .menu-item > a:hover{opacity:.7}
+    .menu-item > a::after{
+      content:"▼"; font-size:10px; opacity:.6; transition:transform .2s ease;
+    }
+    .menu-item:hover > a::after{
+      transform:rotate(180deg);
+    }
+    
+    /* ===== Dropdown Panel ===== */
+    .dropdown{
+      position:absolute; top:100%; left:50%; transform:translateX(-50%);
+      background:rgba(11,11,11,.95); backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,.08); border-radius:12px;
+      padding:16px 0; min-width:200px; margin-top:8px;
+      opacity:0; visibility:hidden; pointer-events:none;
+      transition:opacity .2s ease, visibility .2s ease, transform .2s ease;
+      transform:translateX(-50%) translateY(-8px);
+      box-shadow:0 12px 32px rgba(0,0,0,.4);
+    }
+    .menu-item:hover .dropdown{
+      opacity:1; visibility:visible; pointer-events:auto;
+      transform:translateX(-50%) translateY(0);
+    }
+    .dropdown a{
+      display:block; padding:8px 20px; color:var(--text); text-decoration:none;
+      font-size:14px; font-weight:400; opacity:.85; transition:all .15s ease;
+    }
+    .dropdown a:hover{
+      opacity:1; background:rgba(255,255,255,.05);
+    }
 
     /* ===== Hero ===== */
     .hero{
@@ -76,15 +110,343 @@
     .cta:hover{ transform:translateY(1px); opacity:.97; box-shadow:0 12px 28px rgba(0,0,0,.4) }
     .cta:active{ transform:translateY(2px); opacity:.94 }
 
+    /* ===== Demo Section ===== */
+    .demo-section {
+      padding: 120px 40px;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+    
+    .demo-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+    
+    .demo-title {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: #1a1a1a;
+      font-family: "Playfair Display", Georgia, serif;
+    }
+    
+    .demo-subtitle {
+      font-size: 20px;
+      color: #6b7280;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .demo-container {
+      background: white;
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+      position: relative;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    .prompt-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.2;
+      margin-bottom: 32px;
+      text-align: left;
+      opacity: 0;
+      animation: fadeInSlide 1s ease-out 0.5s forwards;
+    }
+
+    .upload-area {
+      background: #f8f9fa;
+      border: 3px dashed #e0e0e0;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeInSlide 1s ease-out 1.5s forwards;
+    }
+
+    .document-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .doc-icon {
+      font-size: 20px;
+    }
+
+    .analyze-button {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 18px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: fadeInSlide 1s ease-out 2.5s forwards;
+      margin-bottom: 24px;
+    }
+
+    .results-panel {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 32px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: showResults 1s ease-out 4.5s forwards;
+    }
+
+    .chart-container {
+      margin-bottom: 24px;
+    }
+
+    .chart-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    /* Line Chart for Cap Rates */
+    .line-chart {
+      position: relative;
+      height: 200px;
+      background: linear-gradient(to bottom, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+    }
+
+    .line-chart svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .chart-point {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .point-value {
+      background: #2563eb;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      min-width: 60px;
+    }
+
+    .point-year {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    /* Bar Chart for Value Comps */
+    .bar-chart {
+      display: flex;
+      align-items: end;
+      height: 200px;
+      gap: 20px;
+      padding: 20px;
+      background: linear-gradient(to top, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+      border-radius: 12px;
+    }
+
+    .bar-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bar {
+      background: linear-gradient(to top, #10b981, #34d399);
+      border-radius: 6px 6px 0 0;
+      width: 100%;
+      min-height: 20px;
+      position: relative;
+      animation: barGrow 1s ease-out;
+    }
+
+    .bar-value {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #10b981;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .bar-year {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    /* Table for Rent Comps */
+    .rent-table {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 16px;
+      border-bottom: 1px solid #e2e8f0;
+      align-items: center;
+    }
+
+    .table-row:last-child {
+      border-bottom: none;
+    }
+
+    .table-header {
+      background: #f8fafc;
+      font-weight: 700;
+      color: #374151;
+      font-size: 14px;
+    }
+
+    .table-cell {
+      font-size: 14px;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .cagr-highlight {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .typing-indicator {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      color: #6b7280;
+      font-style: italic;
+      margin-top: 16px;
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .typing-dots span {
+      width: 6px;
+      height: 6px;
+      background: #6b7280;
+      border-radius: 50%;
+      animation: typingBounce 1.4s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+    .reset-indicator {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(37, 99, 235, 0.1);
+      color: #2563eb;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0;
+      animation: pulseIndicator 0.5s ease-out 8s forwards;
+    }
+
+    /* Animations */
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes showResults {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+
+    @keyframes pulseIndicator {
+      0% { opacity: 0; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.05); }
+      100% { opacity: 0.8; transform: scale(1); }
+    }
+
+    @keyframes barGrow {
+      from { height: 0; }
+      to { height: var(--bar-height); }
+    }
+
+    @keyframes lineGrow {
+      from { stroke-dashoffset: 1000; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    .demo-container.reset * {
+      animation: none;
+      opacity: 0;
+    }
+
     /* ===== Mobile tweaks ===== */
     @media (max-width:900px){
       .menu{gap:20px}
       .nav{padding:0 20px}
+      .dropdown{min-width:180px}
+      .demo-section{padding:80px 20px}
+      .demo-container{padding:32px}
     }
     @media (max-width:640px){
       .nav{height:64px}
-      .menu{display:none} /* keep it minimal on small screens for now */
+      .menu{display:none}
       .hero{padding-top:56px}
+      .demo-section{padding:60px 16px}
     }
   </style>
 </head>
@@ -95,11 +457,50 @@
     <header class="nav">
       <div class="brand">Iceberg</div>
       <nav class="menu" aria-label="Primary">
-        <a href="#">IcebergIC</a>
-        <a href="#">IcebergIR</a>
-        <a href="#">IcebergREIT</a>
-        <a href="#">IcebergBENCHMARK</a>
-        <a href="#">IcebergCUSTOM</a>
+        <div class="menu-item">
+          <a href="#">IcebergIC</a>
+          <div class="dropdown">
+            <a href="#">Value Comps</a>
+            <a href="#">Cap Rate Intel</a>
+            <a href="#">Occupancy Trends</a>
+            <a href="#">NOI and OpEx Comps</a>
+            <a href="#">Growth Rates</a>
+          </div>
+        </div>
+        
+        <div class="menu-item">
+          <a href="#">IcebergIR</a>
+          <div class="dropdown">
+            <a href="#">Memo Narrative</a>
+            <a href="#">FAQ Prep</a>
+            <a href="#">Market Commentary</a>
+          </div>
+        </div>
+        
+        <div class="menu-item">
+          <a href="#">IcebergREIT</a>
+          <div class="dropdown">
+            <a href="#">Portfolio Composition</a>
+            <a href="#">Valuation Analysis</a>
+            <a href="#">Peer Comparison</a>
+          </div>
+        </div>
+        
+        <div class="menu-item">
+          <a href="#">IcebergBENCHMARK</a>
+          <div class="dropdown">
+            <a href="#">Underwriting Checks</a>
+            <a href="#">Actuals Comparisons</a>
+          </div>
+        </div>
+        
+        <div class="menu-item">
+          <a href="#">IcebergCUSTOM</a>
+          <div class="dropdown">
+            <a href="#">API Integration</a>
+            <a href="#">Private Iceberg Tool</a>
+          </div>
+        </div>
       </nav>
     </header>
   </div>
@@ -110,11 +511,238 @@
       <h1 class="headline">AI‑Powered Real Estate Intelligence</h1>
       <p class="sub">Domain‑specific AI intelligence and tools for managers, investors, brokers, and analysts.</p>
       <a class="cta" href="mailto:patrick@icebergre.ai?subject=Iceberg%20Demo%20Request">Request a Demo</a>
-      <!-- Or wire to Calendly:
-      <a class="cta" href="https://calendly.com/your-handle/iceberg-demo" target="_blank" rel="noopener">Request a Demo</a>
-      -->
     </div>
   </main>
+
+  <!-- Live Demo Section -->
+  <section class="demo-section">
+    <div class="demo-header">
+      <h2 class="demo-title">See Iceberg in Action</h2>
+      <p class="demo-subtitle">Watch real-time analysis of data center markets with instant insights and professional visualizations</p>
+    </div>
+    
+    <div class="demo-container" id="demoContainer">
+      <div class="reset-indicator" id="resetIndicator">🔄 Live Demo</div>
+      
+      <div class="prompt-text" id="promptText">
+        Analyze US data center cap rate trends
+      </div>
+      
+      <div class="upload-area" id="uploadArea">
+        <div class="document-item">
+          <span class="doc-icon">📊</span>
+          <span id="docName">US_DataCenter_CapRates.xlsx</span>
+        </div>
+      </div>
+      
+      <button class="analyze-button" id="analyzeBtn">
+        <span id="btnText">Analyze with IcebergIC</span>
+      </button>
+
+      <div class="typing-indicator" id="typingIndicator">
+        <span>Processing data</span>
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      
+      <div class="results-panel" id="resultsPanel">
+        <div class="chart-container" id="chartContainer">
+          <!-- Chart content will be dynamically inserted -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    let currentLoop = 0;
+    
+    const scenarios = [
+      {
+        prompt: "Analyze US data center cap rate trends",
+        document: "US_DataCenter_CapRates.xlsx",
+        icon: "📈",
+        type: "line",
+        title: "US Data Center Cap Rates (2022-2025)",
+        data: [
+          { year: "2022", value: "4.2%" },
+          { year: "2023", value: "4.1%" },
+          { year: "2024", value: "3.3%" },
+          { year: "2025", value: "3.2%" }
+        ]
+      },
+      {
+        prompt: "Compare NoVa data center value comps",
+        document: "NoVa_ValueComps_Analysis.xlsx", 
+        icon: "💰",
+        type: "bar",
+        title: "Northern Virginia Value per SF",
+        data: [
+          { year: "2022", value: "$1,364", height: 25 },
+          { year: "2023", value: "$1,310", height: 20 },
+          { year: "2024", value: "$1,846", height: 70 },
+          { year: "2025", value: "$2,051", height: 95 }
+        ]
+      },
+      {
+        prompt: "Generate Chicago rent comp analysis",
+        document: "Chicago_RentComps_Q4.xlsx",
+        icon: "🏢", 
+        type: "table",
+        title: "Chicago Data Center Rent Analysis",
+        data: [
+          { year: "2022", value: "$92.76" },
+          { year: "2023", value: "$96.89" },
+          { year: "2024", value: "$99.12" },
+          { year: "2025", value: "$103.01" },
+          { cagr: "3.6% CAGR" }
+        ]
+      }
+    ];
+
+    function createLineChart(data, title) {
+      return `
+        <div class="chart-title">${title}</div>
+        <div class="line-chart">
+          <svg>
+            <path d="M 80 40 L 220 50 L 360 100 L 500 120" 
+                  stroke="#2563eb" 
+                  stroke-width="3" 
+                  fill="none" 
+                  stroke-dasharray="1000"
+                  style="animation: lineGrow 2s ease-out forwards;" />
+          </svg>
+          ${data.map((point, i) => `
+            <div class="chart-point">
+              <div class="point-value">${point.value}</div>
+              <div class="point-year">${point.year}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function createBarChart(data, title) {
+      return `
+        <div class="chart-title">${title}</div>
+        <div class="bar-chart">
+          ${data.map(item => `
+            <div class="bar-item">
+              <div class="bar" style="--bar-height: ${item.height}%; height: ${item.height}%;">
+                <div class="bar-value">${item.value}</div>
+              </div>
+              <div class="bar-year">${item.year}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function createTable(data, title) {
+      return `
+        <div class="chart-title">${title}</div>
+        <div class="rent-table">
+          <div class="table-row table-header">
+            <div>Year</div>
+            <div>Rent/SF</div>
+            <div>Growth</div>
+          </div>
+          ${data.slice(0, 4).map((item, i) => `
+            <div class="table-row">
+              <div class="table-cell">${item.year}</div>
+              <div class="table-cell">${item.value}</div>
+              <div class="table-cell">${i === 0 ? 'Baseline' : '+' + ((parseFloat(item.value.replace('$','')) / parseFloat(data[0].value.replace('$','')) - 1) * 100).toFixed(1) + '%'}</div>
+            </div>
+          `).join('')}
+          <div class="table-row" style="background: #fef3c7;">
+            <div class="table-cell" style="font-weight: 700;">CAGR</div>
+            <div class="table-cell cagr-highlight">${data[4].cagr}</div>
+            <div class="table-cell" style="font-weight: 700;">2022-2025</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function resetDemo() {
+      const container = document.getElementById('demoContainer');
+      container.classList.add('reset');
+      
+      setTimeout(() => {
+        container.classList.remove('reset');
+        startDemo();
+      }, 500);
+    }
+
+    function startDemo() {
+      const scenario = scenarios[currentLoop % scenarios.length];
+      
+      // Update content
+      document.getElementById('promptText').textContent = scenario.prompt;
+      document.querySelector('.doc-icon').textContent = scenario.icon;
+      document.getElementById('docName').textContent = scenario.document;
+      
+      // Animate sequence
+      setTimeout(() => {
+        document.getElementById('promptText').style.opacity = '1';
+        document.getElementById('promptText').style.transform = 'translateY(0)';
+      }, 500);
+
+      setTimeout(() => {
+        document.getElementById('uploadArea').style.opacity = '1';
+        document.getElementById('uploadArea').style.transform = 'translateY(0)';
+      }, 1500);
+
+      setTimeout(() => {
+        document.getElementById('analyzeBtn').style.opacity = '1';
+        document.getElementById('analyzeBtn').style.transform = 'translateY(0)';
+      }, 2500);
+
+      // Button processing
+      setTimeout(() => {
+        const btn = document.getElementById('analyzeBtn');
+        btn.style.background = '#1d4ed8';
+        document.getElementById('btnText').textContent = 'Processing...';
+        document.getElementById('typingIndicator').style.display = 'flex';
+      }, 3500);
+
+      // Show results with chart
+      setTimeout(() => {
+        document.getElementById('typingIndicator').style.display = 'none';
+        document.getElementById('btnText').textContent = 'Analysis Complete ✓';
+        document.getElementById('analyzeBtn').style.background = '#10b981';
+        
+        // Generate appropriate chart
+        let chartHTML = '';
+        if (scenario.type === 'line') {
+          chartHTML = createLineChart(scenario.data, scenario.title);
+        } else if (scenario.type === 'bar') {
+          chartHTML = createBarChart(scenario.data, scenario.title);
+        } else if (scenario.type === 'table') {
+          chartHTML = createTable(scenario.data, scenario.title);
+        }
+        
+        document.getElementById('chartContainer').innerHTML = chartHTML;
+        document.getElementById('resultsPanel').style.opacity = '1';
+        document.getElementById('resultsPanel').style.transform = 'translateY(0)';
+      }, 4500);
+
+      // Show reset indicator
+      setTimeout(() => {
+        document.getElementById('resetIndicator').style.opacity = '0.8';
+      }, 7500);
+
+      // Loop to next scenario
+      setTimeout(() => {
+        currentLoop++;
+        resetDemo();
+      }, 9000);
+    }
+
+    // Start the demo loop
+    setTimeout(startDemo, 1000);
+  </script>
 
 </body>
 </html>
