@@ -12,6 +12,10 @@
       --bg:#0b0b0b; --text:#f6f6f6; --muted:#bdbdbd;
       --btn-bg:#ffffff; --btn-text:#0b0b0b; --maxw:1240px;
       --accent:#2563eb; --radius:24px;
+
+      /* Auto-locked by JS on load (fallback values shown) */
+      --demo-h: 520px;   /* overall demo card height */
+      --viz-h:  240px;   /* reserved infographic area */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -46,40 +50,67 @@
     .split-inner{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1.05fr 0.95fr;gap:28px;align-items:center}
     .panel-demo{display:flex;justify-content:center;transform:translateX(-3%)} /* off-center nudge */
     .panel-copy{display:flex;justify-content:flex-start}
-    .copy-card{background:rgba(255,255,255,.08);color:#121212;border-radius:20px;padding:22px 22px 24px;background:#111213;/* dark card */border:1px solid rgba(255,255,255,.06);box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px}
+    .copy-card{background:#111213;color:#fff;border-radius:20px;padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px}
     .copy-eyebrow{display:inline-block;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#a9afba;margin-bottom:.4rem}
-    .copy-title{font-family:"Playfair Display",Georgia,serif;color:#fff;font-size:clamp(30px,3.5vw,44px);line-height:1.08;margin:0 0 .5rem}
+    .copy-title{font-family:"Playfair Display",Georgia,serif;font-size:clamp(30px,3.5vw,44px);line-height:1.08;margin:0 0 .5rem}
     .copy-sub{color:#cfd5de;font-size:clamp(14px,1.4vw,16px);line-height:1.5;margin:0 0 .9rem}
     .copy-cta{display:inline-block;background:#2563eb;color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 14px}
 
-    /* ===== Demo Card (left) – your original visual, tightened) ===== */
-    .demo-container{background:#fff;border-radius:22px;padding:34px;width:min(680px,100%);box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden}
+    /* ===== Demo Card (left) – tightened and STATIC HEIGHT) ===== */
+    .demo-container{
+      background:#fff;border-radius:22px;padding:34px;width:min(680px,100%);
+      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
+
+      /* Static shell via CSS vars (set by JS on load) */
+      height: var(--demo-h);
+      display: grid;
+      grid-template-rows: auto auto auto 1fr; /* prompt / upload / button / results */
+      align-content: start;
+    }
+
     .prompt-text{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#111;line-height:1.24;margin-bottom:20px;opacity:0;transform:translateY(30px);transition:.5s}
     .upload-area{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:18px;text-align:center;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:.5s .2s}
     .document-item{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;color:#374151}
     .doc-icon{font-size:18px}
-    .analyze-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s ease;opacity:0;transform:translateY(30px);margin-bottom:16px}
-    .results-panel{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:22px;opacity:0;transform:translateY(20px);transition:.45s .6s}
+    .analyze-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s ease;opacity:0;transform:translateY(30px);margin-bottom:16px;min-height:48px;white-space:nowrap}
+    .typing-indicator{display:none;align-items:center;gap:8px;color:#4b5563;font-style:italic;margin-top:10px;min-height:22px}
+    .typing-dots{display:flex;gap:4px}
+    .typing-dots span{width:6px;height:6px;background:#6b7280;border-radius:50%;animation:typingBounce 1.4s infinite ease-in-out}
+    .typing-dots span:nth-child(1){animation-delay:-.32s}.typing-dots span:nth-child(2){animation-delay:-.16s}
+
+    .results-panel{
+      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:22px;
+      opacity:0;transform:translateY(20px);transition:.45s .6s;
+
+      /* Fill remaining card height */
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr; /* title + viz */
+      overflow: hidden;
+    }
     .chart-title{font-size:16px;font-weight:700;color:#111;margin-bottom:12px;text-align:center}
-    .line-chart{position:relative;height:180px;background:linear-gradient(to bottom,rgba(37,99,235,.10) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
+    .chart-container{
+      height: var(--viz-h);
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+    }
+
+    /* Visuals respect reserved space */
+    .line-chart, .bar-chart{ height:100%; width:100%; }
+    .rent-table{ height:100%; overflow:auto; }
+
+    .line-chart{position:relative;background:linear-gradient(to bottom,rgba(37,99,235,.10) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
     .line-chart svg{position:absolute;inset:0;width:100%;height:100%}
     .chart-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
     .point-value{background:#2563eb;color:#fff;padding:5px 10px;border-radius:18px;font-size:12px;font-weight:700;min-width:52px}
     .point-year{font-size:11px;color:#4b5563;font-weight:600}
-    .bar-chart{display:flex;align-items:end;height:180px;gap:16px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.10) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
+    .bar-chart{display:flex;align-items:end;gap:16px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.10) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
     .bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
     .bar{background:linear-gradient(to top,#10b981,#34d399);border-radius:6px 6px 0 0;width:100%;min-height:18px;position:relative}
     .bar-value{position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:3px 6px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
-    .rent-table{background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0}
-    .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:12px;border-bottom:1px solid #e2e8f0;align-items:center}
-    .table-header{background:#f8fafc;font-weight:700;color:#374151;font-size:13px}
-    .table-cell{font-size:13px;color:#111;font-weight:600}
+    .rent-table .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:12px;border-bottom:1px solid #e2e8f0;align-items:center}
+    .rent-table .table-header{background:#f8fafc;font-weight:700;color:#374151;font-size:13px}
+    .rent-table .table-cell{font-size:13px;color:#111;font-weight:600}
     .cagr-highlight{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;padding:3px 6px;border-radius:10px;font-weight:700;text-align:center}
-    .typing-indicator{display:none;align-items:center;gap:8px;color:#4b5563;font-style:italic;margin-top:10px}
-    .typing-dots{display:flex;gap:4px}
-    .typing-dots span{width:6px;height:6px;background:#6b7280;border-radius:50%;animation:typingBounce 1.4s infinite ease-in-out}
-    .typing-dots span:nth-child(1){animation-delay:-.32s}.typing-dots span:nth-child(2){animation-delay:-.16s}
-    .reset-indicator{position:absolute;top:12px;right:12px;background:rgba(37,99,235,.1);color:#2563eb;padding:6px 10px;border-radius:14px;font-size:11px;font-weight:600;opacity:0}
 
     @keyframes typingBounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
 
@@ -142,14 +173,12 @@
     </div>
   </main>
 
-  <!-- Split half‑page: left demo, right copy -->
+  <!-- Split half‑page: left static shell demo, right copy -->
   <section class="split">
     <div class="split-inner">
       <!-- LEFT: demo/graphic -->
       <section class="panel-demo">
         <div class="demo-container" id="demoContainer" aria-live="polite">
-          <div class="reset-indicator" id="resetIndicator">🔄 Live Demo</div>
-
           <div class="prompt-text" id="promptText">Analyze US data center cap rate trends</div>
 
           <div class="upload-area" id="uploadArea" role="region" aria-label="Uploaded document">
@@ -169,6 +198,7 @@
           </div>
 
           <div class="results-panel" id="resultsPanel">
+            <div class="chart-title" id="chartTitle"></div>
             <div class="chart-container" id="chartContainer"><!-- dynamic --></div>
           </div>
         </div>
@@ -186,7 +216,7 @@
     </div>
   </section>
 
-  <!-- JavaScript at the end to avoid any early rendering glitches -->
+  <!-- JS placed at the end to avoid early rendering issues -->
   <script>
     let currentLoop = 0;
     let timers = [];
@@ -202,99 +232,5 @@
       { prompt:"Generate Chicago rent comp analysis", document:"Chicago_RentComps_Q4.xlsx", icon:"🏢", type:"table", title:"Chicago Data Center Rent Analysis", data:[{year:"2022",value:"$92.76"},{year:"2023",value:"$96.89"},{year:"2024",value:"$99.12"},{year:"2025",value:"$103.01"},{cagr:"3.6% CAGR"}]}
     ];
 
-    function createLineChart(data,title){
-      return `
-        <div class="chart-title">${title}</div>
-        <div class="line-chart">
-          <svg>
-            <path d="M 80 40 L 220 50 L 360 100 L 500 120" stroke="#2563eb" stroke-width="3" fill="none"></path>
-          </svg>
-          ${data.map(p=>`
-            <div class="chart-point">
-              <div class="point-value">${p.value}</div>
-              <div class="point-year">${p.year}</div>
-            </div>`).join('')}
-        </div>`;
-    }
-    function createBarChart(data,title){
-      return `
-        <div class="chart-title">${title}</div>
-        <div class="bar-chart">
-          ${data.map(i=>`
-            <div class="bar-item">
-              <div class="bar" style="height:${i.height}%;">
-                <div class="bar-value">${i.value}</div>
-              </div>
-              <div class="bar-year">${i.year}</div>
-            </div>`).join('')}
-        </div>`;
-    }
-    function createTable(data,title){
-      return `
-        <div class="chart-title">${title}</div>
-        <div class="rent-table">
-          <div class="table-row table-header"><div>Year</div><div>Rent/SF</div><div>Growth</div></div>
-          ${data.slice(0,4).map((item,i)=>{const base=toNumber(data[0].value);const val=toNumber(item.value);const g=i===0?'Baseline':'+'+(((val/base)-1)*100).toFixed(1)+'%';return `
-            <div class="table-row"><div class="table-cell">${item.year}</div><div class="table-cell">${item.value}</div><div class="table-cell">${g}</div></div>`;}).join('')}
-          <div class="table-row" style="background:#fef3c7;"><div class="table-cell" style="font-weight:700;">CAGR</div><div class="table-cell cagr-highlight">${data[4].cagr}</div><div class="table-cell" style="font-weight:700;">2022-2025</div></div>
-        </div>`;
-    }
-
-    function resetDemo(){
-      clearTimers();
-      document.getElementById('typingIndicator').style.display='none';
-      const btn=document.getElementById('analyzeBtn');
-      btn.style.background='#2563eb'; btn.setAttribute('aria-busy','false');
-      document.getElementById('btnText').textContent='Analyze with IcebergIC';
-      document.getElementById('resetIndicator').style.opacity='0';
-      document.getElementById('chartContainer').innerHTML='';
-      document.getElementById('resultsPanel').style.opacity='0';
-      document.getElementById('resultsPanel').style.transform='translateY(20px)';
-      ['promptText','uploadArea','analyzeBtn'].forEach(id=>{const el=document.getElementById(id); el.style.opacity='0'; el.style.transform='translateY(30px)';});
-      setTimeout(startDemo, rm?0:250);
-    }
-
-    function startDemo(){
-      const s = scenarios[currentLoop % scenarios.length];
-
-      // update all content BEFORE any animations
-      document.getElementById('promptText').textContent = s.prompt;
-      document.querySelector('.doc-icon').textContent = s.icon;
-      document.getElementById('docName').textContent = s.document;
-
-      const step = rm ? 0 : 900;
-
-      // Step 1: show prompt (500ms)
-      schedule(()=>{const el=document.getElementById('promptText'); el.style.opacity='1'; el.style.transform='translateY(0)';}, step*0.5);
-
-      // Step 2: show upload area (1.5s)
-      schedule(()=>{const el=document.getElementById('uploadArea'); el.style.opacity='1'; el.style.transform='translateY(0)';}, step*1.5);
-
-      // Step 3: show button (2.5s)
-      schedule(()=>{const el=document.getElementById('analyzeBtn'); el.style.opacity='1'; el.style.transform='translateY(0)';}, step*2.5);
-
-      // Step 4: processing (3.5s)
-      schedule(()=>{const btn=document.getElementById('analyzeBtn'); btn.style.background='#1d4ed8'; btn.setAttribute('aria-busy','true'); document.getElementById('btnText').textContent='Processing...'; document.getElementById('typingIndicator').style.display='flex';}, step*3.5);
-
-      // Step 5: results (4.5s)
-      schedule(()=>{
-        document.getElementById('typingIndicator').style.display='none';
-        const btn=document.getElementById('analyzeBtn'); document.getElementById('btnText').textContent='Analysis Complete ✓'; btn.style.background='#10b981'; btn.setAttribute('aria-busy','false');
-        let html=''; if(s.type==='line') html=createLineChart(s.data,s.title); else if(s.type==='bar') html=createBarChart(s.data,s.title); else html=createTable(s.data,s.title);
-        document.getElementById('chartContainer').innerHTML=html;
-        const panel=document.getElementById('resultsPanel'); panel.style.opacity='1'; panel.style.transform='translateY(0)';
-      }, step*4.5);
-
-      // Show loop indicator and loop
-      schedule(()=>{document.getElementById('resetIndicator').style.opacity='0.85';}, step*7.5);
-      schedule(()=>{currentLoop++; resetDemo();}, step*9);
-
-      // click to fast-forward
-      document.getElementById('analyzeBtn').onclick=()=>{clearTimers(); const btn=document.getElementById('analyzeBtn'); btn.style.background='#1d4ed8'; btn.setAttribute('aria-busy','true'); document.getElementById('btnText').textContent='Processing...'; document.getElementById('typingIndicator').style.display='flex'; setTimeout(()=>{document.getElementById('typingIndicator').style.display='none'; btn.style.background='#10b981'; btn.setAttribute('aria-busy','false'); document.getElementById('btnText').textContent='Analysis Complete ✓'; let html=''; if(s.type==='line') html=createLineChart(s.data,s.title); else if(s.type==='bar') html=createBarChart(s.data,s.title); else html=createTable(s.data,s.title); document.getElementById('chartContainer').innerHTML=html; const panel=document.getElementById('resultsPanel'); panel.style.opacity='1'; panel.style.transform='translateY(0)';}, rm?0:800);};
-    }
-
-    // kick off after first paint
-    window.addEventListener('load', ()=> setTimeout(startDemo, 300));
-  </script>
-</body>
-</html>
+    /* ---------- Viz builders ---------- */
+    func
