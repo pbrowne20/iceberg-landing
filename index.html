@@ -42,7 +42,7 @@
     .brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:20px;letter-spacing:.2px}
     .brand a{text-decoration:none;color:inherit;display:flex;align-items:center;gap:12px;transition:opacity .2s ease}
     .brand a:hover{opacity:.8}
-    .logo{height:32px;display:block}
+    .logo{height:40px;width:40px;display:block;flex-shrink:0}
     
     .menu{display:flex;gap:24px}
     .menu-item{position:relative}
@@ -333,21 +333,26 @@
   <div class="nav-wrap">
     <header class="nav">
       <div class="brand">
-        <div class="logo">
-          <svg viewBox="0 0 32 32" fill="none">
-            <!-- Water surface -->
-            <path d="M2 20 C8 18, 12 22, 18 20 C24 18, 28 22, 30 20 L30 30 L2 30 Z" fill="#0891b2"/>
-            <!-- Iceberg above water -->
-            <path d="M14 8 L18 8 L20 16 L12 16 Z" fill="#e5e7eb"/>
-            <!-- Iceberg below water (larger, subtle) -->
-            <path d="M10 16 L22 16 L24 28 L8 28 Z" fill="#0c4a6e" opacity="0.6"/>
-            <!-- Data visualization dots below water -->
-            <circle cx="13" cy="22" r="1" fill="#2563eb" opacity="0.8"/>
-            <circle cx="16" cy="24" r="1" fill="#10b981" opacity="0.8"/>
-            <circle cx="19" cy="23" r="1" fill="#f59e0b" opacity="0.8"/>
+        <a href="#" style="display:flex;align-items:center;gap:12px;">
+          <svg class="logo" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Iceberg outline only -->
+            <path d="M50 10 L70 50 L30 50 Z" fill="none" stroke="#ffffff" stroke-width="2"/>
+            
+            <!-- Water surface waves -->
+            <path d="M5 50 Q15 47, 25 50 T45 50 T65 50 T85 50 T95 50" 
+                  stroke="#ffffff" stroke-width="2" fill="none"/>
+            
+            <!-- REAI Text -->
+            <text x="50" y="80" 
+                  font-family="Arial, sans-serif" 
+                  font-size="20" 
+                  font-weight="bold" 
+                  text-anchor="middle" 
+                  fill="#ffffff"
+                  letter-spacing="2">REAI</text>
           </svg>
-        </div>
-        <span>Iceberg</span>
+          <span>Iceberg</span>
+        </a>
       </div>
       <nav class="menu" aria-label="Primary">
         <div class="menu-item">
