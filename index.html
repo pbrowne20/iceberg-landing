@@ -512,6 +512,48 @@
     </div>
   </section>
 
+  <!-- SECTION 4: IcebergBENCHMARK (hero left, demo right) -->
+  <section class="split-benchmark" id="icebergbenchmark">
+    <div class="split-inner">
+
+      <!-- LEFT: hero copy -->
+      <section class="panel-copy" aria-labelledby="copy-title-benchmark">
+        <div class="copy-card benchmark">
+          <span class="copy-eyebrow">IcebergBENCHMARK</span>
+          <h2 id="copy-title-benchmark" class="copy-title">Confirm Your Performance</h2>
+          <p class="copy-sub">Compare your actuals or deal assumptions to institutional performance benchmarks.</p>
+          <a class="copy-cta" href="#icebergbenchmark">Explore IcebergBENCHMARK →</a>
+        </div>
+      </section>
+
+      <!-- RIGHT: benchmark demo -->
+      <section class="panel-demo">
+        <div class="demo-container benchmark" id="benchmarkDemo" aria-live="polite">
+          <div class="prompt-text benchmark" id="benchmarkPrompt">Compare portfolio occupancy vs institutional benchmarks</div>
+
+          <div class="upload-area benchmark" role="region" aria-label="Uploaded documents">
+            <div class="document-item">
+              <span class="doc-icon">📊</span>
+              <span id="benchmarkDocName">Portfolio_Occupancy.xlsx</span>
+            </div>
+          </div>
+
+          <button class="benchmark-button" id="benchmarkBtn" type="button">
+            <span id="benchmarkBtnText">Benchmark with IcebergBENCHMARK</span>
+          </button>
+
+          <div class="benchmark-results">
+            <div class="benchmark-title" id="benchmarkTitle">Portfolio vs Benchmark Comparison</div>
+            <div class="benchmark-output" id="benchmarkOutput">
+              <!-- chart appears here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
   <!-- Scripts -->
   <script>
     /* ===================== Section 1: IcebergIC (charts) ===================== */
