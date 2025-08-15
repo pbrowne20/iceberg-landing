@@ -22,16 +22,11 @@
     }
     
     *{box-sizing:border-box}
-    html{
-      height:100%; margin:0; padding:0;
-      scroll-behavior: smooth; /* Smooth scrolling for navigation */
-    }
+    html,body{height:100%; margin:0; padding:0;}
     body{
-      height:100%; margin:0; padding:0;
       background:var(--bg);color:var(--text);
       font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
       -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-      overflow-x: hidden; /* Prevent horizontal scroll from transforms */
     }
 
     /* ===== Sticky Top Navigation ===== */
@@ -45,26 +40,16 @@
     .menu-item>a::after{content:"▼";font-size:10px;opacity:.6;transition:transform .2s ease}
     .menu-item:hover>a::after{transform:rotate(180deg)}
     .dropdown{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-8px);background:rgba(11,11,11,.95);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 0;min-width:200px;margin-top:6px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,visibility .2s ease,transform .2s ease;box-shadow:0 12px 32px rgba(0,0,0,.4)}
-    
-    /* Keyboard-friendly dropdowns */
-    .menu-item:hover .dropdown,
-    .menu-item:focus-within .dropdown{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
-    
+    .menu-item:hover .dropdown{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
     .dropdown a{display:block;padding:8px 16px;color:var(--text);text-decoration:none;font-size:14px;font-weight:400;opacity:.85;transition:all .15s ease}
     .dropdown a:hover{opacity:1;background:rgba(255,255,255,.05)}
 
-    /* ===== Top Hero - FIXED VIEWPORT ===== */
+    /* ===== Top Hero - FIXED HEIGHT ===== */
     .hero{
-      min-height: calc(100dvh - 72px);   /* subtract sticky nav */
-      padding: 72px 20px 0;               /* trim bottom padding to zero */
-      display:flex; align-items:center; justify-content:center;
-      position:relative; overflow:hidden;
+      height:100vh;
+      display:flex;align-items:center;justify-content:center;
+      padding:72px 20px 24px;position:relative;overflow:hidden;
     }
-    /* Fallback for older browsers */
-    @supports not (height: 100dvh) {
-      .hero { min-height: calc(100vh - 72px); }
-    }
-    
     .hero::before{content:"";position:absolute;inset:-20% -20% 0 -20%;background:radial-gradient(60% 60% at 50% 35%, rgba(255,255,255,.06), transparent 65%),radial-gradient(50% 50% at 50% 100%, rgba(255,255,255,.03), transparent 60%);pointer-events:none;mix-blend-mode:screen;opacity:.6}
     .hero-inner{position:relative;width:100%;max-width:880px;text-align:center}
     .headline{font-family:"Playfair Display",Georgia,serif;font-weight:700;line-height:1.06;font-size:clamp(42px,7vw,84px);margin:0 0 14px}
@@ -73,10 +58,7 @@
     .cta:hover{transform:translateY(1px);opacity:.97;box-shadow:0 12px 28px rgba(0,0,0,.4)}
 
     /* ===== Split Demo Section Base ===== */
-    .split{
-      padding:64px 20px 96px;
-      scroll-margin-top: 84px; /* keeps section titles out from under nav */
-    }
+    .split{padding:64px 20px 96px;}
     .split-inner{max-width:var(--maxw);margin:0 auto;display:grid;gap:28px;align-items:center}
     .panel-demo{display:flex;justify-content:center;}
     .panel-copy{display:flex;}
@@ -88,163 +70,160 @@
     .copy-sub{color:#cfd5de;font-size:clamp(14px,1.4vw,16px);line-height:1.5;margin:0 0 .9rem}
     .copy-cta{display:inline-block;background:#2563eb;color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 14px}
 
-    /* ===== Demo Container Shared Styles - DARK THEME ===== */
+    /* ===== Demo Container Shared Styles ===== */
     .demo-container{
-      background:#1f1f1f;border-radius:22px;padding:28px;width:min(680px,100%);
-      box-shadow:0 22px 70px rgba(0,0,0,.4);position:relative;overflow:hidden;
+      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
+      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
       height: var(--demo-h);
       display: grid;
       grid-template-rows: auto auto auto 1fr;
       align-content: start;
-      border:1px solid rgba(255,255,255,.08);
     }
 
-    /* ===== Section-Specific Layouts - DARK THEME ===== */
+    /* ===== Section-Specific Layouts ===== */
     
     /* IcebergIC - demo left, copy right */
-    .split.ic{background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%)}
+    .split.ic{background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%)}
     .split.ic .split-inner{grid-template-columns:1.05fr 0.95fr;}
     .split.ic .panel-demo{transform:translateX(-3%);}
     .split.ic .panel-copy{justify-content:flex-start;}
 
     /* IcebergIR - copy left, demo right */
-    .split.ir{background:linear-gradient(180deg,#0f0f0f 0%, #1a1a1a 100%)}
+    .split.ir{background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%)}
     .split.ir .split-inner{grid-template-columns:0.95fr 1.05fr;}
     .split.ir .panel-copy{justify-content:flex-end;}
     .split.ir .panel-demo{transform:translateX(3%);}
 
     /* IcebergREIT - demo left, copy right */
-    .split.reit{background:linear-gradient(135deg,#161616 0%,#0b0b0b 100%)}
+    .split.reit{background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%)}
     .split.reit .split-inner{grid-template-columns:1.05fr 0.95fr;}
     .split.reit .panel-demo{transform:translateX(-3%);}
     .split.reit .panel-copy{justify-content:flex-start;}
 
     /* IcebergBENCHMARK - copy left, demo right */
-    .split.benchmark{background:linear-gradient(180deg,#0b0b0b 0%, #161616 100%)}
+    .split.benchmark{background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%)}
     .split.benchmark .split-inner{grid-template-columns:0.95fr 1.05fr;}
     .split.benchmark .panel-copy{justify-content:flex-end;}
     .split.benchmark .panel-demo{transform:translateX(3%);}
 
     /* IcebergCUSTOM - demo left, copy right */
-    .split.custom{background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%); padding-bottom:120px;}
+    .split.custom{background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%); padding-bottom:120px;}
     .split.custom .split-inner{grid-template-columns:1.05fr 0.95fr;}
     .split.custom .panel-demo{transform:translateX(-3%);}
     .split.custom .panel-copy{justify-content:flex-start;}
 
-    /* ===== IcebergIC Demo Styles - DARK THEME ===== */
-    .prompt-text{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#f6f6f6;line-height:1.24;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:.5s}
-    .upload-area{background:#161616;border:2px dashed rgba(255,255,255,.15);border-radius:14px;padding:16px;text-align:center;margin-bottom:12px;opacity:0;transform:translateY(30px);transition:.5s .2s}
-    .document-item{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;color:#bdbdbd}
+    /* ===== IcebergIC Demo Styles ===== */
+    .prompt-text{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#111;line-height:1.24;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:.5s}
+    .upload-area{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:16px;text-align:center;margin-bottom:12px;opacity:0;transform:translateY(30px);transition:.5s .2s}
+    .document-item{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;color:#374151}
     .doc-icon{font-size:18px}
     .analyze-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s ease;opacity:0;transform:translateY(30px);margin-bottom:12px;min-height:46px;white-space:nowrap}
-    .typing-indicator{display:none;align-items:center;gap:8px;color:#9ca3af;font-style:italic;margin-top:8px;min-height:20px}
+    .typing-indicator{display:none;align-items:center;gap:8px;color:#4b5563;font-style:italic;margin-top:8px;min-height:20px}
     .typing-dots{display:flex;gap:4px}
     .typing-dots span{width:6px;height:6px;background:#6b7280;border-radius:50%;animation:typingBounce 1.4s infinite ease-in-out}
     .typing-dots span:nth-child(1){animation-delay:-.32s}.typing-dots span:nth-child(2){animation-delay:-.16s}
 
     .results-panel{
-      background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:18px;
+      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:18px;
       opacity:0;transform:translateY(20px);transition:.45s .6s;
       height: 100%;
       display: grid;
       grid-template-rows: auto 1fr;
       overflow: hidden;
-      min-height: 220px; /* Reduce layout shift */
     }
-    .chart-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:10px;text-align:center}
+    .chart-title{font-size:16px;font-weight:700;color:#111;margin-bottom:10px;text-align:center}
     .chart-container{
       height: var(--viz-h);
       display:flex;align-items:center;justify-content:center;overflow:hidden;
-      min-height: 160px; /* Reduce layout shift */
     }
 
     /* Visuals respect reserved space */
     .line-chart, .bar-chart{ height:100%; width:100%; }
     .rent-table{ height:100%; overflow:auto; }
 
-    /* Line chart styling - DARK THEME */
-    .line-chart{position:relative;background:linear-gradient(to bottom,rgba(37,99,235,.15) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:14px;display:flex;align-items:end;justify-content:space-between}
+    /* Line chart styling */
+    .line-chart{position:relative;background:linear-gradient(to bottom,rgba(37,99,235,.10) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:14px;display:flex;align-items:end;justify-content:space-between}
     .line-chart svg{position:absolute;inset:0;width:100%;height:100%}
     .chart-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
     .point-value{background:#2563eb;color:#fff;padding:4px 8px;border-radius:16px;font-size:12px;font-weight:700;min-width:48px}
-    .point-year{font-size:11px;color:#9ca3af;font-weight:600}
+    .point-year{font-size:11px;color:#4b5563;font-weight:600}
 
-    /* Bar chart styling - DARK THEME */
-    .bar-chart{display:flex;align-items:end;gap:14px;padding:14px;background:linear-gradient(to top,rgba(16,185,129,.15) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
+    /* Bar chart styling */
+    .bar-chart{display:flex;align-items:end;gap:14px;padding:14px;background:linear-gradient(to top,rgba(16,185,129,.10) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
     .bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
     .bar{background:linear-gradient(to top,#10b981,#34d399);border-radius:6px 6px 0 0;width:100%;min-height:16px;position:relative}
     .bar-value{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:3px 6px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
-    .bar-year{font-size:11px;color:#9ca3af;font-weight:600}
+    .bar-year{font-size:11px;color:#4b5563;font-weight:600}
 
-    /* Table styling - DARK THEME */
-    .rent-table .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:10px;border-bottom:1px solid rgba(255,255,255,.1);align-items:center}
-    .rent-table .table-header{background:#0f0f0f;font-weight:700;color:#f6f6f6;font-size:13px}
-    .rent-table .table-cell{font-size:13px;color:#e5e7eb;font-weight:600}
+    /* Table styling */
+    .rent-table .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:10px;border-bottom:1px solid #e2e8f0;align-items:center}
+    .rent-table .table-header{background:#f8fafc;font-weight:700;color:#374151;font-size:13px}
+    .rent-table .table-cell{font-size:13px;color:#111;font-weight:600}
     .cagr-highlight{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;padding:3px 6px;border-radius:10px;font-weight:700;text-align:center}
 
     @keyframes typingBounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
 
-    /* ===== IcebergIR Demo Styles - DARK THEME ===== */
+    /* ===== IcebergIR Demo Styles ===== */
     .demo-container.ir{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
-    .prompt-text.ir{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
+    .prompt-text.ir{margin-bottom:12px;opacity:1;transform:none}
     .ir-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
-    .ir-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
-    .ir-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
-    .ir-output{height:var(--viz2-h);overflow:auto;background:#0f0f0f;border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.08);font-size:14px;color:#e5e7eb;line-height:1.6}
+    .ir-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .ir-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .ir-output{height:var(--viz2-h);overflow:auto;background:#fff;border-radius:10px;padding:14px;border:1px solid #eef2f6;font-size:14px;color:#111;line-height:1.6}
     .ir-output ul{margin:0 0 0 18px;padding:0}
     .ir-output li{margin:6px 0}
-    .ir-cursor{display:inline-block;width:8px;height:1em;vertical-align:-2px;background:#f6f6f6;animation:blink .9s steps(1,end) infinite}
+    .ir-cursor{display:inline-block;width:8px;height:1em;vertical-align:-2px;background:#111;animation:blink .9s steps(1,end) infinite}
     @keyframes blink{50%{opacity:0}}
 
-    /* ===== IcebergREIT Demo Styles - DARK THEME ===== */
+    /* ===== IcebergREIT Demo Styles ===== */
     .demo-container.reit{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
-    .prompt-text.reit{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
+    .prompt-text.reit{margin-bottom:12px;opacity:1;transform:none}
     .reit-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
-    .reit-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
-    .reit-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
-    .reit-output{height:var(--viz2-h);overflow:auto;background:#0f0f0f;border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.08);font-size:13px;color:#e5e7eb;line-height:1.4}
+    .reit-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .reit-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .reit-output{height:var(--viz2-h);overflow:auto;background:#fff;border-radius:10px;padding:14px;border:1px solid #eef2f6;font-size:13px;color:#111;line-height:1.4}
 
-    /* REIT comparison table styling - DARK THEME */
+    /* REIT comparison table styling */
     .reit-table{width:100%;border-collapse:collapse;font-size:13px}
-    .reit-table th{background:#161616;padding:8px 6px;text-align:center;font-weight:700;color:#f6f6f6;border-bottom:2px solid rgba(255,255,255,.1)}
-    .reit-table td{padding:8px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600}
-    .reit-table .ticker-col{background:#1a1a1a;font-weight:700;color:#fbbf24}
+    .reit-table th{background:#f8fafc;padding:8px 6px;text-align:center;font-weight:700;color:#374151;border-bottom:2px solid #e2e8f0}
+    .reit-table td{padding:8px 6px;text-align:center;border-bottom:1px solid #e2e8f0;font-weight:600}
+    .reit-table .ticker-col{background:#fef9f3;font-weight:700;color:#d97706}
     .reit-table .metric-highlight{background:linear-gradient(135deg,#10b981,#34d399);color:#fff;border-radius:6px;padding:4px 2px;font-weight:700}
 
-    /* ===== IcebergBENCHMARK Demo Styles - DARK THEME ===== */
+    /* ===== IcebergBENCHMARK Demo Styles ===== */
     .demo-container.benchmark{height:var(--demo2-h);grid-template-rows:auto auto auto 1fr;}
-    .prompt-text.benchmark{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
-    .upload-area.benchmark{background:#161616;border:2px dashed rgba(255,255,255,.15);border-radius:14px;padding:12px;text-align:center;margin-bottom:12px;opacity:1;transform:none}
+    .prompt-text.benchmark{margin-bottom:12px;opacity:1;transform:none}
+    .upload-area.benchmark{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:12px;text-align:center;margin-bottom:12px;opacity:1;transform:none}
     .benchmark-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
-    .benchmark-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
-    .benchmark-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
-    .benchmark-output{height:var(--viz2-h);overflow:hidden;background:#0f0f0f;border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.08);font-size:13px;color:#e5e7eb;line-height:1.4}
+    .benchmark-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .benchmark-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .benchmark-output{height:var(--viz2-h);overflow:hidden;background:#fff;border-radius:10px;padding:14px;border:1px solid #eef2f6;font-size:13px;color:#111;line-height:1.4}
 
-    /* Benchmark chart styling - DARK THEME */
-    .benchmark-line-chart{position:relative;height:100%;width:100%;background:linear-gradient(to bottom,rgba(37,99,235,.12) 0%,rgba(37,99,235,.04) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
+    /* Benchmark chart styling */
+    .benchmark-line-chart{position:relative;height:100%;width:100%;background:linear-gradient(to bottom,rgba(37,99,235,.08) 0%,rgba(37,99,235,.03) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
     .benchmark-line-chart svg{position:absolute;inset:0;width:100%;height:100%}
     .benchmark-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
     .benchmark-point-value{background:#2563eb;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px}
     .benchmark-point-bench{background:#10b981;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px;margin-top:2px}
-    .benchmark-point-year{font-size:10px;color:#9ca3af;font-weight:600;margin-top:2px}
+    .benchmark-point-year{font-size:10px;color:#4b5563;font-weight:600;margin-top:2px}
 
-    .benchmark-bar-chart{height:100%;width:100%;display:flex;align-items:end;gap:12px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.12) 0%,rgba(16,185,129,.04) 100%);border-radius:10px}
+    .benchmark-bar-chart{height:100%;width:100%;display:flex;align-items:end;gap:12px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.08) 0%,rgba(16,185,129,.03) 100%);border-radius:10px}
     .benchmark-bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
     .benchmark-bars{display:flex;gap:4px;align-items:end;height:120px}
     .benchmark-bar-portfolio{background:linear-gradient(to top,#2563eb,#3b82f6);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
     .benchmark-bar-bench{background:linear-gradient(to top,#10b981,#34d399);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
-    .benchmark-bar-year{font-size:10px;color:#9ca3af;font-weight:600}
+    .benchmark-bar-year{font-size:10px;color:#4b5563;font-weight:600}
 
-    /* ===== IcebergCUSTOM Demo Styles - DARK THEME ===== */
+    /* ===== IcebergCUSTOM Demo Styles ===== */
     .demo-container.custom{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
-    .prompt-text.custom{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
+    .prompt-text.custom{margin-bottom:12px;opacity:1;transform:none}
     .custom-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
-    .custom-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
-    .custom-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
-    .custom-output{height:var(--viz2-h);overflow:auto;background:#0f0f0f;border-radius:10px;padding:16px;border:1px solid rgba(255,255,255,.08);font-size:13px;color:#e5e7eb;line-height:1.5}
+    .custom-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .custom-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .custom-output{height:var(--viz2-h);overflow:auto;background:#fff;border-radius:10px;padding:16px;border:1px solid #eef2f6;font-size:13px;color:#111;line-height:1.5}
     .checklist{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .check{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:#1a1a1a;font-weight:600;color:#e5e7eb}
-    .progress{height:10px;background:#333;border-radius:6px;overflow:hidden;margin-top:12px}
+    .check{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#f9fafb;font-weight:600}
+    .progress{height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-top:12px}
     .progress > div{height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#10b981)}
 
     /* ===== Responsive Design ===== */
@@ -252,20 +231,19 @@
       .split-inner{grid-template-columns:1fr!important;gap:18px}
       .panel-demo{transform:none!important}
       .copy-card{max-width:unset}
-      .hero{min-height:calc(100dvh - 72px);padding:72px 20px 0;}
+      .hero{height:auto;min-height:100vh;padding:72px 20px 48px;}
     }
 
     @media (max-width:640px){
       .nav{padding:0 20px}
       .menu{gap:16px}
-      .hero{padding:60px 16px 0;}
+      .hero{padding:60px 16px 32px;}
       .split{padding:48px 16px 64px;}
     }
 
     /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       *{animation:none!important;transition:none!important}
-      html{scroll-behavior:auto;}
     }
   </style>
 </head>
@@ -274,32 +252,32 @@
   <!-- Sticky Nav -->
   <div class="nav-wrap">
     <header class="nav">
-      <div class="brand">Iceberg</div>
+      <div class="brand"><img src="logo.png" alt="" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;background:#0f1115;padding:3px;margin-right:8px;">Iceberg</div>
       <nav class="menu" aria-label="Primary">
         <div class="menu-item">
-          <a href="#icebergic">IcebergIC</a>
+          <a href="#">IcebergIC</a>
           <div class="dropdown">
             <a href="#">Value Comps</a><a href="#">Cap Rate Intel</a><a href="#">Occupancy Trends</a><a href="#">NOI and OpEx Comps</a><a href="#">Growth Rates</a>
           </div>
         </div>
         <div class="menu-item">
-          <a href="#icebergir">IcebergIR</a>
+          <a href="#">IcebergIR</a>
           <div class="dropdown">
             <a href="#">Memo Narrative</a><a href="#">FAQ Prep</a><a href="#">Market Commentary</a>
           </div>
         </div>
         <div class="menu-item">
-          <a href="#icebergreit">IcebergREIT</a>
+          <a href="#">IcebergREIT</a>
           <div class="dropdown">
             <a href="#">Portfolio Composition</a><a href="#">Valuation Analysis</a><a href="#">Peer Comparison</a>
           </div>
         </div>
         <div class="menu-item">
-          <a href="#icebergbenchmark">IcebergBENCHMARK</a>
+          <a href="#">IcebergBENCHMARK</a>
           <div class="dropdown"><a href="#">Underwriting Checks</a><a href="#">Actuals Comparisons</a></div>
         </div>
         <div class="menu-item">
-          <a href="#icebergcustom">IcebergCUSTOM</a>
+          <a href="#">IcebergCUSTOM</a>
           <div class="dropdown"><a href="#">API Integration</a><a href="#">Private Iceberg Tool</a></div>
         </div>
       </nav>
@@ -311,12 +289,12 @@
     <div class="hero-inner">
       <h1 class="headline">AI‑Powered Real Estate Intelligence</h1>
       <p class="sub">Domain‑specific AI intelligence and tools for managers, investors, brokers, and analysts.</p>
-      <a class="cta" href="mailto:patrick@icebergre.ai?subject=Iceberg%20Demo%20Request">Request a Demo</a>
+      <a class="cta" href="#signup">Request a Demo</a>
     </div>
   </main>
 
   <!-- SECTION 1: IcebergIC -->
-  <section class="split ic" id="icebergic">
+  <section class="split ic">
     <div class="split-inner">
       <!-- LEFT: demo -->
       <section class="panel-demo">
@@ -352,7 +330,7 @@
           <span class="copy-eyebrow">IcebergIC</span>
           <h2 id="copy-title" class="copy-title">Support Your Basis</h2>
           <p class="copy-sub">Use natural language search to find the comps you need</p>
-          <a class="copy-cta" href="#how">Explore IcebergIC →</a>
+          <a class="copy-cta" href="#how">Request a Demo →</a>
         </div>
       </section>
     </div>
@@ -368,7 +346,7 @@
           <span class="copy-eyebrow">IcebergIR</span>
           <h2 id="copy-title-ir" class="copy-title">Draft Faster. Explain Better.</h2>
           <p class="copy-sub">Turn complex data into crisp summary and narrative for board meetings, IC memos or investor FAQs.</p>
-          <a class="copy-cta" href="#icebergir">Explore IcebergIR →</a>
+          <a class="copy-cta" href="#signup">Request a Demo →</a>
         </div>
       </section>
 
@@ -417,7 +395,7 @@
           <span class="copy-eyebrow">IcebergREIT</span>
           <h2 id="copy-title-reit" class="copy-title">Dynamically Value and Analyze REITs</h2>
           <p class="copy-sub">Dynamically value and compare REITs in real time.</p>
-          <a class="copy-cta" href="#icebergreit">Explore IcebergREIT →</a>
+          <a class="copy-cta" href="#signup">Request a Demo →</a>
         </div>
       </section>
 
@@ -434,7 +412,7 @@
           <span class="copy-eyebrow">IcebergBENCHMARK</span>
           <h2 id="copy-title-benchmark" class="copy-title">Confirm Your Performance</h2>
           <p class="copy-sub">Compare your actuals or deal assumptions to institutional performance benchmarks.</p>
-          <a class="copy-cta" href="#icebergbenchmark">Explore IcebergBENCHMARK →</a>
+          <a class="copy-cta" href="#signup">Request a Demo →</a>
         </div>
       </section>
 
@@ -490,7 +468,7 @@
           <span class="copy-eyebrow">IcebergCUSTOM</span>
           <h2 id="copy-title-custom" class="copy-title">Private White Label Iceberg Tool for your Organization</h2>
           <p class="copy-sub">Iceberg's AI‑powered — but for your own organization's data.</p>
-          <a class="copy-cta" href="#icebergcustom">Explore IcebergCUSTOM →</a>
+          <a class="copy-cta" href="#signup">Request a Demo →</a>
         </div>
       </section>
 
@@ -564,18 +542,29 @@
       });
     }
 
+    
     function createLineChart(data){
+      const N = data.length;
+      const x = i => (i/(N-1))*100;
+      const toNum = s => parseFloat(String(s).replace(/[$,%\s,]/g,''));
+      const vals = data.map(d => toNum(d.value));
+      const min = Math.min(...vals), max = Math.max(...vals)||1;
+      const y = v => 70 - ((toNum(v)-min)/(max-min))*40; // 70..30
+        
+      const dPath = data.map((d,i)=>`${x(i)},${y(d.value)}`).join(' L ');
       return `
         <div class="line-chart">
-          <svg>
-            <path d="M 80 40 L 220 50 L 360 100 L 500 120"
-                  stroke="#2563eb" stroke-width="3" fill="none"></path>
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M ${dPath}" stroke="#2563eb" stroke-width="3" fill="none"></path>
           </svg>
           ${data.map(p=>`
             <div class="chart-point">
               <div class="point-value">${p.value}</div>
               <div class="point-year">${p.year}</div>
             </div>`).join('')}
+        </div>`;
+    }
+
         </div>`;
     }
     function createBarChart(data, title){
@@ -988,29 +977,15 @@
     function benchmarkSchedule(fn, ms){ const id = setTimeout(fn, ms); benchmarkTimers.push(id); }
     function benchmarkClear(){ benchmarkTimers.forEach(clearTimeout); benchmarkTimers = []; }
 
-    // IMPROVED: Full-width responsive line chart
     function createBenchmarkLineChart(scenario){
       const { portfolio, benchmark, years } = scenario.data;
-      const N = portfolio.length;
-      const x = i => (i/(N-1))*100;           // 0..100%
-      
-      // Convert percentages to numbers and scale to 30-70 range for nice visual
-      const toNum = s => parseFloat(s.replace(/[%]/g,''));
-      const scale = arr => {
-        const vals = arr.map(toNum);
-        const min = Math.min(...vals), max = Math.max(...vals)||1;
-        return vals.map(v => 70 - ((v - min)/(max - min))*40); // 70(top) .. 30(bottom)
-      };
-      
-      const yP = scale(portfolio);
-      const yB = scale(benchmark);
-      const path = ys => ys.map((y,i)=>`${x(i)},${y}`).join(' L ');
-      
       return `
         <div class="benchmark-line-chart">
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M ${path(yP)}" stroke="#2563eb" stroke-width="2" fill="none"/>
-            <path d="M ${path(yB)}" stroke="#10b981" stroke-width="2" fill="none"/>
+          <svg>
+            <path d="M 60 80 L 140 70 L 220 100 L 300 50"
+                  stroke="#2563eb" stroke-width="2" fill="none"></path>
+            <path d="M 60 100 L 140 90 L 220 80 L 300 70"
+                  stroke="#10b981" stroke-width="2" fill="none"></path>
           </svg>
           ${years.map((year, i) => `
             <div class="benchmark-point">
@@ -1214,5 +1189,80 @@
     });
 
   </script>
+
+  <!-- SIGN UP / REQUEST DEMO -->
+  <section class="split" id="signup" style="background:linear-gradient(180deg,#0b0b0b 0%, #161616 100%); padding:72px 20px 120px;">
+    <div class="split-inner" style="grid-template-columns:1fr;">
+      <div class="demo-container" style="max-width:720px;margin:0 auto;">
+        <h3 class="chart-title" style="font-size:22px;">Request a Demo</h3>
+        <form id="signupForm" action="https://formspree.io/f/your_form_id" method="POST" style="display:grid;gap:12px;">
+          <input type="hidden" name="_subject" value="Iceberg Demo Request" />
+          <label style="display:grid;gap:6px;color:#e5e7eb;">
+            <span>Name</span>
+            <input name="name" required placeholder="Your name" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f0f0f;color:#fff">
+          </label>
+          <label style="display:grid;gap:6px;color:#e5e7eb;">
+            <span>Email</span>
+            <input name="email" type="email" required placeholder="you@company.com" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f0f0f;color:#fff">
+          </label>
+          <label style="display:grid;gap:6px;color:#e5e7eb;">
+            <span>Company</span>
+            <input name="company" placeholder="Company" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f0f0f;color:#fff">
+          </label>
+          <label style="display:grid;gap:6px;color:#e5e7eb;">
+            <span>What would you like to do with Iceberg?</span>
+            <textarea name="message" rows="4" placeholder="A few details..." style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f0f0f;color:#fff"></textarea>
+          </label>
+          <button class="analyze-button" type="submit" style="opacity:1;transform:none">Send Request</button>
+          <div class="typing-indicator" id="formThanks" style="display:none">Thanks — we’ll get back to you shortly.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="split" id="team" style="background:linear-gradient(135deg,#161616 0%,#0b0b0b 100%);">
+    <div class="split-inner" style="grid-template-columns:1fr;">
+      <div style="max-width:980px;margin:0 auto;">
+        <h3 class="chart-title" style="font-size:22px;margin-bottom:18px;">Team</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;">
+          <div class="copy-card" style="text-align:center;">
+            <img src="logo.png" alt="" style="width:64px;height:64px;border-radius:50%;margin-bottom:10px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));background:#0f1115;padding:8px;">
+            <div style="font-weight:800;">Patrick Browne</div>
+            <div style="color:#a9afba;font-size:14px;margin-top:2px;">Founder</div>
+            <div style="color:#cfd5de;font-size:13px;margin-top:8px;">Building ICEBERG AI for institutional‑grade real estate data and analysis.</div>
+          </div>
+          <div class="copy-card" style="text-align:center;">
+            <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 10px;background:#0f1115;display:flex;align-items:center;justify-content:center;font-weight:800;">AI</div>
+            <div style="font-weight:800;">Advisors</div>
+            <div style="color:#a9afba;font-size:14px;margin-top:2px;">Product & Data</div>
+            <div style="color:#cfd5de;font-size:13px;margin-top:8px;">Bench of product, ML, and RE experts helping guide the roadmap.</div>
+          </div>
+          <div class="copy-card" style="text-align:center;">
+            <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 10px;background:#0f1115;display:flex;align-items:center;justify-content:center;font-weight:800;">YOU</div>
+            <div style="font-weight:800;">Design Partners</div>
+            <div style="color:#a9afba;font-size:14px;margin-top:2px;">Beta Cohort</div>
+            <div style="color:#cfd5de;font-size:13px;margin-top:8px;">We’re partnering with early users on real workflows. Want in?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="padding:32px 20px;border-top:1px solid rgba(255,255,255,.08);background:#0b0b0b;color:#cfd5de;">
+    <div class="split-inner" style="grid-template-columns:1fr;">
+      <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="logo.png" alt="Iceberg" style="width:28px;height:28px;border-radius:50%;background:#0f1115;padding:4px;">
+          <strong>Iceberg</strong>
+        </div>
+        <div style="display:flex;gap:18px;align-items:center;">
+          <a href="mailto:patrick@icebergre.ai" style="color:#e5e7eb;text-decoration:none;">patrick@icebergre.ai</a>
+          <a href="#signup" style="color:#93c5fd;text-decoration:none;">Request a demo</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
