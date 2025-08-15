@@ -311,6 +311,59 @@
     @media (prefers-reduced-motion: reduce){
       *{animation:none!important;transition:none!important}
     }
+  
+    /* ===== Fifth split (IcebergCUSTOM) — demo left, hero right ===== */
+    .split-custom{
+      padding:64px 20px 120px;
+      background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%);
+    }
+    .split-custom .split-inner{
+      max-width:var(--maxw); margin:0 auto;
+      display:grid; grid-template-columns:1.05fr 0.95fr; /* demo left, hero right */
+      gap:28px; align-items:center;
+    }
+    .split-custom .panel-demo{ display:flex; justify-content:center; transform:translateX(-3%); }
+    .split-custom .panel-copy{ display:flex; justify-content:flex-start; }
+
+    .copy-card.custom{
+      background:#111213;color:#fff;border-radius:20px;
+      padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);
+      box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px
+    }
+
+    .demo-container.custom{
+      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
+      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
+      height:var(--demo2-h);
+      display:grid; grid-template-rows:auto auto 1fr; align-content:start;
+    }
+    .prompt-text.custom{ margin-bottom:12px; opacity:1; transform:none }
+    .custom-button{
+      width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;
+      padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;
+      margin-bottom:12px;min-height:46px;white-space:nowrap
+    }
+    .custom-results{
+      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;
+      height:100%; display:grid; grid-template-rows:auto 1fr; overflow:hidden
+    }
+    .custom-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .custom-output{
+      height:var(--viz2-h); overflow:auto; background:#fff;border-radius:10px;
+      padding:16px;border:1px solid #eef2f6; font-size:13px; color:#111; line-height:1.5
+    }
+    .checklist{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .check{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#f9fafb;font-weight:600}
+    .progress{height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-top:12px}
+    .progress > div{height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#10b981)}
+
+
+    @media (max-width:980px){
+      .split-custom .split-inner{ grid-template-columns:1fr; gap:18px }
+      .split-custom .panel-demo{ transform:none }
+      .copy-card.custom{ max-width:unset }
+    }
+
   </style>
 </head>
 <body>
@@ -515,6 +568,43 @@
 
     </div>
   </section>
+
+
+  <!-- SECTION 5: IcebergCUSTOM (demo left, hero right) -->
+  <section class="split-custom" id="icebergcustom">
+    <div class="split-inner">
+
+      <!-- LEFT: setup demo -->
+      <section class="panel-demo">
+        <div class="demo-container custom" id="customDemo" aria-live="polite">
+          <div class="prompt-text custom" id="customPrompt">Provision a private, white‑label Iceberg for my org</div>
+
+          <button class="custom-button" id="customBtn" type="button">
+            <span id="customBtnText">Provision Private Iceberg</span>
+          </button>
+
+          <div class="custom-results">
+            <div class="custom-title" id="customTitle">Private Iceberg Setup</div>
+            <div class="custom-output" id="customOutput">
+              <!-- wizard appears here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: hero copy -->
+      <section class="panel-copy" aria-labelledby="copy-title-custom">
+        <div class="copy-card custom">
+          <span class="copy-eyebrow">IcebergCUSTOM</span>
+          <h2 id="copy-title-custom" class="copy-title">Private White Label Iceberg Tool for your Organization</h2>
+          <p class="copy-sub">Iceberg's AI‑powered — but for your own organization's data.</p>
+          <a class="copy-cta" href="#icebergcustom">Explore IcebergCUSTOM →</a>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
 
   <!-- Scripts -->
   <script>
@@ -1140,6 +1230,88 @@
     window.addEventListener('load', () => {
       benchmarkSchedule(startBenchmark, 1600); // kick off the benchmark loop after the others
     });
+  
+    /* ===================== Section 5: IcebergCUSTOM (private white-label wizard) ===================== */
+
+    const customScenario = {
+      prompt: "Provision a private, white‑label Iceberg for my org",
+      steps: [
+        { title: "Connect Data Sources", body: "<div class='checklist'><div class='check'>✅ Snowflake</div><div class='check'>✅ S3 / CSV</div><div class='check'>✅ Postgres</div><div class='check'>✅ Google Drive</div></div>" },
+        { title: "Enable SSO & Roles", body: "<div class='checklist'><div class='check'>✅ SSO (Okta / Azure AD)</div><div class='check'>✅ Roles & Row‑level Access</div><div class='check'>✅ Audit Logging</div><div class='check'>✅ PII Redaction</div></div>" },
+        { title: "Apply Branding", body: "<div style='display:flex;align-items:center;gap:12px'><div style='width:44px;height:44px;border-radius:10px;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800'>AC</div><div style='font-weight:800;font-size:18px'>Acme Real Estate</div></div><div style='margin-top:8px;color:#374151'>Preview: <em>acme.iceberg.tools</em></div>" },
+        { title: "Deploy", body: "<div>Deploying to <strong>acme.iceberg.tools</strong>…</div><div class='progress'><div id='customProgress'></div></div>" },
+        { title: "All Set", body: "<div style='font-weight:700'>Your Private Iceberg is Ready ✓</div><ul style='margin:8px 0 0 18px'><li>Chat over your own data</li><li>Custom metrics & vocab</li><li>Invite your team</li></ul>" }
+      ]
+    };
+
+    let customTimers = [];
+    function customSchedule(fn, ms){ const id = setTimeout(fn, ms); customTimers.push(id); }
+    function customClear(){ customTimers.forEach(clearTimeout); customTimers = []; }
+    const cById = id => document.getElementById(id);
+
+    function renderCustomStep(idx){
+      const step = customScenario.steps[idx];
+      const out = cById('customOutput');
+      const title = cById('customTitle');
+      if (!out || !title) return;
+      title.textContent = `Private Iceberg Setup — ${step.title}`;
+      out.innerHTML = step.body;
+      if (idx === 3){ // deploy step -> animate progress
+        const bar = out.querySelector('#customProgress');
+        if (bar){
+          let w = 0;
+          const tick = () => { w = Math.min(100, w + 5); bar.style.width = w + '%'; if (w < 100) setTimeout(tick, 80); };
+          tick();
+        }
+      }
+    }
+
+    function resetCustom(){
+      customClear();
+      const btn = cById('customBtn');
+      const txt = cById('customBtnText');
+      const out = cById('customOutput');
+      const title = cById('customTitle');
+      if (btn && txt){ btn.style.background = '#2563eb'; txt.textContent = 'Provision Private Iceberg'; }
+      if (out) out.innerHTML = '';
+      if (title) title.textContent = 'Private Iceberg Setup';
+      customSchedule(startCustom, 700);
+    }
+
+    function startCustom(){
+      const p = cById('customPrompt'); if (p) p.textContent = customScenario.prompt;
+      const btn = cById('customBtn'); const txt = cById('customBtnText');
+      if (btn && txt){
+        btn.onclick = fastForwardCustom;
+        btn.style.background = '#1d4ed8';
+        txt.textContent = 'Provisioning…';
+      }
+
+      // Walk through steps automatically
+      [0,1,2,3,4].forEach((idx, i) => {
+        customSchedule(() => renderCustomStep(idx), 600 + i*1100);
+      });
+
+      customSchedule(() => {
+        if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Private Iceberg Ready ✓'; }
+        customSchedule(resetCustom, 4500);
+      }, 600 + 5*1100);
+    }
+
+    function fastForwardCustom(){
+      customClear();
+      const btn = cById('customBtn'); const txt = cById('customBtnText');
+      if (btn && txt){ btn.style.background = '#1d4ed8'; txt.textContent = 'Provisioning…'; }
+      // Jump straight to final step
+      renderCustomStep(4);
+      if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Private Iceberg Ready ✓'; }
+      customSchedule(resetCustom, 3500);
+    }
+
+    window.addEventListener('load', () => {
+      customSchedule(startCustom, 2000); // kick off after others
+    });
+
   </script>
 </body>
 </html>
