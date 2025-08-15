@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Iceberg — AI‑Powered Real Estate Intelligence</title>
 
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
@@ -12,14 +13,17 @@
       --bg:#0b0b0b; --text:#f6f6f6; --muted:#bdbdbd;
       --btn-bg:#ffffff; --btn-text:#0b0b0b; --maxw:1240px;
       --accent:#2563eb; --radius:24px;
-
-      /* Auto-locked by JS on load (fallback values shown) */
+      /* Auto-locked by JS on load (fallbacks below) */
       --demo-h: 520px;   /* overall demo card height */
       --viz-h:  240px;   /* reserved infographic area */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    body{
+      margin:0;background:var(--bg);color:var(--text);
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    }
 
     /* ===== Sticky Top Navigation ===== */
     .nav-wrap{position:sticky;top:0;z-index:50;background:rgba(11,11,11,.92);backdrop-filter:saturate(140%) blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
@@ -36,7 +40,7 @@
     .dropdown a{display:block;padding:8px 16px;color:var(--text);text-decoration:none;font-size:14px;font-weight:400;opacity:.85;transition:all .15s ease}
     .dropdown a:hover{opacity:1;background:rgba(255,255,255,.05)}
 
-    /* ===== Hero (top) ===== */
+    /* ===== Top Hero ===== */
     .hero{min-height:calc(90vh - 72px);display:flex;align-items:center;justify-content:center;padding:72px 20px 24px;position:relative;overflow:hidden}
     .hero::before{content:"";position:absolute;inset:-20% -20% 0 -20%;background:radial-gradient(60% 60% at 50% 35%, rgba(255,255,255,.06), transparent 65%),radial-gradient(50% 50% at 50% 100%, rgba(255,255,255,.03), transparent 60%);pointer-events:none;mix-blend-mode:screen;opacity:.6}
     .hero-inner{position:relative;width:100%;max-width:880px;text-align:center}
@@ -45,7 +49,7 @@
     .cta{display:inline-block;padding:12px 18px;border-radius:12px;background:var(--btn-bg);color:var(--btn-text);text-decoration:none;font-weight:600;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 24px rgba(0,0,0,.35);transition:transform .06s ease, opacity .2s ease, box-shadow .2s ease}
     .cta:hover{transform:translateY(1px);opacity:.97;box-shadow:0 12px 28px rgba(0,0,0,.4)}
 
-    /* ===== Split Demo Section (half page, tighter) ===== */
+    /* ===== Split Demo Section (off-center half page) ===== */
     .split{padding:64px 20px 96px;background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%)}
     .split-inner{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1.05fr 0.95fr;gap:28px;align-items:center}
     .panel-demo{display:flex;justify-content:center;transform:translateX(-3%)} /* off-center nudge */
@@ -56,7 +60,7 @@
     .copy-sub{color:#cfd5de;font-size:clamp(14px,1.4vw,16px);line-height:1.5;margin:0 0 .9rem}
     .copy-cta{display:inline-block;background:#2563eb;color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 14px}
 
-    /* ===== Demo Card (left) – tightened and STATIC HEIGHT) ===== */
+    /* ===== Demo Card (static shell) ===== */
     .demo-container{
       background:#fff;border-radius:22px;padding:34px;width:min(680px,100%);
       box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
@@ -98,15 +102,21 @@
     .line-chart, .bar-chart{ height:100%; width:100%; }
     .rent-table{ height:100%; overflow:auto; }
 
+    /* Line chart styling */
     .line-chart{position:relative;background:linear-gradient(to bottom,rgba(37,99,235,.10) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
     .line-chart svg{position:absolute;inset:0;width:100%;height:100%}
     .chart-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
     .point-value{background:#2563eb;color:#fff;padding:5px 10px;border-radius:18px;font-size:12px;font-weight:700;min-width:52px}
     .point-year{font-size:11px;color:#4b5563;font-weight:600}
+
+    /* Bar chart styling */
     .bar-chart{display:flex;align-items:end;gap:16px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.10) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
     .bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
     .bar{background:linear-gradient(to top,#10b981,#34d399);border-radius:6px 6px 0 0;width:100%;min-height:18px;position:relative}
     .bar-value{position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:3px 6px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
+    .bar-year{font-size:11px;color:#4b5563;font-weight:600}
+
+    /* Table styling */
     .rent-table .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:12px;border-bottom:1px solid #e2e8f0;align-items:center}
     .rent-table .table-header{background:#f8fafc;font-weight:700;color:#374151;font-size:13px}
     .rent-table .table-cell{font-size:13px;color:#111;font-weight:600}
@@ -216,21 +226,262 @@
     </div>
   </section>
 
-  <!-- JS placed at the end to avoid early rendering issues -->
+  <!-- Fixed-height demo loop script (static shell, swapping visuals) -->
   <script>
     let currentLoop = 0;
     let timers = [];
     const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function schedule(fn, ms){ const id = setTimeout(fn, ms); timers.push(id); }
-    function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
-    function toNumber(s){ if(typeof s!=="string") return Number(s); return Number(s.replace(/[$,%\\s,]/g,"")); }
-
+    /* Your scenarios (exactly as provided) */
     const scenarios = [
-      { prompt:"Analyze US data center cap rate trends", document:"US_DataCenter_CapRates.xlsx", icon:"📈", type:"line", title:"US Data Center Cap Rates (2022-2025)", data:[{year:"2022",value:"4.2%"},{year:"2023",value:"4.1%"},{year:"2024",value:"3.3%"},{year:"2025",value:"3.2%"}]},
-      { prompt:"Compare NoVa data center value comps", document:"NoVa_ValueComps_Analysis.xlsx", icon:"💰", type:"bar", title:"Northern Virginia Value per SF", data:[{year:"2022",value:"$1,364",height:25},{year:"2023",value:"$1,310",height:20},{year:"2024",value:"$1,846",height:70},{year:"2025",value:"$2,051",height:95}]},
-      { prompt:"Generate Chicago rent comp analysis", document:"Chicago_RentComps_Q4.xlsx", icon:"🏢", type:"table", title:"Chicago Data Center Rent Analysis", data:[{year:"2022",value:"$92.76"},{year:"2023",value:"$96.89"},{year:"2024",value:"$99.12"},{year:"2025",value:"$103.01"},{cagr:"3.6% CAGR"}]}
+      {
+        prompt: "Analyze US data center cap rate trends",
+        document: "US_DataCenter_CapRates.xlsx",
+        icon: "📈",
+        type: "line",
+        title: "US Data Center Cap Rates (2022-2025)",
+        data: [
+          { year: "2022", value: "4.2%" },
+          { year: "2023", value: "4.1%" },
+          { year: "2024", value: "3.3%" },
+          { year: "2025", value: "3.2%" }
+        ]
+      },
+      {
+        prompt: "Compare NoVa data center value comps",
+        document: "NoVa_ValueComps_Analysis.xlsx",
+        icon: "💰",
+        type: "bar",
+        title: "Northern Virginia Value per SF",
+        data: [
+          { year: "2022", value: "$1,364", height: 25 },
+          { year: "2023", value: "$1,310", height: 20 },
+          { year: "2024", value: "$1,846", height: 70 },
+          { year: "2025", value: "$2,051", height: 95 }
+        ]
+      },
+      {
+        prompt: "Generate Chicago rent comp analysis",
+        document: "Chicago_RentComps_Q4.xlsx",
+        icon: "🏢",
+        type: "table",
+        title: "Chicago Data Center Rent Analysis",
+        data: [
+          { year: "2022", value: "$92.76" },
+          { year: "2023", value: "$96.89" },
+          { year: "2024", value: "$99.12" },
+          { year: "2025", value: "$103.01" },
+          { cagr: "3.6% CAGR" }
+        ]
+      }
     ];
 
-    /* ---------- Viz builders ---------- */
-    func
+    /* ---------- helpers ---------- */
+    const byId  = id => document.getElementById(id);
+    const q     = sel => document.querySelector(sel);
+    function schedule(fn, ms){ const id = setTimeout(fn, ms); timers.push(id); }
+    function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+    function toNumber(s){ if(typeof s!=="string") return Number(s); return Number(s.replace(/[$,%\s,]/g,"")); }
+
+    /* ---------- viz builders ---------- */
+    function createLineChart(data){
+      return `
+        <div class="line-chart">
+          <svg>
+            <path d="M 80 40 L 220 50 L 360 100 L 500 120"
+                  stroke="#2563eb" stroke-width="3" fill="none"></path>
+          </svg>
+          ${data.map(p=>`
+            <div class="chart-point">
+              <div class="point-value">${p.value}</div>
+              <div class="point-year">${p.year}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+    function createBarChart(data){
+      return `
+        <div class="bar-chart">
+          ${data.map(i=>`
+            <div class="bar-item">
+              <div class="bar" style="height:${i.height}%;">
+                <div class="bar-value">${i.value}</div>
+              </div>
+              <div class="bar-year">${i.year}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+    function createTable(data){
+      return `
+        <div class="rent-table">
+          <div class="table-row table-header"><div>Year</div><div>Rent/SF</div><div>Growth</div></div>
+          ${data.slice(0,4).map((item,i)=>{
+            const base=toNumber(data[0].value), val=toNumber(item.value);
+            const g=i===0?'Baseline':'+'+(((val/base)-1)*100).toFixed(1)+'%';
+            return `<div class="table-row">
+              <div class="table-cell">${item.year}</div>
+              <div class="table-cell">${item.value}</div>
+              <div class="table-cell">${g}</div>
+            </div>`;
+          }).join('')}
+          <div class="table-row" style="background:#fef3c7;">
+            <div class="table-cell" style="font-weight:700;">CAGR</div>
+            <div class="table-cell cagr-highlight">${data[4].cagr}</div>
+            <div class="table-cell" style="font-weight:700;">2022-2025</div>
+          </div>
+        </div>`;
+    }
+
+    /* ---------- measure tallest scenario once, lock heights ---------- */
+    function measureScenarioHeight(html){
+      const probe = document.createElement('div');
+      probe.className = 'demo-container';
+      // override CSS height so we can measure natural size
+      probe.style.position='absolute';
+      probe.style.visibility='hidden';
+      probe.style.pointerEvents='none';
+      probe.style.inset='0';
+      probe.style.height='auto';
+      probe.innerHTML = `
+        <div class="prompt-text" style="opacity:1;transform:none">X</div>
+        <div class="upload-area" style="opacity:1;transform:none">
+          <div class="document-item">X</div>
+        </div>
+        <button class="analyze-button" style="opacity:1;transform:none;min-height:48px">Analyze</button>
+        <div class="results-panel" style="opacity:1;transform:none">
+          <div class="chart-title">Title</div>
+          <div class="chart-container" id="__probe_chart__">${html}</div>
+        </div>`;
+      document.body.appendChild(probe);
+      const demoH = probe.offsetHeight;
+      const vizH  = probe.querySelector('#__probe_chart__').offsetHeight;
+      probe.remove();
+      return { demoH, vizH };
+    }
+
+    function computeAndLockHeights(){
+      const htmls = scenarios.map(s =>
+        s.type==='line' ? createLineChart(s.data) :
+        s.type==='bar'  ? createBarChart(s.data)  :
+                          createTable(s.data)
+      );
+      let maxDemo = 0, maxViz = 0;
+      htmls.forEach(h => {
+        const m = measureScenarioHeight(h);
+        maxDemo = Math.max(maxDemo, m.demoH);
+        maxViz  = Math.max(maxViz,  m.vizH);
+      });
+      // cushions + minimums
+      maxDemo = Math.max(420, maxDemo + 8);
+      maxViz  = Math.max(200, maxViz  + 4);
+      document.documentElement.style.setProperty('--demo-h', `${maxDemo}px`);
+      document.documentElement.style.setProperty('--viz-h',  `${maxViz}px`);
+    }
+
+    /* ---------- flow ---------- */
+    function resetDemo(){
+      clearTimers();
+      const typing = byId('typingIndicator'); if (typing) typing.style.display='none';
+      const btn = byId('analyzeBtn');
+      if (btn){
+        btn.style.background='#2563eb';
+        btn.setAttribute('aria-busy','false');
+        const btnText = byId('btnText'); if (btnText) btnText.textContent='Analyze with IcebergIC';
+      }
+      ['promptText','uploadArea','analyzeBtn'].forEach(id=>{
+        const el = byId(id); if(!el) return;
+        el.style.opacity='0'; el.style.transform='translateY(30px)';
+      });
+      const panel = byId('resultsPanel');
+      if (panel){ panel.style.opacity='0'; panel.style.transform='translateY(20px)'; }
+      const ct = byId('chartTitle');     if (ct) ct.textContent='';
+      const cc = byId('chartContainer'); if (cc) cc.innerHTML='';
+      setTimeout(startDemo, rm?0:250);
+    }
+
+    function startDemo(){
+      const s = scenarios[currentLoop % scenarios.length];
+
+      // Update content BEFORE animations (guarded)
+      const p = byId('promptText'); if (p) p.textContent = s.prompt;
+      const i = q('.doc-icon');     if (i) i.textContent = s.icon;
+      const n = byId('docName');    if (n) n.textContent = s.document;
+      const t = byId('chartTitle'); if (t) t.textContent = s.title;
+
+      const step = rm ? 0 : 900;
+
+      schedule(()=>{ const el=byId('promptText'); if(el){ el.style.opacity='1'; el.style.transform='translateY(0)'; } }, step*0.5);
+      schedule(()=>{ const el=byId('uploadArea'); if(el){ el.style.opacity='1'; el.style.transform='translateY(0)'; } }, step*1.5);
+      schedule(()=>{ const el=byId('analyzeBtn'); if(el){ el.style.opacity='1'; el.style.transform='translateY(0)'; } }, step*2.5);
+
+      // processing
+      schedule(()=>{
+        const btn = byId('analyzeBtn'); if(!btn) return;
+        btn.style.background='#1d4ed8';
+        btn.setAttribute('aria-busy','true');
+        const btnText = byId('btnText'); if (btnText) btnText.textContent='Processing...';
+        const typing = byId('typingIndicator'); if (typing) typing.style.display='flex';
+      }, step*3.5);
+
+      // results
+      schedule(()=>{
+        const typing = byId('typingIndicator'); if (typing) typing.style.display='none';
+        const btn = byId('analyzeBtn'); if (btn){
+          btn.style.background='#10b981';
+          btn.setAttribute('aria-busy','false');
+          const btnText = byId('btnText'); if (btnText) btnText.textContent='Analysis Complete ✓';
+        }
+        const s2 = scenarios[currentLoop % scenarios.length];
+        const cc = byId('chartContainer');
+        if (cc){
+          cc.innerHTML = (s2.type==='line') ? createLineChart(s2.data)
+                     : (s2.type==='bar')  ? createBarChart(s2.data)
+                                          : createTable(s2.data);
+        }
+        const panel = byId('resultsPanel'); if (panel){ panel.style.opacity='1'; panel.style.transform='translateY(0)'; }
+      }, step*4.5);
+
+      // loop
+      schedule(()=>{ currentLoop++; resetDemo(); }, step*9);
+
+      // click to fast-forward
+      const btn = byId('analyzeBtn');
+      if (btn){
+        btn.onclick = () => {
+          clearTimers();
+          btn.style.background='#1d4ed8';
+          btn.setAttribute('aria-busy','true');
+          const btnText = byId('btnText'); if (btnText) btnText.textContent='Processing...';
+          const typing = byId('typingIndicator'); if (typing) typing.style.display='flex';
+          setTimeout(()=>{
+            if (typing) typing.style.display='none';
+            btn.style.background='#10b981';
+            btn.setAttribute('aria-busy','false');
+            if (btnText) btnText.textContent='Analysis Complete ✓';
+            const s3 = scenarios[currentLoop % scenarios.length];
+            const cc = byId('chartContainer');
+            if (cc){
+              cc.innerHTML = (s3.type==='line') ? createLineChart(s3.data)
+                         : (s3.type==='bar')  ? createBarChart(s3.data)
+                                              : createTable(s3.data);
+            }
+            const panel = byId('resultsPanel'); if (panel){ panel.style.opacity='1'; panel.style.transform='translateY(0)'; }
+          }, rm?0:800);
+        };
+      }
+    }
+
+    // Start-up: compute heights once; if it fails, set fallbacks and still start
+    window.addEventListener('load', () => {
+      try {
+        computeAndLockHeights();
+      } catch (e){
+        document.documentElement.style.setProperty('--demo-h', '520px');
+        document.documentElement.style.setProperty('--viz-h',  '240px');
+        console && console.warn && console.warn('Sizing fallback:', e);
+      } finally {
+        setTimeout(startDemo, 300);
+      }
+    });
+  </script>
+</body>
+</html>
