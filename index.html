@@ -129,9 +129,57 @@
 
     /* ===== Second split (IcebergIR) — swapped sides ===== */
     .split-ir{
-      padding:64px 20px 120px; /* extra bottom spacing */
+      padding:64px 20px 96px;
       background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%);
     }
+
+    /* ===== Third split (IcebergREIT) — same as first section ===== */
+    .split-reit{
+      padding:64px 20px 120px; /* extra bottom spacing */
+      background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%);
+    }
+    .split-reit .split-inner{
+      max-width:var(--maxw); margin:0 auto;
+      display:grid; grid-template-columns:1.05fr 0.95fr; /* demo left, hero right */
+      gap:28px; align-items:center;
+    }
+    .split-reit .panel-demo{ display:flex; justify-content:center; transform:translateX(-3%); }
+    .split-reit .panel-copy{ display:flex; justify-content:flex-start; }
+
+    .copy-card.reit{
+      background:#111213;color:#fff;border-radius:20px;
+      padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);
+      box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px
+    }
+
+    .demo-container.reit{
+      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
+      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
+      height:var(--demo2-h);
+      display:grid; grid-template-rows:auto auto 1fr; align-content:start;
+    }
+    .prompt-text.reit{ margin-bottom:12px; opacity:1; transform:none }
+    .reit-button{
+      width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;
+      padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;
+      margin-bottom:12px;min-height:46px;white-space:nowrap
+    }
+    .reit-results{
+      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;
+      height:100%; display:grid; grid-template-rows:auto 1fr; overflow:hidden
+    }
+    .reit-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .reit-output{
+      height:var(--viz2-h); overflow:auto; background:#fff;border-radius:10px;
+      padding:14px;border:1px solid #eef2f6; font-size:13px; color:#111; line-height:1.4
+    }
+
+    /* REIT comparison table styling */
+    .reit-table{width:100%;border-collapse:collapse;font-size:13px}
+    .reit-table th{background:#f8fafc;padding:8px 6px;text-align:center;font-weight:700;color:#374151;border-bottom:2px solid #e2e8f0}
+    .reit-table td{padding:8px 6px;text-align:center;border-bottom:1px solid #e2e8f0;font-weight:600}
+    .reit-table .ticker-col{background:#fef9f3;font-weight:700;color:#d97706}
+    .reit-table .metric-highlight{background:linear-gradient(135deg,#10b981,#34d399);color:#fff;border-radius:6px;padding:4px 2px;font-weight:700}
     .split-ir .split-inner{
       max-width:var(--maxw); margin:0 auto;
       display:grid; grid-template-columns:0.95fr 1.05fr; /* hero left, demo right */
@@ -184,6 +232,9 @@
       .split-ir .split-inner{ grid-template-columns:1fr; gap:18px }
       .split-ir .panel-demo{ transform:none }
       .copy-card.ir{ max-width:unset }
+      .split-reit .split-inner{ grid-template-columns:1fr; gap:18px }
+      .split-reit .panel-demo{ transform:none }
+      .copy-card.reit{ max-width:unset }
     }
 
     /* Reduced motion */
@@ -310,6 +361,41 @@
               <!-- typing output appears here -->
             </div>
           </div>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+  <!-- SECTION 3: IcebergREIT (demo left, hero right) -->
+  <section class="split-reit" id="icebergreit">
+    <div class="split-inner">
+
+      <!-- LEFT: table demo -->
+      <section class="panel-demo">
+        <div class="demo-container reit" id="reitDemo" aria-live="polite">
+          <div class="prompt-text reit" id="reitPrompt">Compare NOI per sq ft across office REITs by market</div>
+
+          <button class="reit-button" id="reitBtn" type="button">
+            <span id="reitBtnText">Analyze with IcebergREIT</span>
+          </button>
+
+          <div class="reit-results">
+            <div class="reit-title">REIT Portfolio Comparison</div>
+            <div class="reit-output" id="reitOutput">
+              <!-- table appears here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: hero copy -->
+      <section class="panel-copy" aria-labelledby="copy-title-reit">
+        <div class="copy-card reit">
+          <span class="copy-eyebrow">IcebergREIT</span>
+          <h2 id="copy-title-reit" class="copy-title">Dynamically Value and Analyze REITs</h2>
+          <p class="copy-sub">Dynamically value and compare REITs in real time.</p>
+          <a class="copy-cta" href="#icebergreit">Explore IcebergREIT →</a>
         </div>
       </section>
 
@@ -661,6 +747,143 @@
 
     window.addEventListener('load', () => {
       irSchedule(startIR, 800); // kick off the IR loop slightly after the first
+    });
+
+
+    /* ===================== Section 3: IcebergREIT (table) ===================== */
+
+    const reitScenarios = [
+      {
+        prompt: "Compare NOI per sq ft across office REITs by market",
+        title: "NOI/SF by Market - Office REITs",
+        data: {
+          headers: ["REIT", "Atlanta", "Dallas", "Florida"],
+          rows: [
+            { ticker: "CUZ", values: ["$22.15", "$19.80", "$24.30"] },
+            { ticker: "PDM", values: ["$18.90", "$21.45", "$17.60"] },
+            { ticker: "HIW", values: ["$20.75", "$23.10", "$19.95"] }
+          ]
+        }
+      },
+      {
+        prompt: "Show NOI per sq ft for Southeast markets",
+        title: "NOI/SF - Southeast Markets",
+        data: {
+          headers: ["REIT", "Charlotte", "Nashville", "Tampa"],
+          rows: [
+            { ticker: "CUZ", values: ["$21.40", "$18.75", "$23.60"] },
+            { ticker: "PDM", values: ["$19.20", "$20.15", "$18.85"] },
+            { ticker: "HIW", values: ["$22.90", "$21.30", "$20.45"] }
+          ]
+        }
+      },
+      {
+        prompt: "Analyze NOI per sq ft for major Texas markets",
+        title: "NOI/SF - Texas Markets",
+        data: {
+          headers: ["REIT", "Houston", "Austin", "San Antonio"],
+          rows: [
+            { ticker: "CUZ", values: ["$20.85", "$24.15", "$17.90"] },
+            { ticker: "PDM", values: ["$22.30", "$21.60", "$19.40"] },
+            { ticker: "HIW", values: ["$19.75", "$23.85", "$18.25"] }
+          ]
+        }
+      }
+    ];
+
+    let reitCurrentLoop = 0;
+    let reitTimers = [];
+    const reitById = id => document.getElementById(id);
+    function reitSchedule(fn, ms){ const id = setTimeout(fn, ms); reitTimers.push(id); }
+    function reitClear(){ reitTimers.forEach(clearTimeout); reitTimers = []; }
+
+    function createReitTable(scenario){
+      const { headers, rows } = scenario.data;
+      return `
+        <table class="reit-table">
+          <thead>
+            <tr>
+              ${headers.map(h => `<th>${h}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(row => `
+              <tr>
+                <td class="ticker-col">${row.ticker}</td>
+                ${row.values.map((val, i) => `<td class="metric-highlight">${val}</td>`).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function resetReit(){
+      reitClear();
+      const btn = reitById('reitBtn');
+      const txt = reitById('reitBtnText');
+      const out = reitById('reitOutput');
+      const title = reitById('reitTitle');
+      
+      if (btn && txt){ btn.style.background = '#2563eb'; txt.textContent = 'Analyze with IcebergREIT'; }
+      if (out){ out.innerHTML = ''; }
+      
+      reitSchedule(startReit, 500);
+    }
+
+    function startReit(){
+      const scenario = reitScenarios[reitCurrentLoop % reitScenarios.length];
+      
+      const p = reitById('reitPrompt'); 
+      const title = reitById('reitTitle');
+      if (p) p.textContent = scenario.prompt;
+
+      const btn = reitById('reitBtn'); 
+      const txt = reitById('reitBtnText');
+      if (btn && txt){
+        btn.onclick = fastForwardReit;
+        btn.style.background = '#1d4ed8';
+        txt.textContent = 'Processing...';
+      }
+
+      reitSchedule(() => {
+        const out = reitById('reitOutput');
+        if (out){
+          out.innerHTML = createReitTable(scenario);
+        }
+        if (btn && txt){ 
+          btn.style.background = '#10b981'; 
+          txt.textContent = 'Analysis Complete ✓'; 
+        }
+        
+        reitSchedule(() => {
+          reitCurrentLoop++;
+          resetReit();
+        }, 4500);
+      }, 1200);
+    }
+
+    function fastForwardReit(){
+      reitClear();
+      const scenario = reitScenarios[reitCurrentLoop % reitScenarios.length];
+      const btn = reitById('reitBtn'); 
+      const txt = reitById('reitBtnText');
+      const out = reitById('reitOutput');
+      
+      if (btn && txt){ btn.style.background = '#1d4ed8'; txt.textContent = 'Processing...'; }
+      
+      setTimeout(() => {
+        if (out) out.innerHTML = createReitTable(scenario);
+        if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Analysis Complete ✓'; }
+        
+        reitSchedule(() => {
+          reitCurrentLoop++;
+          resetReit();
+        }, 3500);
+      }, 300);
+    }
+
+    window.addEventListener('load', () => {
+      reitSchedule(startReit, 1200); // kick off the REIT loop after the others
     });
   </script>
 </body>
