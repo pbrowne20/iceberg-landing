@@ -20,10 +20,11 @@
       --demo2-h: 440px;  /* increased height for IcebergIR */
       --viz2-h:  200px;  /* increased height for text content */
     }
+    
     *{box-sizing:border-box}
-    html,body{height:100%}
+    html,body{height:100%; margin:0; padding:0;}
     body{
-      margin:0;background:var(--bg);color:var(--text);
+      background:var(--bg);color:var(--text);
       font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
       -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
     }
@@ -43,8 +44,12 @@
     .dropdown a{display:block;padding:8px 16px;color:var(--text);text-decoration:none;font-size:14px;font-weight:400;opacity:.85;transition:all .15s ease}
     .dropdown a:hover{opacity:1;background:rgba(255,255,255,.05)}
 
-    /* ===== Top Hero ===== */
-    .hero{min-height:calc(90vh - 72px);display:flex;align-items:center;justify-content:center;padding:72px 20px 24px;position:relative;overflow:hidden}
+    /* ===== Top Hero - FIXED HEIGHT ===== */
+    .hero{
+      height:100vh;
+      display:flex;align-items:center;justify-content:center;
+      padding:72px 20px 24px;position:relative;overflow:hidden;
+    }
     .hero::before{content:"";position:absolute;inset:-20% -20% 0 -20%;background:radial-gradient(60% 60% at 50% 35%, rgba(255,255,255,.06), transparent 65%),radial-gradient(50% 50% at 50% 100%, rgba(255,255,255,.03), transparent 60%);pointer-events:none;mix-blend-mode:screen;opacity:.6}
     .hero-inner{position:relative;width:100%;max-width:880px;text-align:center}
     .headline{font-family:"Playfair Display",Georgia,serif;font-weight:700;line-height:1.06;font-size:clamp(42px,7vw,84px);margin:0 0 14px}
@@ -52,29 +57,62 @@
     .cta{display:inline-block;padding:12px 18px;border-radius:12px;background:var(--btn-bg);color:var(--btn-text);text-decoration:none;font-weight:600;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 24px rgba(0,0,0,.35);transition:transform .06s ease, opacity .2s ease, box-shadow .2s ease}
     .cta:hover{transform:translateY(1px);opacity:.97;box-shadow:0 12px 28px rgba(0,0,0,.4)}
 
-    /* ===== Split Demo Section (off-center half page) ===== */
-    .split{padding:64px 20px 96px;background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%)}
-    .split-inner{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1.05fr 0.95fr;gap:28px;align-items:center}
-    .panel-demo{display:flex;justify-content:center;transform:translateX(-3%)} /* off-center nudge */
-    .panel-copy{display:flex;justify-content:flex-start}
+    /* ===== Split Demo Section Base ===== */
+    .split{padding:64px 20px 96px;}
+    .split-inner{max-width:var(--maxw);margin:0 auto;display:grid;gap:28px;align-items:center}
+    .panel-demo{display:flex;justify-content:center;}
+    .panel-copy{display:flex;}
+    
+    /* ===== Copy Card Shared Styles ===== */
     .copy-card{background:#111213;color:#fff;border-radius:20px;padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px}
     .copy-eyebrow{display:inline-block;font-size:.8rem;letter-spacing:.08em;color:#a9afba;margin-bottom:.4rem}
     .copy-title{font-family:"Playfair Display",Georgia,serif;font-size:clamp(30px,3.5vw,44px);line-height:1.08;margin:0 0 .5rem}
     .copy-sub{color:#cfd5de;font-size:clamp(14px,1.4vw,16px);line-height:1.5;margin:0 0 .9rem}
     .copy-cta{display:inline-block;background:#2563eb;color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 14px}
 
-    /* ===== Demo Card (static shell) ===== */
+    /* ===== Demo Container Shared Styles ===== */
     .demo-container{
       background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
       box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
-
-      /* Static shell via CSS vars (set by JS on load) */
       height: var(--demo-h);
       display: grid;
-      grid-template-rows: auto auto auto 1fr; /* prompt / upload / button / results */
+      grid-template-rows: auto auto auto 1fr;
       align-content: start;
     }
 
+    /* ===== Section-Specific Layouts ===== */
+    
+    /* IcebergIC - demo left, copy right */
+    .split.ic{background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%)}
+    .split.ic .split-inner{grid-template-columns:1.05fr 0.95fr;}
+    .split.ic .panel-demo{transform:translateX(-3%);}
+    .split.ic .panel-copy{justify-content:flex-start;}
+
+    /* IcebergIR - copy left, demo right */
+    .split.ir{background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%)}
+    .split.ir .split-inner{grid-template-columns:0.95fr 1.05fr;}
+    .split.ir .panel-copy{justify-content:flex-end;}
+    .split.ir .panel-demo{transform:translateX(3%);}
+
+    /* IcebergREIT - demo left, copy right */
+    .split.reit{background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%)}
+    .split.reit .split-inner{grid-template-columns:1.05fr 0.95fr;}
+    .split.reit .panel-demo{transform:translateX(-3%);}
+    .split.reit .panel-copy{justify-content:flex-start;}
+
+    /* IcebergBENCHMARK - copy left, demo right */
+    .split.benchmark{background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%)}
+    .split.benchmark .split-inner{grid-template-columns:0.95fr 1.05fr;}
+    .split.benchmark .panel-copy{justify-content:flex-end;}
+    .split.benchmark .panel-demo{transform:translateX(3%);}
+
+    /* IcebergCUSTOM - demo left, copy right */
+    .split.custom{background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%); padding-bottom:120px;}
+    .split.custom .split-inner{grid-template-columns:1.05fr 0.95fr;}
+    .split.custom .panel-demo{transform:translateX(-3%);}
+    .split.custom .panel-copy{justify-content:flex-start;}
+
+    /* ===== IcebergIC Demo Styles ===== */
     .prompt-text{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#111;line-height:1.24;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:.5s}
     .upload-area{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:16px;text-align:center;margin-bottom:12px;opacity:0;transform:translateY(30px);transition:.5s .2s}
     .document-item{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;color:#374151}
@@ -88,11 +126,9 @@
     .results-panel{
       background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:18px;
       opacity:0;transform:translateY(20px);transition:.45s .6s;
-
-      /* Fill remaining card height */
       height: 100%;
       display: grid;
-      grid-template-rows: auto 1fr; /* title + viz */
+      grid-template-rows: auto 1fr;
       overflow: hidden;
     }
     .chart-title{font-size:16px;font-weight:700;color:#111;margin-bottom:10px;text-align:center}
@@ -127,117 +163,25 @@
 
     @keyframes typingBounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
 
-    /* ===== Second split (IcebergIR) — swapped sides ===== */
-    .split-ir{
-      padding:64px 20px 96px;
-      background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%);
-    }
+    /* ===== IcebergIR Demo Styles ===== */
+    .demo-container.ir{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
+    .prompt-text.ir{margin-bottom:12px;opacity:1;transform:none}
+    .ir-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
+    .ir-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .ir-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .ir-output{height:var(--viz2-h);overflow:auto;background:#fff;border-radius:10px;padding:14px;border:1px solid #eef2f6;font-size:14px;color:#111;line-height:1.6}
+    .ir-output ul{margin:0 0 0 18px;padding:0}
+    .ir-output li{margin:6px 0}
+    .ir-cursor{display:inline-block;width:8px;height:1em;vertical-align:-2px;background:#111;animation:blink .9s steps(1,end) infinite}
+    @keyframes blink{50%{opacity:0}}
 
-    /* ===== Third split (IcebergREIT) — same as first section ===== */
-    .split-reit{
-      padding:64px 20px 96px;
-      background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%);
-    }
-
-    /* ===== Fourth split (IcebergBENCHMARK) — swapped like IR ===== */
-    .split-benchmark{
-      padding:64px 20px 120px; /* extra bottom spacing */
-      background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%);
-    }
-    .split-benchmark .split-inner{
-      max-width:var(--maxw); margin:0 auto;
-      display:grid; grid-template-columns:0.95fr 1.05fr; /* hero left, demo right */
-      gap:28px; align-items:center;
-    }
-    .split-benchmark .panel-copy{ display:flex; justify-content:flex-end; }
-    .split-benchmark .panel-demo{ display:flex; justify-content:center; transform:translateX(3%); }
-
-    .copy-card.benchmark{
-      background:#111213;color:#fff;border-radius:20px;
-      padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);
-      box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px
-    }
-
-    .demo-container.benchmark{
-      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
-      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
-      height:var(--demo2-h);
-      display:grid; grid-template-rows:auto auto auto 1fr; align-content:start;
-    }
-    .prompt-text.benchmark{ margin-bottom:12px; opacity:1; transform:none }
-    .upload-area.benchmark{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:12px;text-align:center;margin-bottom:12px;opacity:1;transform:none}
-    .benchmark-button{
-      width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;
-      padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;
-      margin-bottom:12px;min-height:46px;white-space:nowrap
-    }
-    .benchmark-results{
-      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;
-      height:100%; display:grid; grid-template-rows:auto 1fr; overflow:hidden
-    }
-    .benchmark-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
-    .benchmark-output{
-      height:var(--viz2-h); overflow:hidden; background:#fff;border-radius:10px;
-      padding:14px;border:1px solid #eef2f6; font-size:13px; color:#111; line-height:1.4
-    }
-
-    /* Benchmark chart styling */
-    .benchmark-line-chart{
-      position:relative; height:100%; width:100%;
-      background:linear-gradient(to bottom,rgba(37,99,235,.08) 0%,rgba(37,99,235,.03) 100%);
-      border-radius:10px; padding:16px; display:flex; align-items:end; justify-content:space-between;
-    }
-    .benchmark-line-chart svg{position:absolute;inset:0;width:100%;height:100%}
-    .benchmark-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
-    .benchmark-point-value{background:#2563eb;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px}
-    .benchmark-point-bench{background:#10b981;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px;margin-top:2px}
-    .benchmark-point-year{font-size:10px;color:#4b5563;font-weight:600;margin-top:2px}
-
-    .benchmark-bar-chart{
-      height:100%; width:100%; display:flex; align-items:end; gap:12px; padding:16px;
-      background:linear-gradient(to top,rgba(16,185,129,.08) 0%,rgba(16,185,129,.03) 100%);
-      border-radius:10px;
-    }
-    .benchmark-bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-    .benchmark-bars{display:flex;gap:4px;align-items:end;height:120px}
-    .benchmark-bar-portfolio{background:linear-gradient(to top,#2563eb,#3b82f6);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
-    .benchmark-bar-bench{background:linear-gradient(to top,#10b981,#34d399);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
-    .benchmark-bar-year{font-size:10px;color:#4b5563;font-weight:600}
-    .split-reit .split-inner{
-      max-width:var(--maxw); margin:0 auto;
-      display:grid; grid-template-columns:1.05fr 0.95fr; /* demo left, hero right */
-      gap:28px; align-items:center;
-    }
-    .split-reit .panel-demo{ display:flex; justify-content:center; transform:translateX(-3%); }
-    .split-reit .panel-copy{ display:flex; justify-content:flex-start; }
-
-    .copy-card.reit{
-      background:#111213;color:#fff;border-radius:20px;
-      padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);
-      box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px
-    }
-
-    .demo-container.reit{
-      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
-      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
-      height:var(--demo2-h);
-      display:grid; grid-template-rows:auto auto 1fr; align-content:start;
-    }
-    .prompt-text.reit{ margin-bottom:12px; opacity:1; transform:none }
-    .reit-button{
-      width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;
-      padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;
-      margin-bottom:12px;min-height:46px;white-space:nowrap
-    }
-    .reit-results{
-      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;
-      height:100%; display:grid; grid-template-rows:auto 1fr; overflow:hidden
-    }
+    /* ===== IcebergREIT Demo Styles ===== */
+    .demo-container.reit{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
+    .prompt-text.reit{margin-bottom:12px;opacity:1;transform:none}
+    .reit-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
+    .reit-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
     .reit-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
-    .reit-output{
-      height:var(--viz2-h); overflow:auto; background:#fff;border-radius:10px;
-      padding:14px;border:1px solid #eef2f6; font-size:13px; color:#111; line-height:1.4
-    }
+    .reit-output{height:var(--viz2-h);overflow:auto;background:#fff;border-radius:10px;padding:14px;border:1px solid #eef2f6;font-size:13px;color:#111;line-height:1.4}
 
     /* REIT comparison table styling */
     .reit-table{width:100%;border-collapse:collapse;font-size:13px}
@@ -246,124 +190,61 @@
     .reit-table .ticker-col{background:#fef9f3;font-weight:700;color:#d97706}
     .reit-table .metric-highlight{background:linear-gradient(135deg,#10b981,#34d399);color:#fff;border-radius:6px;padding:4px 2px;font-weight:700}
 
-    
-    .split-ir .split-inner{
-      max-width:var(--maxw); margin:0 auto;
-      display:grid; grid-template-columns:0.95fr 1.05fr; /* hero left, demo right */
-      gap:28px; align-items:center;
-    }
-    .split-ir .panel-copy{ display:flex; justify-content:flex-end; }
-    .split-ir .panel-demo{ display:flex; justify-content:center; transform:translateX(3%); } /* opposite nudge */
+    /* ===== IcebergBENCHMARK Demo Styles ===== */
+    .demo-container.benchmark{height:var(--demo2-h);grid-template-rows:auto auto auto 1fr;}
+    .prompt-text.benchmark{margin-bottom:12px;opacity:1;transform:none}
+    .upload-area.benchmark{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:12px;text-align:center;margin-bottom:12px;opacity:1;transform:none}
+    .benchmark-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
+    .benchmark-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .benchmark-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .benchmark-output{height:var(--viz2-h);overflow:hidden;background:#fff;border-radius:10px;padding:14px;border:1px solid #eef2f6;font-size:13px;color:#111;line-height:1.4}
 
-    .copy-card.ir{
-      background:#111213;color:#fff;border-radius:20px;
-      padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);
-      box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px
-    }
+    /* Benchmark chart styling */
+    .benchmark-line-chart{position:relative;height:100%;width:100%;background:linear-gradient(to bottom,rgba(37,99,235,.08) 0%,rgba(37,99,235,.03) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
+    .benchmark-line-chart svg{position:absolute;inset:0;width:100%;height:100%}
+    .benchmark-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .benchmark-point-value{background:#2563eb;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px}
+    .benchmark-point-bench{background:#10b981;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px;margin-top:2px}
+    .benchmark-point-year{font-size:10px;color:#4b5563;font-weight:600;margin-top:2px}
 
-    .demo-container.ir{
-      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
-      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
-      height:var(--demo2-h);
-      display:grid; grid-template-rows:auto auto 1fr; align-content:start;
-    }
-    .prompt-text.ir{ margin-bottom:12px; opacity:1; transform:none }
-    .ir-button{
-      width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;
-      padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;
-      margin-bottom:12px;min-height:46px;white-space:nowrap
-    }
-    .ir-results{
-      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;
-      height:100%; display:grid; grid-template-rows:auto 1fr; overflow:hidden
-    }
-    .ir-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
-    .ir-output{
-      height:var(--viz2-h); overflow:auto; background:#fff;border-radius:10px;
-      padding:14px;border:1px solid #eef2f6; font-size:14px; color:#111; line-height:1.6
-    }
-    .ir-output ul{margin:0 0 0 18px; padding:0}
-    .ir-output li{margin:6px 0}
+    .benchmark-bar-chart{height:100%;width:100%;display:flex;align-items:end;gap:12px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.08) 0%,rgba(16,185,129,.03) 100%);border-radius:10px}
+    .benchmark-bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .benchmark-bars{display:flex;gap:4px;align-items:end;height:120px}
+    .benchmark-bar-portfolio{background:linear-gradient(to top,#2563eb,#3b82f6);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
+    .benchmark-bar-bench{background:linear-gradient(to top,#10b981,#34d399);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
+    .benchmark-bar-year{font-size:10px;color:#4b5563;font-weight:600}
 
-    .ir-cursor{
-      display:inline-block; width:8px; height:1em; vertical-align:-2px;
-      background:#111; animation:blink .9s steps(1,end) infinite
-    }
-    @keyframes blink{ 50%{ opacity:0 } }
+    /* ===== IcebergCUSTOM Demo Styles ===== */
+    .demo-container.custom{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
+    .prompt-text.custom{margin-bottom:12px;opacity:1;transform:none}
+    .custom-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
+    .custom-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .custom-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .custom-output{height:var(--viz2-h);overflow:auto;background:#fff;border-radius:10px;padding:16px;border:1px solid #eef2f6;font-size:13px;color:#111;line-height:1.5}
+    .checklist{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .check{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#f9fafb;font-weight:600}
+    .progress{height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-top:12px}
+    .progress > div{height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#10b981)}
 
-    /* Responsive */
+    /* ===== Responsive Design ===== */
     @media (max-width:980px){
-      .split-inner{grid-template-columns:1fr;gap:18px}
-      .panel-demo{transform:none}
+      .split-inner{grid-template-columns:1fr!important;gap:18px}
+      .panel-demo{transform:none!important}
       .copy-card{max-width:unset}
-      .split-ir .split-inner{ grid-template-columns:1fr; gap:18px }
-      .split-ir .panel-demo{ transform:none }
-      .copy-card.ir{ max-width:unset }
-      .split-reit .split-inner{ grid-template-columns:1fr; gap:18px }
-      .split-reit .panel-demo{ transform:none }
-      .copy-card.reit{ max-width:unset }
-      .split-benchmark .split-inner{ grid-template-columns:1fr; gap:18px }
-      .split-benchmark .panel-demo{ transform:none }
-      .copy-card.benchmark{ max-width:unset }
+      .hero{height:auto;min-height:100vh;padding:72px 20px 48px;}
+    }
+
+    @media (max-width:640px){
+      .nav{padding:0 20px}
+      .menu{gap:16px}
+      .hero{padding:60px 16px 32px;}
+      .split{padding:48px 16px 64px;}
     }
 
     /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       *{animation:none!important;transition:none!important}
     }
-  
-    /* ===== Fifth split (IcebergCUSTOM) — demo left, hero right ===== */
-    .split-custom{
-      padding:64px 20px 120px;
-      background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%);
-    }
-    .split-custom .split-inner{
-      max-width:var(--maxw); margin:0 auto;
-      display:grid; grid-template-columns:1.05fr 0.95fr; /* demo left, hero right */
-      gap:28px; align-items:center;
-    }
-    .split-custom .panel-demo{ display:flex; justify-content:center; transform:translateX(-3%); }
-    .split-custom .panel-copy{ display:flex; justify-content:flex-start; }
-
-    .copy-card.custom{
-      background:#111213;color:#fff;border-radius:20px;
-      padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);
-      box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px
-    }
-
-    .demo-container.custom{
-      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
-      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
-      height:var(--demo2-h);
-      display:grid; grid-template-rows:auto auto 1fr; align-content:start;
-    }
-    .prompt-text.custom{ margin-bottom:12px; opacity:1; transform:none }
-    .custom-button{
-      width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;
-      padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;
-      margin-bottom:12px;min-height:46px;white-space:nowrap
-    }
-    .custom-results{
-      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;
-      height:100%; display:grid; grid-template-rows:auto 1fr; overflow:hidden
-    }
-    .custom-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
-    .custom-output{
-      height:var(--viz2-h); overflow:auto; background:#fff;border-radius:10px;
-      padding:16px;border:1px solid #eef2f6; font-size:13px; color:#111; line-height:1.5
-    }
-    .checklist{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .check{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#f9fafb;font-weight:600}
-    .progress{height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-top:12px}
-    .progress > div{height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#10b981)}
-
-
-    @media (max-width:980px){
-      .split-custom .split-inner{ grid-template-columns:1fr; gap:18px }
-      .split-custom .panel-demo{ transform:none }
-      .copy-card.custom{ max-width:unset }
-    }
-
   </style>
 </head>
 <body>
@@ -412,8 +293,8 @@
     </div>
   </main>
 
-  <!-- SECTION 1: IcebergIC (demo left, hero right) -->
-  <section class="split">
+  <!-- SECTION 1: IcebergIC -->
+  <section class="split ic">
     <div class="split-inner">
       <!-- LEFT: demo -->
       <section class="panel-demo">
@@ -438,12 +319,10 @@
 
           <div class="results-panel" id="resultsPanel">
             <div class="chart-title" id="chartTitle"></div>
-            <div class="chart-container" id="chartContainer"><!-- dynamic --></div>
+            <div class="chart-container" id="chartContainer"></div>
           </div>
         </div>
       </section>
-
-  
 
       <!-- RIGHT: hero copy -->
       <section class="panel-copy" aria-labelledby="copy-title">
@@ -457,13 +336,13 @@
     </div>
   </section>
 
-  <!-- SECTION 2: IcebergIR (hero left, demo right) -->
-  <section class="split-ir" id="icebergir">
+  <!-- SECTION 2: IcebergIR -->
+  <section class="split ir" id="icebergir">
     <div class="split-inner">
 
       <!-- LEFT: hero copy -->
       <section class="panel-copy" aria-labelledby="copy-title-ir">
-        <div class="copy-card ir">
+        <div class="copy-card">
           <span class="copy-eyebrow">IcebergIR</span>
           <h2 id="copy-title-ir" class="copy-title">Draft Faster. Explain Better.</h2>
           <p class="copy-sub">Turn complex data into crisp summary and narrative for board meetings, IC memos or investor FAQs.</p>
@@ -482,9 +361,7 @@
 
           <div class="ir-results">
             <div class="ir-title">Draft</div>
-            <div class="ir-output" id="irOutput">
-              <!-- typing output appears here -->
-            </div>
+            <div class="ir-output" id="irOutput"></div>
           </div>
         </div>
       </section>
@@ -492,8 +369,8 @@
     </div>
   </section>
 
-  <!-- SECTION 3: IcebergREIT (demo left, hero right) -->
-  <section class="split-reit" id="icebergreit">
+  <!-- SECTION 3: IcebergREIT -->
+  <section class="split reit" id="icebergreit">
     <div class="split-inner">
 
       <!-- LEFT: table demo -->
@@ -507,16 +384,14 @@
 
           <div class="reit-results">
             <div class="reit-title">REIT Portfolio Comparison</div>
-            <div class="reit-output" id="reitOutput">
-              <!-- table appears here -->
-            </div>
+            <div class="reit-output" id="reitOutput"></div>
           </div>
         </div>
       </section>
 
       <!-- RIGHT: hero copy -->
       <section class="panel-copy" aria-labelledby="copy-title-reit">
-        <div class="copy-card reit">
+        <div class="copy-card">
           <span class="copy-eyebrow">IcebergREIT</span>
           <h2 id="copy-title-reit" class="copy-title">Dynamically Value and Analyze REITs</h2>
           <p class="copy-sub">Dynamically value and compare REITs in real time.</p>
@@ -527,13 +402,13 @@
     </div>
   </section>
 
-  <!-- SECTION 4: IcebergBENCHMARK (hero left, demo right) -->
-  <section class="split-benchmark" id="icebergbenchmark">
+  <!-- SECTION 4: IcebergBENCHMARK -->
+  <section class="split benchmark" id="icebergbenchmark">
     <div class="split-inner">
 
       <!-- LEFT: hero copy -->
       <section class="panel-copy" aria-labelledby="copy-title-benchmark">
-        <div class="copy-card benchmark">
+        <div class="copy-card">
           <span class="copy-eyebrow">IcebergBENCHMARK</span>
           <h2 id="copy-title-benchmark" class="copy-title">Confirm Your Performance</h2>
           <p class="copy-sub">Compare your actuals or deal assumptions to institutional performance benchmarks.</p>
@@ -559,9 +434,7 @@
 
           <div class="benchmark-results">
             <div class="benchmark-title" id="benchmarkTitle">Portfolio vs Benchmark Comparison</div>
-            <div class="benchmark-output" id="benchmarkOutput">
-              <!-- chart appears here -->
-            </div>
+            <div class="benchmark-output" id="benchmarkOutput"></div>
           </div>
         </div>
       </section>
@@ -569,9 +442,8 @@
     </div>
   </section>
 
-
-  <!-- SECTION 5: IcebergCUSTOM (demo left, hero right) -->
-  <section class="split-custom" id="icebergcustom">
+  <!-- SECTION 5: IcebergCUSTOM -->
+  <section class="split custom" id="icebergcustom">
     <div class="split-inner">
 
       <!-- LEFT: setup demo -->
@@ -585,16 +457,14 @@
 
           <div class="custom-results">
             <div class="custom-title" id="customTitle">Private Iceberg Setup</div>
-            <div class="custom-output" id="customOutput">
-              <!-- wizard appears here -->
-            </div>
+            <div class="custom-output" id="customOutput"></div>
           </div>
         </div>
       </section>
 
       <!-- RIGHT: hero copy -->
       <section class="panel-copy" aria-labelledby="copy-title-custom">
-        <div class="copy-card custom">
+        <div class="copy-card">
           <span class="copy-eyebrow">IcebergCUSTOM</span>
           <h2 id="copy-title-custom" class="copy-title">Private White Label Iceberg Tool for your Organization</h2>
           <p class="copy-sub">Iceberg's AI‑powered — but for your own organization's data.</p>
@@ -604,7 +474,6 @@
 
     </div>
   </section>
-
 
   <!-- Scripts -->
   <script>
@@ -950,7 +819,7 @@
     }
 
     window.addEventListener('load', () => {
-      irSchedule(startIR, 800); // kick off the IR loop slightly after the first
+      irSchedule(startIR, 800);
     });
 
 
@@ -971,7 +840,6 @@
       }
     ];
 
-    let reitCurrentLoop = 0;
     let reitTimers = [];
     const reitById = id => document.getElementById(id);
     function reitSchedule(fn, ms){ const id = setTimeout(fn, ms); reitTimers.push(id); }
@@ -1002,7 +870,6 @@
       const btn = reitById('reitBtn');
       const txt = reitById('reitBtnText');
       const out = reitById('reitOutput');
-      const title = reitById('reitTitle');
       
       if (btn && txt){ btn.style.background = '#2563eb'; txt.textContent = 'Analyze with IcebergREIT'; }
       if (out){ out.innerHTML = ''; }
@@ -1011,10 +878,9 @@
     }
 
     function startReit(){
-      const scenario = reitScenarios[0]; // Always use the first (and only) scenario
+      const scenario = reitScenarios[0];
       
       const p = reitById('reitPrompt'); 
-      const title = reitById('reitTitle');
       if (p) p.textContent = scenario.prompt;
 
       const btn = reitById('reitBtn'); 
@@ -1043,7 +909,7 @@
 
     function fastForwardReit(){
       reitClear();
-      const scenario = reitScenarios[0]; // Always use the first (and only) scenario
+      const scenario = reitScenarios[0];
       const btn = reitById('reitBtn'); 
       const txt = reitById('reitBtnText');
       const out = reitById('reitOutput');
@@ -1061,7 +927,7 @@
     }
 
     window.addEventListener('load', () => {
-      reitSchedule(startReit, 1200); // kick off the REIT loop after the others
+      reitSchedule(startReit, 1200);
     });
 
 
@@ -1122,7 +988,6 @@
     function createBenchmarkBarChart(scenario){
       const { portfolio, benchmark, years } = scenario.data;
       
-      // Convert to numbers for height calculation
       const portfolioNums = portfolio.map(v => parseFloat(v.replace(/[$,%]/g, '')));
       const benchmarkNums = benchmark.map(v => parseFloat(v.replace(/[$,%]/g, '')));
       const allNums = [...portfolioNums, ...benchmarkNums];
@@ -1228,7 +1093,7 @@
     }
 
     window.addEventListener('load', () => {
-      benchmarkSchedule(startBenchmark, 1600); // kick off the benchmark loop after the others
+      benchmarkSchedule(startBenchmark, 1600);
     });
   
     /* ===================== Section 5: IcebergCUSTOM (private white-label wizard) ===================== */
@@ -1309,7 +1174,7 @@
     }
 
     window.addEventListener('load', () => {
-      customSchedule(startCustom, 2000); // kick off after others
+      customSchedule(startCustom, 2000);
     });
 
   </script>
