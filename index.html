@@ -1,182 +1,135 @@
-function startDemo() {
-      const scenario = scenarios[currentLoop % scenarios.length];
-      
-      // Update ALL content at the same time, before any animations
-      document.getElementById('promptText').textContent = scenario.prompt;
-      document.querySelector('.doc-icon').textContent = scenario.icon;
-      document.getElementById('docName').textContent = scenario.document;
-      
-      // Pre-generate the chart content so it's ready
-      let chartHTML = '';
-      if (scenario.type === 'line') {
-        chartHTML = createLineChart(scenario.data, scenario.title);
-      } else if (scenario.type === 'bar') {
-        chartHTML = createBarChart(scenario.data, scenario.title);
-      } else if (scenario.type === 'table') {
-        chartHTML = createTable(scenario.data, scenario.title);
-      }
-      
-      // Clear previous chart and prepare new one (but keep it hidden)
-      document.getElementById('chartContainer').innerHTML = chartHTML;
-      
-      // Step 1: Show prompt (500ms delay)
-      setTimeout(() => {
-        document.getElementById('promptText').style.opacity = '1';
-        document.getElementById('promptText').style.transform = 'translateY(0)';
-      }, 500);
-
-      // Step 2: Show upload area (1500<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Iceberg — AI‑Powered Real Estate Intelligence</title>
-
-  <!-- Serif for headline, sans for UI/body -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IcebergIC • Split Hero + Live Demo</title>
 
   <style>
+    /* =========================
+       THEME TOKENS (tweak freely)
+       ========================= */
     :root{
-      --bg:#0b0b0b;       /* deep charcoal */
-      --text:#f6f6f6;     /* near-white text */
-      --muted:#bdbdbd;    /* subheadline color */
-      --btn-bg:#ffffff;   /* CTA background */
-      --btn-text:#0b0b0b; /* CTA text */
-      --maxw:1220px;
+      --bg: radial-gradient(1200px 600px at 20% -10%, #202020 0%, #0f0f0f 60%, #0b0b0b 100%);
+      --surface: #111213;
+      --card: #ffffff;      /* demo card stays light for contrast */
+      --text: #eaeaea;
+      --muted: #a7a7a7;
+      --accent: #2563eb;
+      --radius: 24px;
+      --gap: clamp(16px, 3vw, 32px);
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+
+    /* =========
+       PAGE LAYER
+       ========= */
+    html, body { height: 100%; }
     body{
-      margin:0; background:var(--bg); color:var(--text);
-      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      margin:0;
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
-    /* ===== Sticky Top Navigation ===== */
-    .nav-wrap{
-      position:sticky; top:0; z-index:50;
-      background:rgba(11,11,11,.92);
-      backdrop-filter:saturate(140%) blur(6px);
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-    .nav{
-      height:72px; display:flex; align-items:center; justify-content:space-between;
-      max-width:var(--maxw); margin:0 auto; padding:0 40px;
-    }
-    .brand{font-weight:600; font-size:20px; letter-spacing:.2px}
-    .menu{display:flex; gap:28px}
-    
-    /* ===== Dropdown Menu Items ===== */
-    .menu-item{
-      position:relative;
-    }
-    .menu-item > a{
-      color:var(--text); text-decoration:none; font-weight:500; font-size:15px;
-      opacity:.92; transition:opacity .2s ease; display:flex; align-items:center; gap:4px;
-    }
-    .menu-item > a:hover{opacity:.7}
-    .menu-item > a::after{
-      content:"▼"; font-size:10px; opacity:.6; transition:transform .2s ease;
-    }
-    .menu-item:hover > a::after{
-      transform:rotate(180deg);
-    }
-    
-    /* ===== Dropdown Panel ===== */
-    .dropdown{
-      position:absolute; top:100%; left:50%; transform:translateX(-50%);
-      background:rgba(11,11,11,.95); backdrop-filter:blur(12px);
-      border:1px solid rgba(255,255,255,.08); border-radius:12px;
-      padding:16px 0; min-width:200px; margin-top:8px;
-      opacity:0; visibility:hidden; pointer-events:none;
-      transition:opacity .2s ease, visibility .2s ease, transform .2s ease;
-      transform:translateX(-50%) translateY(-8px);
-      box-shadow:0 12px 32px rgba(0,0,0,.4);
-    }
-    .menu-item:hover .dropdown{
-      opacity:1; visibility:visible; pointer-events:auto;
-      transform:translateX(-50%) translateY(0);
-    }
-    .dropdown a{
-      display:block; padding:8px 20px; color:var(--text); text-decoration:none;
-      font-size:14px; font-weight:400; opacity:.85; transition:all .15s ease;
-    }
-    .dropdown a:hover{
-      opacity:1; background:rgba(255,255,255,.05);
-    }
-
-    /* ===== Hero ===== */
-    .hero{
-      min-height:calc(100vh - 72px);
-      display:flex; align-items:center; justify-content:center;
-      padding:72px 24px 64px; position:relative; overflow:hidden;
-    }
-    .hero::before{
-      content:""; position:absolute; inset:-20% -20% 0 -20%;
-      background:
-        radial-gradient(60% 60% at 50% 35%, rgba(255,255,255,.06), transparent 65%),
-        radial-gradient(50% 50% at 50% 100%, rgba(255,255,255,.03), transparent 60%);
-      pointer-events:none; mix-blend-mode:screen; opacity:.6;
-    }
-    .hero-inner{position:relative; width:100%; max-width:860px; text-align:center}
-    .headline{
-      font-family:"Playfair Display", Georgia, serif; font-weight:700; line-height:1.06;
-      font-size:clamp(44px, 7vw, 84px); margin:0 0 18px; letter-spacing:.2px;
-    }
-    .sub{
-      font-size:clamp(16px, 2.2vw, 20px); color:var(--muted); margin:0 0 32px;
-    }
-    .cta{
-      display:inline-block; padding:14px 22px; border-radius:12px;
-      background:var(--btn-bg); color:var(--btn-text);
-      text-decoration:none; font-weight:600;
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 10px 24px rgba(0,0,0,.35);
-      transition:transform .06s ease, opacity .2s ease, box-shadow .2s ease;
-    }
-    .cta:hover{ transform:translateY(1px); opacity:.97; box-shadow:0 12px 28px rgba(0,0,0,.4) }
-    .cta:active{ transform:translateY(2px); opacity:.94 }
-
-    /* ===== Demo Section ===== */
-    .demo-section {
-      padding: 120px 40px;
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    }
-    
-    .demo-header {
-      text-align: center;
-      margin-bottom: 80px;
-    }
-    
-    .demo-title {
-      font-size: 48px;
-      font-weight: 800;
-      margin-bottom: 20px;
-      color: #1a1a1a;
-      font-family: "Playfair Display", Georgia, serif;
-    }
-    
-    .demo-subtitle {
-      font-size: 20px;
-      color: #6b7280;
-      max-width: 600px;
+    .hero-shell{
+      display:grid;
+      grid-template-columns: 1.05fr 0.95fr; /* ~52% / 48% */
+      align-items: center;
+      gap: var(--gap);
+      max-width: 1200px;
       margin: 0 auto;
+      padding: clamp(16px, 4vw, 40px);
     }
+
+    /* LEFT PANEL (demo/graphic) */
+    .panel-demo{
+      position: relative;
+      min-height: min(72vh, 760px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      isolation:isolate;
+      transform: translateX(-4%); /* off-center vibe */
+    }
+
+    /* RIGHT PANEL (copy/CTA) */
+    .panel-copy{
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+    }
+    .copy-inner{
+      background: color-mix(in oklab, var(--surface) 92%, transparent);
+      border-radius: var(--radius);
+      padding: clamp(20px, 4vw, 36px);
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+      max-width: 560px;
+    }
+    .eyebrow{
+      display:inline-block;
+      font-size:.85rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:.5rem;
+    }
+    #hero-title{
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.05;
+      margin: 0 0 .75rem 0;
+    }
+    .subhead{
+      color: color-mix(in oklab, var(--text) 82%, white 0%);
+      font-size: clamp(16px, 1.6vw, 18px);
+      line-height: 1.5;
+      margin: 0 0 1.25rem;
+      max-width: 34ch;
+    }
+    .cta-row{
+      display:flex;
+      gap:.75rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary{
+      display:inline-block;
+      background: var(--accent);
+      color:white;
+      text-decoration:none;
+      padding: .9rem 1.1rem;
+      border-radius: 14px;
+      font-weight: 700;
+    }
+    .btn-primary:hover{ filter: brightness(1.05); }
+    .btn-link{
+      display:inline-block;
+      color: var(--text);
+      text-decoration:none;
+      padding:.9rem 0;
+      font-weight:600;
+      opacity:.85;
+    }
+    .btn-link:hover{ opacity:1; }
+
+    /* =======================
+       DEMO CARD (your original)
+       ======================= */
+    * { box-sizing: border-box; }
 
     .demo-container {
-      background: white;
+      background: var(--card);
       border-radius: 24px;
       padding: 48px;
       max-width: 700px;
       width: 100%;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
       position: relative;
       overflow: hidden;
-      margin: 0 auto;
     }
 
     .prompt-text {
-      font-size: 28px;
+      font-size: clamp(20px, 4vw, 28px);
       font-weight: 700;
       color: #1a1a1a;
       line-height: 1.2;
@@ -207,9 +160,7 @@ function startDemo() {
       color: #374151;
     }
 
-    .doc-icon {
-      font-size: 20px;
-    }
+    .doc-icon { font-size: 20px; }
 
     .analyze-button {
       width: 100%;
@@ -237,10 +188,7 @@ function startDemo() {
       animation: showResults 1s ease-out 4.5s forwards;
     }
 
-    .chart-container {
-      margin-bottom: 24px;
-    }
-
+    .chart-container { margin-bottom: 24px; }
     .chart-title {
       font-size: 18px;
       font-weight: 700;
@@ -249,7 +197,7 @@ function startDemo() {
       text-align: center;
     }
 
-    /* Line Chart for Cap Rates */
+    /* Line Chart */
     .line-chart {
       position: relative;
       height: 200px;
@@ -260,15 +208,10 @@ function startDemo() {
       align-items: end;
       justify-content: space-between;
     }
-
     .line-chart svg {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
     }
-
     .chart-point {
       position: relative;
       z-index: 2;
@@ -278,7 +221,6 @@ function startDemo() {
       align-items: center;
       gap: 8px;
     }
-
     .point-value {
       background: #2563eb;
       color: white;
@@ -288,14 +230,13 @@ function startDemo() {
       font-weight: 700;
       min-width: 60px;
     }
-
     .point-year {
       font-size: 12px;
       color: #6b7280;
       font-weight: 600;
     }
 
-    /* Bar Chart for Value Comps */
+    /* Bar Chart */
     .bar-chart {
       display: flex;
       align-items: end;
@@ -305,7 +246,6 @@ function startDemo() {
       background: linear-gradient(to top, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
       border-radius: 12px;
     }
-
     .bar-item {
       flex: 1;
       display: flex;
@@ -313,7 +253,6 @@ function startDemo() {
       align-items: center;
       gap: 8px;
     }
-
     .bar {
       background: linear-gradient(to top, #10b981, #34d399);
       border-radius: 6px 6px 0 0;
@@ -322,7 +261,6 @@ function startDemo() {
       position: relative;
       animation: barGrow 1s ease-out;
     }
-
     .bar-value {
       position: absolute;
       top: -30px;
@@ -336,21 +274,19 @@ function startDemo() {
       font-weight: 700;
       white-space: nowrap;
     }
-
     .bar-year {
       font-size: 12px;
       color: #6b7280;
       font-weight: 600;
     }
 
-    /* Table for Rent Comps */
+    /* Table */
     .rent-table {
       background: white;
       border-radius: 12px;
       overflow: hidden;
       border: 1px solid #e2e8f0;
     }
-
     .table-row {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -358,24 +294,18 @@ function startDemo() {
       border-bottom: 1px solid #e2e8f0;
       align-items: center;
     }
-
-    .table-row:last-child {
-      border-bottom: none;
-    }
-
+    .table-row:last-child { border-bottom: none; }
     .table-header {
       background: #f8fafc;
       font-weight: 700;
       color: #374151;
       font-size: 14px;
     }
-
     .table-cell {
       font-size: 14px;
       color: #1a1a1a;
       font-weight: 600;
     }
-
     .cagr-highlight {
       background: linear-gradient(135deg, #fbbf24, #f59e0b);
       color: white;
@@ -385,6 +315,7 @@ function startDemo() {
       text-align: center;
     }
 
+    /* Misc */
     .typing-indicator {
       display: none;
       align-items: center;
@@ -393,27 +324,18 @@ function startDemo() {
       font-style: italic;
       margin-top: 16px;
     }
-
-    .typing-dots {
-      display: flex;
-      gap: 4px;
-    }
-
+    .typing-dots { display: flex; gap: 4px; }
     .typing-dots span {
-      width: 6px;
-      height: 6px;
-      background: #6b7280;
+      width: 6px; height: 6px; background: #6b7280;
       border-radius: 50%;
       animation: typingBounce 1.4s infinite ease-in-out;
     }
-
     .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
     .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
 
     .reset-indicator {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 20px; right: 20px;
       background: rgba(37, 99, 235, 0.1);
       color: #2563eb;
       padding: 8px 16px;
@@ -424,193 +346,87 @@ function startDemo() {
       animation: pulseIndicator 0.5s ease-out 8s forwards;
     }
 
-    /* Reduced motion accessibility */
-    @media (prefers-reduced-motion: reduce) {
-      * { 
-        animation: none !important; 
-        transition: none !important; 
-      }
+    /* Animations */
+    @keyframes fadeInSlide { from { opacity:0; transform: translateY(30px);} to {opacity:1; transform: translateY(0);} }
+    @keyframes showResults { from { opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
+    @keyframes typingBounce { 0%,80%,100%{ transform: scale(0);} 40%{ transform: scale(1);} }
+    @keyframes pulseIndicator { 0%{ opacity:0; transform: scale(0.8);} 50%{ opacity:1; transform: scale(1.05);} 100%{ opacity:.8; transform: scale(1);} }
+    @keyframes barGrow { from{ height:0;} to{ height: var(--bar-height);} }
+    @keyframes lineGrow { from{ stroke-dashoffset:1000;} to{ stroke-dashoffset:0;} }
+
+    .demo-container.reset * { animation: none; opacity: 0; }
+
+    /* Responsive stack */
+    @media (max-width: 980px){
+      .hero-shell{ grid-template-columns: 1fr; padding: clamp(12px, 5vw, 24px); }
+      .panel-demo{ transform:none; min-height:auto; }
+      .copy-inner{ margin-top: 8px; }
     }
 
-    /* Responsive typography */
-    .prompt-text { 
-      font-size: clamp(20px, 4vw, 28px); 
-    }
-    
-    .demo-container { 
-      padding: clamp(20px, 4vw, 48px); 
-    }
-
-    /* Better color contrast */
-    .point-year, .bar-year {
-      font-size: 12px;
-      color: #4b5563; /* Darker for better contrast */
-      font-weight: 600;
-    }
-
-    .typing-indicator {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      color: #4b5563; /* Better contrast */
-      font-style: italic;
-      margin-top: 16px;
-    }
-
-    /* Focus styles for accessibility */
-    .analyze-button:focus-visible {
-      outline: 2px solid #2563eb;
-      outline-offset: 2px;
-    }
-
-    /* Smooth transitions for all demo elements */
-    .demo-container * {
-      transition: opacity 0.5s ease, transform 0.5s ease, background-color 0.3s ease;
-    }
-
-    /* ===== Mobile tweaks ===== */
-    @media (max-width:900px){
-      .menu{gap:20px}
-      .nav{padding:0 20px}
-      .dropdown{min-width:180px}
-      .demo-section{padding:80px 20px}
-      .demo-container{padding:32px}
-    }
-    @media (max-width:640px){
-      .nav{height:64px}
-      .menu{display:none}
-      .hero{padding-top:56px}
-      .demo-section{padding:60px 16px}
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      * { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sticky Nav -->
-  <div class="nav-wrap">
-    <header class="nav">
-      <div class="brand">Iceberg</div>
-      <nav class="menu" aria-label="Primary">
-        <div class="menu-item">
-          <a href="#">IcebergIC</a>
-          <div class="dropdown">
-            <a href="#">Value Comps</a>
-            <a href="#">Cap Rate Intel</a>
-            <a href="#">Occupancy Trends</a>
-            <a href="#">NOI and OpEx Comps</a>
-            <a href="#">Growth Rates</a>
+  <div class="hero-shell">
+    <!-- LEFT: Demo / Graphic -->
+    <section class="panel-demo">
+      <div class="demo-container" id="demoContainer" aria-live="polite">
+        <div class="reset-indicator" id="resetIndicator">🔄 Demo Loop</div>
+
+        <div class="prompt-text" id="promptText">
+          Analyze US data center cap rate trends
+        </div>
+
+        <div class="upload-area" id="uploadArea" role="region" aria-label="Uploaded document">
+          <div class="document-item">
+            <span class="doc-icon">📊</span>
+            <span id="docName">US_DataCenter_CapRates.xlsx</span>
           </div>
         </div>
-        
-        <div class="menu-item">
-          <a href="#">IcebergIR</a>
-          <div class="dropdown">
-            <a href="#">Memo Narrative</a>
-            <a href="#">FAQ Prep</a>
-            <a href="#">Market Commentary</a>
+
+        <button class="analyze-button" id="analyzeBtn" type="button" aria-controls="resultsPanel">
+          <span id="btnText">Analyze with IcebergIC</span>
+        </button>
+
+        <div class="typing-indicator" id="typingIndicator" role="status" aria-live="polite">
+          <span>Processing data</span>
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="results-panel" id="resultsPanel">
+          <div class="chart-container" id="chartContainer">
+            <!-- Chart content will be dynamically inserted -->
           </div>
         </div>
-        
-        <div class="menu-item">
-          <a href="#">IcebergREIT</a>
-          <div class="dropdown">
-            <a href="#">Portfolio Composition</a>
-            <a href="#">Valuation Analysis</a>
-            <a href="#">Peer Comparison</a>
-          </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Hero copy -->
+    <section class="panel-copy" aria-labelledby="hero-title">
+      <div class="copy-inner">
+        <span class="eyebrow">Assistant</span>
+        <h1 id="hero-title">Tailored to<br/>Your Expertise</h1>
+        <p class="subhead">
+          Delegate complex tasks in natural language to your domain‑specific assistant.
+          IcebergIC turns raw filings into decisions—fast.
+        </p>
+        <div class="cta-row">
+          <a class="btn-primary" href="#try">Explore IcebergIC</a>
+          <a class="btn-link" href="#how">How it works →</a>
         </div>
-        
-        <div class="menu-item">
-          <a href="#">IcebergBENCHMARK</a>
-          <div class="dropdown">
-            <a href="#">Underwriting Checks</a>
-            <a href="#">Actuals Comparisons</a>
-          </div>
-        </div>
-        
-        <div class="menu-item">
-          <a href="#">IcebergCUSTOM</a>
-          <div class="dropdown">
-            <a href="#">API Integration</a>
-            <a href="#">Private Iceberg Tool</a>
-          </div>
-        </div>
-      </nav>
-    </header>
+      </div>
+    </section>
   </div>
 
-  <!-- Hero -->
-  <main class="hero">
-    <div class="hero-inner">
-      <h1 class="headline">AI‑Powered Real Estate Intelligence</h1>
-      <p class="sub">Domain‑specific AI intelligence and tools for managers, investors, brokers, and analysts.</p>
-      <a class="cta" href="mailto:patrick@icebergre.ai?subject=Iceberg%20Demo%20Request">Request a Demo</a>
-    </div>
-  </main>
-
-  <!-- Live Demo Section -->
-  <section class="demo-section">
-    <div class="demo-header">
-      <h2 class="demo-title">See Iceberg in Action</h2>
-      <p class="demo-subtitle">Watch real-time analysis of data center markets with instant insights and professional visualizations</p>
-    </div>
-    
-    <div class="demo-container" id="demoContainer">
-      <div class="reset-indicator" id="resetIndicator">🔄 Live Demo</div>
-      
-      <div class="prompt-text" id="promptText">
-        Analyze US data center cap rate trends
-      </div>
-      
-      <div class="upload-area" id="uploadArea">
-        <div class="document-item">
-          <span class="doc-icon">📊</span>
-          <span id="docName">US_DataCenter_CapRates.xlsx</span>
-        </div>
-      </div>
-      
-      <button class="analyze-button" id="analyzeBtn">
-        <span id="btnText">Analyze with IcebergIC</span>
-      </button>
-
-      <div class="typing-indicator" id="typingIndicator">
-        <span>Processing data</span>
-        <div class="typing-dots">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-      
-      <div class="results-panel" id="resultsPanel">
-        <div class="chart-container" id="chartContainer">
-          <!-- Chart content will be dynamically inserted -->
-        </div>
-      </div>
-    </div>
-  </section>
-
   <script>
+    /* ======= Demo data (unchanged) ======= */
     let currentLoop = 0;
     let timers = [];
-
     const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function schedule(fn, ms) {
-      const id = setTimeout(fn, ms);
-      timers.push(id);
-    }
-    
-    function clearTimers() {
-      timers.forEach(clearTimeout);
-      timers = [];
-    }
-
-    function toNumber(s) {
-      // "$1,846" -> 1846 ; "3.2%" -> 3.2
-      if (typeof s !== 'string') return Number(s);
-      return Number(s.replace(/[$,%\s,]/g, ''));
-    }
 
     const scenarios = [
       {
@@ -628,7 +444,7 @@ function startDemo() {
       },
       {
         prompt: "Compare NoVa data center value comps",
-        document: "NoVa_ValueComps_Analysis.xlsx", 
+        document: "NoVa_ValueComps_Analysis.xlsx",
         icon: "💰",
         type: "bar",
         title: "Northern Virginia Value per SF",
@@ -642,7 +458,7 @@ function startDemo() {
       {
         prompt: "Generate Chicago rent comp analysis",
         document: "Chicago_RentComps_Q4.xlsx",
-        icon: "🏢", 
+        icon: "🏢",
         type: "table",
         title: "Chicago Data Center Rent Analysis",
         data: [
@@ -655,20 +471,35 @@ function startDemo() {
       }
     ];
 
+    /* ======= Utility & safer timing ======= */
+    function schedule(fn, ms) {
+      const id = setTimeout(fn, ms);
+      timers.push(id);
+    }
+    function clearTimers() {
+      timers.forEach(clearTimeout);
+      timers = [];
+    }
+    function toNumber(s) {
+      if (typeof s !== 'string') return Number(s);
+      return Number(s.replace(/[$,%\s,]/g, ''));
+    }
+
+    /* ======= Chart/Markup builders ======= */
     function createLineChart(data, title) {
       return `
         <div class="chart-title">${title}</div>
         <div class="line-chart">
           <svg>
-            <path d="M 80 40 L 220 50 L 360 100 L 500 120" 
-                  stroke="#2563eb" 
-                  stroke-width="3" 
-                  fill="none" />
+            <path d="M 80 40 L 220 50 L 360 100 L 500 120"
+                  stroke="#2563eb" stroke-width="3" fill="none"
+                  stroke-dasharray="1000"
+                  style="animation: lineGrow 2s ease-out forwards;" />
           </svg>
-          ${data.map((point, i) => `
+          ${data.map(p => `
             <div class="chart-point">
-              <div class="point-value">${point.value}</div>
-              <div class="point-year">${point.year}</div>
+              <div class="point-value">${p.value}</div>
+              <div class="point-year">${p.year}</div>
             </div>
           `).join('')}
         </div>
@@ -681,7 +512,7 @@ function startDemo() {
         <div class="bar-chart">
           ${data.map(item => `
             <div class="bar-item">
-              <div class="bar" style="height: ${item.height}%;">
+              <div class="bar" style="--bar-height: ${item.height}%; height: ${item.height}%;">
                 <div class="bar-value">${item.value}</div>
               </div>
               <div class="bar-year">${item.year}</div>
@@ -696,49 +527,49 @@ function startDemo() {
         <div class="chart-title">${title}</div>
         <div class="rent-table">
           <div class="table-row table-header">
-            <div>Year</div><div>Rent/SF</div><div>Growth</div>
+            <div>Year</div>
+            <div>Rent/SF</div>
+            <div>Growth</div>
           </div>
-          ${data.slice(0,4).map((item,i) => {
+          ${data.slice(0,4).map((item, i) => {
             const base = toNumber(data[0].value);
             const val = toNumber(item.value);
-            const growth = i===0 ? 'Baseline' : '+'+(((val/base)-1)*100).toFixed(1)+'%';
+            const growth = i === 0 ? 'Baseline' : '+' + (((val / base) - 1) * 100).toFixed(1) + '%';
             return `
               <div class="table-row">
                 <div class="table-cell">${item.year}</div>
                 <div class="table-cell">${item.value}</div>
                 <div class="table-cell">${growth}</div>
-              </div>`;
+              </div>
+            `;
           }).join('')}
           <div class="table-row" style="background:#fef3c7;">
             <div class="table-cell" style="font-weight:700;">CAGR</div>
             <div class="table-cell cagr-highlight">${data[4].cagr}</div>
             <div class="table-cell" style="font-weight:700;">2022-2025</div>
           </div>
-        </div>`;
+        </div>
+      `;
     }
 
+    /* ======= Demo flow (looped) ======= */
     function resetDemo() {
       clearTimers();
       const c = document.getElementById('demoContainer');
-      
-      // Explicit state reset
+      c.classList.add('reset');
+
+      // explicit UI reset
       document.getElementById('typingIndicator').style.display = 'none';
       const btn = document.getElementById('analyzeBtn');
       btn.style.background = '#2563eb';
-      btn.setAttribute('aria-busy', 'false');
       document.getElementById('btnText').textContent = 'Analyze with IcebergIC';
       document.getElementById('resetIndicator').style.opacity = '0';
       document.getElementById('chartContainer').innerHTML = '';
       document.getElementById('resultsPanel').style.opacity = '0';
       document.getElementById('resultsPanel').style.transform = 'translateY(20px)';
-      document.getElementById('promptText').style.opacity = '0';
-      document.getElementById('promptText').style.transform = 'translateY(30px)';
-      document.getElementById('uploadArea').style.opacity = '0';
-      document.getElementById('uploadArea').style.transform = 'translateY(30px)';
-      document.getElementById('analyzeBtn').style.opacity = '0';
-      document.getElementById('analyzeBtn').style.transform = 'translateY(30px)';
 
       setTimeout(() => {
+        c.classList.remove('reset');
         startDemo();
       }, rm ? 0 : 500);
     }
@@ -746,7 +577,7 @@ function startDemo() {
     function startDemo() {
       const s = scenarios[currentLoop % scenarios.length];
 
-      // Update content immediately
+      // Update content
       document.getElementById('promptText').textContent = s.prompt;
       document.querySelector('.doc-icon').textContent = s.icon;
       document.getElementById('docName').textContent = s.document;
@@ -771,50 +602,45 @@ function startDemo() {
         el.style.transform = 'translateY(0)';
       }, step * 2.5);
 
-      schedule(() => {
+      // Simulate processing (also wire up real click)
+      const triggerProcessing = () => {
         const btn = document.getElementById('analyzeBtn');
         btn.style.background = '#1d4ed8';
-        btn.setAttribute('aria-busy', 'true');
         document.getElementById('btnText').textContent = 'Processing...';
         document.getElementById('typingIndicator').style.display = 'flex';
-      }, step * 3.5);
+      };
 
-      schedule(() => {
+      const completeProcessing = () => {
         document.getElementById('typingIndicator').style.display = 'none';
-        const btn = document.getElementById('analyzeBtn');
         document.getElementById('btnText').textContent = 'Analysis Complete ✓';
-        btn.style.background = '#10b981';
-        btn.setAttribute('aria-busy', 'false');
-
-        // Build chart/table
+        document.getElementById('analyzeBtn').style.background = '#10b981';
         let html = '';
-        if (s.type === 'line') {
-          html = createLineChart(s.data, s.title);
-        } else if (s.type === 'bar') {
-          html = createBarChart(s.data, s.title);
-        } else {
-          html = createTable(s.data, s.title);
-        }
+        if (s.type === 'line') html = createLineChart(s.data, s.title);
+        else if (s.type === 'bar') html = createBarChart(s.data, s.title);
+        else html = createTable(s.data, s.title);
         document.getElementById('chartContainer').innerHTML = html;
-
         const panel = document.getElementById('resultsPanel');
         panel.style.opacity = '1';
         panel.style.transform = 'translateY(0)';
-      }, step * 4.5);
+      };
 
-      schedule(() => {
-        document.getElementById('resetIndicator').style.opacity = '0.8';
-      }, step * 7.5);
+      schedule(triggerProcessing, step * 3.5);
+      schedule(completeProcessing, step * 4.5);
 
-      schedule(() => {
-        currentLoop++;
-        resetDemo();
-      }, step * 9);
+      schedule(() => { document.getElementById('resetIndicator').style.opacity = '0.8'; }, step * 7.5);
+      schedule(() => { currentLoop++; resetDemo(); }, step * 9);
+
+      // Click allows skipping the wait
+      const btn = document.getElementById('analyzeBtn');
+      btn.onclick = () => {
+        clearTimers();
+        triggerProcessing();
+        setTimeout(completeProcessing, rm ? 0 : 900);
+      };
     }
 
-    // Start the demo
+    // Kickoff
     setTimeout(startDemo, 1000);
   </script>
-
 </body>
 </html>
