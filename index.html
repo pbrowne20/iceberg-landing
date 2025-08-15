@@ -135,9 +135,74 @@
 
     /* ===== Third split (IcebergREIT) — same as first section ===== */
     .split-reit{
-      padding:64px 20px 120px; /* extra bottom spacing */
+      padding:64px 20px 96px;
       background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%);
     }
+
+    /* ===== Fourth split (IcebergBENCHMARK) — swapped like IR ===== */
+    .split-benchmark{
+      padding:64px 20px 120px; /* extra bottom spacing */
+      background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%);
+    }
+    .split-benchmark .split-inner{
+      max-width:var(--maxw); margin:0 auto;
+      display:grid; grid-template-columns:0.95fr 1.05fr; /* hero left, demo right */
+      gap:28px; align-items:center;
+    }
+    .split-benchmark .panel-copy{ display:flex; justify-content:flex-end; }
+    .split-benchmark .panel-demo{ display:flex; justify-content:center; transform:translateX(3%); }
+
+    .copy-card.benchmark{
+      background:#111213;color:#fff;border-radius:20px;
+      padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);
+      box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px
+    }
+
+    .demo-container.benchmark{
+      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
+      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
+      height:var(--demo2-h);
+      display:grid; grid-template-rows:auto auto auto 1fr; align-content:start;
+    }
+    .prompt-text.benchmark{ margin-bottom:12px; opacity:1; transform:none }
+    .upload-area.benchmark{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:12px;text-align:center;margin-bottom:12px;opacity:1;transform:none}
+    .benchmark-button{
+      width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;
+      padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;
+      margin-bottom:12px;min-height:46px;white-space:nowrap
+    }
+    .benchmark-results{
+      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;
+      height:100%; display:grid; grid-template-rows:auto 1fr; overflow:hidden
+    }
+    .benchmark-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .benchmark-output{
+      height:var(--viz2-h); overflow:hidden; background:#fff;border-radius:10px;
+      padding:14px;border:1px solid #eef2f6; font-size:13px; color:#111; line-height:1.4
+    }
+
+    /* Benchmark chart styling */
+    .benchmark-line-chart{
+      position:relative; height:100%; width:100%;
+      background:linear-gradient(to bottom,rgba(37,99,235,.08) 0%,rgba(37,99,235,.03) 100%);
+      border-radius:10px; padding:16px; display:flex; align-items:end; justify-content:space-between;
+    }
+    .benchmark-line-chart svg{position:absolute;inset:0;width:100%;height:100%}
+    .benchmark-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .benchmark-point-value{background:#2563eb;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px}
+    .benchmark-point-bench{background:#10b981;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px;margin-top:2px}
+    .benchmark-point-year{font-size:10px;color:#4b5563;font-weight:600;margin-top:2px}
+
+    .benchmark-bar-chart{
+      height:100%; width:100%; display:flex; align-items:end; gap:12px; padding:16px;
+      background:linear-gradient(to top,rgba(16,185,129,.08) 0%,rgba(16,185,129,.03) 100%);
+      border-radius:10px;
+    }
+    .benchmark-bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .benchmark-bars{display:flex;gap:4px;align-items:end;height:120px}
+    .benchmark-bar-portfolio{background:linear-gradient(to top,#2563eb,#3b82f6);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
+    .benchmark-bar-bench{background:linear-gradient(to top,#10b981,#34d399);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
+    .benchmark-bar-year{font-size:10px;color:#4b5563;font-weight:600}
     .split-reit .split-inner{
       max-width:var(--maxw); margin:0 auto;
       display:grid; grid-template-columns:1.05fr 0.95fr; /* demo left, hero right */
@@ -235,6 +300,9 @@
       .split-reit .split-inner{ grid-template-columns:1fr; gap:18px }
       .split-reit .panel-demo{ transform:none }
       .copy-card.reit{ max-width:unset }
+      .split-benchmark .split-inner{ grid-template-columns:1fr; gap:18px }
+      .split-benchmark .panel-demo{ transform:none }
+      .copy-card.benchmark{ max-width:unset }
     }
 
     /* Reduced motion */
@@ -319,6 +387,48 @@
           </div>
         </div>
       </section>
+
+  <!-- SECTION 4: IcebergBENCHMARK (hero left, demo right) -->
+  <section class="split-benchmark" id="icebergbenchmark">
+    <div class="split-inner">
+
+      <!-- LEFT: hero copy -->
+      <section class="panel-copy" aria-labelledby="copy-title-benchmark">
+        <div class="copy-card benchmark">
+          <span class="copy-eyebrow">IcebergBENCHMARK</span>
+          <h2 id="copy-title-benchmark" class="copy-title">Confirm Your Performance</h2>
+          <p class="copy-sub">Compare your actuals or deal assumptions to institutional performance benchmarks.</p>
+          <a class="copy-cta" href="#icebergbenchmark">Explore IcebergBENCHMARK →</a>
+        </div>
+      </section>
+
+      <!-- RIGHT: benchmark demo -->
+      <section class="panel-demo">
+        <div class="demo-container benchmark" id="benchmarkDemo" aria-live="polite">
+          <div class="prompt-text benchmark" id="benchmarkPrompt">Compare portfolio occupancy vs institutional benchmarks</div>
+
+          <div class="upload-area benchmark" role="region" aria-label="Uploaded documents">
+            <div class="document-item">
+              <span class="doc-icon">📊</span>
+              <span id="benchmarkDocName">Portfolio_Occupancy.xlsx</span>
+            </div>
+          </div>
+
+          <button class="benchmark-button" id="benchmarkBtn" type="button">
+            <span id="benchmarkBtnText">Benchmark with IcebergBENCHMARK</span>
+          </button>
+
+          <div class="benchmark-results">
+            <div class="benchmark-title" id="benchmarkTitle">Portfolio vs Benchmark Comparison</div>
+            <div class="benchmark-output" id="benchmarkOutput">
+              <!-- chart appears here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </section>
 
       <!-- RIGHT: hero copy -->
       <section class="panel-copy" aria-labelledby="copy-title">
@@ -764,30 +874,6 @@
             { ticker: "HIW", values: ["$20.75", "$23.10", "$19.95"] }
           ]
         }
-      },
-      {
-        prompt: "Show NOI per sq ft for Southeast markets",
-        title: "NOI/SF - Southeast Markets",
-        data: {
-          headers: ["REIT", "Charlotte", "Nashville", "Tampa"],
-          rows: [
-            { ticker: "CUZ", values: ["$21.40", "$18.75", "$23.60"] },
-            { ticker: "PDM", values: ["$19.20", "$20.15", "$18.85"] },
-            { ticker: "HIW", values: ["$22.90", "$21.30", "$20.45"] }
-          ]
-        }
-      },
-      {
-        prompt: "Analyze NOI per sq ft for major Texas markets",
-        title: "NOI/SF - Texas Markets",
-        data: {
-          headers: ["REIT", "Houston", "Austin", "San Antonio"],
-          rows: [
-            { ticker: "CUZ", values: ["$20.85", "$24.15", "$17.90"] },
-            { ticker: "PDM", values: ["$22.30", "$21.60", "$19.40"] },
-            { ticker: "HIW", values: ["$19.75", "$23.85", "$18.25"] }
-          ]
-        }
       }
     ];
 
@@ -831,7 +917,7 @@
     }
 
     function startReit(){
-      const scenario = reitScenarios[reitCurrentLoop % reitScenarios.length];
+      const scenario = reitScenarios[0]; // Always use the first (and only) scenario
       
       const p = reitById('reitPrompt'); 
       const title = reitById('reitTitle');
@@ -856,7 +942,6 @@
         }
         
         reitSchedule(() => {
-          reitCurrentLoop++;
           resetReit();
         }, 4500);
       }, 1200);
@@ -864,7 +949,7 @@
 
     function fastForwardReit(){
       reitClear();
-      const scenario = reitScenarios[reitCurrentLoop % reitScenarios.length];
+      const scenario = reitScenarios[0]; // Always use the first (and only) scenario
       const btn = reitById('reitBtn'); 
       const txt = reitById('reitBtnText');
       const out = reitById('reitOutput');
@@ -876,7 +961,6 @@
         if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Analysis Complete ✓'; }
         
         reitSchedule(() => {
-          reitCurrentLoop++;
           resetReit();
         }, 3500);
       }, 300);
@@ -884,6 +968,173 @@
 
     window.addEventListener('load', () => {
       reitSchedule(startReit, 1200); // kick off the REIT loop after the others
+    });
+
+
+    /* ===================== Section 4: IcebergBENCHMARK (comparison charts) ===================== */
+
+    const benchmarkScenarios = [
+      {
+        prompt: "Compare portfolio occupancy vs institutional benchmarks",
+        document: "Portfolio_Occupancy.xlsx",
+        icon: "📊",
+        title: "Portfolio vs Benchmark Occupancy",
+        type: "line",
+        data: {
+          portfolio: ["84%", "86%", "80%", "89%"],
+          benchmark: ["80%", "82%", "84%", "86%"],
+          years: ["2022", "2023", "2024", "2025"]
+        }
+      },
+      {
+        prompt: "Analyze OpEx per sq ft against market benchmarks",
+        document: "Portfolio_OpEx_Analysis.xlsx", 
+        icon: "💰",
+        title: "Portfolio vs Benchmark OpEx/SF",
+        type: "bar",
+        data: {
+          portfolio: ["$13.20", "$14.80", "$12.50", "$15.60"],
+          benchmark: ["$12.80", "$13.40", "$14.20", "$14.90"],
+          years: ["2022", "2023", "2024", "2025"]
+        }
+      }
+    ];
+
+    let benchmarkCurrentLoop = 0;
+    let benchmarkTimers = [];
+    const benchmarkById = id => document.getElementById(id);
+    function benchmarkSchedule(fn, ms){ const id = setTimeout(fn, ms); benchmarkTimers.push(id); }
+    function benchmarkClear(){ benchmarkTimers.forEach(clearTimeout); benchmarkTimers = []; }
+
+    function createBenchmarkLineChart(scenario){
+      const { portfolio, benchmark, years } = scenario.data;
+      return `
+        <div class="benchmark-line-chart">
+          <svg>
+            <path d="M 60 80 L 140 70 L 220 100 L 300 50"
+                  stroke="#2563eb" stroke-width="2" fill="none"></path>
+            <path d="M 60 100 L 140 90 L 220 80 L 300 70"
+                  stroke="#10b981" stroke-width="2" fill="none"></path>
+          </svg>
+          ${years.map((year, i) => `
+            <div class="benchmark-point">
+              <div class="benchmark-point-value">${portfolio[i]}</div>
+              <div class="benchmark-point-bench">${benchmark[i]}</div>
+              <div class="benchmark-point-year">${year}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    function createBenchmarkBarChart(scenario){
+      const { portfolio, benchmark, years } = scenario.data;
+      
+      // Convert to numbers for height calculation
+      const portfolioNums = portfolio.map(v => parseFloat(v.replace(/[$,%]/g, '')));
+      const benchmarkNums = benchmark.map(v => parseFloat(v.replace(/[$,%]/g, '')));
+      const allNums = [...portfolioNums, ...benchmarkNums];
+      const min = Math.min(...allNums);
+      const max = Math.max(...allNums);
+      const range = max - min;
+      
+      return `
+        <div class="benchmark-bar-chart">
+          ${years.map((year, i) => {
+            const portfolioHeight = 20 + ((portfolioNums[i] - min) / range) * 80;
+            const benchmarkHeight = 20 + ((benchmarkNums[i] - min) / range) * 80;
+            return `
+              <div class="benchmark-bar-group">
+                <div class="benchmark-bars">
+                  <div class="benchmark-bar-portfolio" style="height:${portfolioHeight}%;" title="Portfolio: ${portfolio[i]}"></div>
+                  <div class="benchmark-bar-bench" style="height:${benchmarkHeight}%;" title="Benchmark: ${benchmark[i]}"></div>
+                </div>
+                <div class="benchmark-bar-year">${year}</div>
+              </div>`;
+          }).join('')}
+        </div>`;
+    }
+
+    function resetBenchmark(){
+      benchmarkClear();
+      const btn = benchmarkById('benchmarkBtn');
+      const txt = benchmarkById('benchmarkBtnText');
+      const out = benchmarkById('benchmarkOutput');
+      
+      if (btn && txt){ btn.style.background = '#2563eb'; txt.textContent = 'Benchmark with IcebergBENCHMARK'; }
+      if (out){ out.innerHTML = ''; }
+      
+      benchmarkSchedule(startBenchmark, 500);
+    }
+
+    function startBenchmark(){
+      const scenario = benchmarkScenarios[benchmarkCurrentLoop % benchmarkScenarios.length];
+      
+      const p = benchmarkById('benchmarkPrompt');
+      const docIcon = document.querySelector('#benchmarkDemo .doc-icon');
+      const docName = benchmarkById('benchmarkDocName');
+      const title = benchmarkById('benchmarkTitle');
+      
+      if (p) p.textContent = scenario.prompt;
+      if (docIcon) docIcon.textContent = scenario.icon;
+      if (docName) docName.textContent = scenario.document;
+      if (title) title.textContent = scenario.title;
+
+      const btn = benchmarkById('benchmarkBtn');
+      const txt = benchmarkById('benchmarkBtnText');
+      if (btn && txt){
+        btn.onclick = fastForwardBenchmark;
+        btn.style.background = '#1d4ed8';
+        txt.textContent = 'Processing...';
+      }
+
+      benchmarkSchedule(() => {
+        const out = benchmarkById('benchmarkOutput');
+        if (out){
+          if (scenario.type === 'line') {
+            out.innerHTML = createBenchmarkLineChart(scenario);
+          } else {
+            out.innerHTML = createBenchmarkBarChart(scenario);
+          }
+        }
+        if (btn && txt){ 
+          btn.style.background = '#10b981'; 
+          txt.textContent = 'Benchmark Complete ✓'; 
+        }
+        
+        benchmarkSchedule(() => {
+          benchmarkCurrentLoop++;
+          resetBenchmark();
+        }, 4500);
+      }, 1200);
+    }
+
+    function fastForwardBenchmark(){
+      benchmarkClear();
+      const scenario = benchmarkScenarios[benchmarkCurrentLoop % benchmarkScenarios.length];
+      const btn = benchmarkById('benchmarkBtn');
+      const txt = benchmarkById('benchmarkBtnText');
+      const out = benchmarkById('benchmarkOutput');
+      
+      if (btn && txt){ btn.style.background = '#1d4ed8'; txt.textContent = 'Processing...'; }
+      
+      setTimeout(() => {
+        if (out) {
+          if (scenario.type === 'line') {
+            out.innerHTML = createBenchmarkLineChart(scenario);
+          } else {
+            out.innerHTML = createBenchmarkBarChart(scenario);
+          }
+        }
+        if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Benchmark Complete ✓'; }
+        
+        benchmarkSchedule(() => {
+          benchmarkCurrentLoop++;
+          resetBenchmark();
+        }, 3500);
+      }, 300);
+    }
+
+    window.addEventListener('load', () => {
+      benchmarkSchedule(startBenchmark, 1600); // kick off the benchmark loop after the others
     });
   </script>
 </body>
