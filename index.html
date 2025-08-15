@@ -17,8 +17,8 @@
       --demo-h: 420px;   /* overall demo card height (compressed) */
       --viz-h:  180px;   /* reserved infographic area (compressed) */
       /* Second section static vars */
-      --demo2-h: 360px;
-      --viz2-h:  180px;
+      --demo2-h: 440px;  /* increased height for IcebergIR */
+      --viz2-h:  200px;  /* increased height for text content */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -58,7 +58,7 @@
     .panel-demo{display:flex;justify-content:center;transform:translateX(-3%)} /* off-center nudge */
     .panel-copy{display:flex;justify-content:flex-start}
     .copy-card{background:#111213;color:#fff;border-radius:20px;padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px}
-    .copy-eyebrow{display:inline-block;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#a9afba;margin-bottom:.4rem}
+    .copy-eyebrow{display:inline-block;font-size:.8rem;letter-spacing:.08em;color:#a9afba;margin-bottom:.4rem}
     .copy-title{font-family:"Playfair Display",Georgia,serif;font-size:clamp(30px,3.5vw,44px);line-height:1.08;margin:0 0 .5rem}
     .copy-sub{color:#cfd5de;font-size:clamp(14px,1.4vw,16px);line-height:1.5;margin:0 0 .9rem}
     .copy-cta{display:inline-block;background:#2563eb;color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 14px}
@@ -290,7 +290,7 @@
         <div class="copy-card ir">
           <span class="copy-eyebrow">IcebergIR</span>
           <h2 id="copy-title-ir" class="copy-title">Draft Faster. Explain Better.</h2>
-          <p class="copy-sub">Turn messy filings into clean, on‑brand bullet points and prose your team can actually use.</p>
+          <p class="copy-sub">Turn complex data into crisp summary and narrative for board meetings, IC memos or investor FAQs.</p>
           <a class="copy-cta" href="#icebergir">Explore IcebergIR →</a>
         </div>
       </section>
