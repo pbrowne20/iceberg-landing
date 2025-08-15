@@ -12,10 +12,10 @@
     :root{
       --bg:#0b0b0b; --text:#f6f6f6; --muted:#bdbdbd;
       --btn-bg:#ffffff; --btn-text:#0b0b0b; --maxw:1240px;
-      --accent:#2563eb; --radius:24px;
+      --accent:#2563eb;
       /* Auto-locked by JS on load (fallbacks below) */
-      --demo-h: 520px;   /* overall demo card height */
-      --viz-h:  240px;   /* reserved infographic area */
+      --demo-h: 420px;   /* overall demo card height (compressed) */
+      --viz-h:  180px;   /* reserved infographic area (compressed) */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -62,7 +62,7 @@
 
     /* ===== Demo Card (static shell) ===== */
     .demo-container{
-      background:#fff;border-radius:22px;padding:34px;width:min(680px,100%);
+      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
       box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
 
       /* Static shell via CSS vars (set by JS on load) */
@@ -72,18 +72,18 @@
       align-content: start;
     }
 
-    .prompt-text{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#111;line-height:1.24;margin-bottom:20px;opacity:0;transform:translateY(30px);transition:.5s}
-    .upload-area{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:18px;text-align:center;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:.5s .2s}
+    .prompt-text{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#111;line-height:1.24;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:.5s}
+    .upload-area{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:16px;text-align:center;margin-bottom:12px;opacity:0;transform:translateY(30px);transition:.5s .2s}
     .document-item{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;color:#374151}
     .doc-icon{font-size:18px}
-    .analyze-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s ease;opacity:0;transform:translateY(30px);margin-bottom:16px;min-height:48px;white-space:nowrap}
-    .typing-indicator{display:none;align-items:center;gap:8px;color:#4b5563;font-style:italic;margin-top:10px;min-height:22px}
+    .analyze-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s ease;opacity:0;transform:translateY(30px);margin-bottom:12px;min-height:46px;white-space:nowrap}
+    .typing-indicator{display:none;align-items:center;gap:8px;color:#4b5563;font-style:italic;margin-top:8px;min-height:20px}
     .typing-dots{display:flex;gap:4px}
     .typing-dots span{width:6px;height:6px;background:#6b7280;border-radius:50%;animation:typingBounce 1.4s infinite ease-in-out}
     .typing-dots span:nth-child(1){animation-delay:-.32s}.typing-dots span:nth-child(2){animation-delay:-.16s}
 
     .results-panel{
-      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:22px;
+      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:18px;
       opacity:0;transform:translateY(20px);transition:.45s .6s;
 
       /* Fill remaining card height */
@@ -92,7 +92,7 @@
       grid-template-rows: auto 1fr; /* title + viz */
       overflow: hidden;
     }
-    .chart-title{font-size:16px;font-weight:700;color:#111;margin-bottom:12px;text-align:center}
+    .chart-title{font-size:16px;font-weight:700;color:#111;margin-bottom:10px;text-align:center}
     .chart-container{
       height: var(--viz-h);
       display:flex;align-items:center;justify-content:center;overflow:hidden;
@@ -103,21 +103,21 @@
     .rent-table{ height:100%; overflow:auto; }
 
     /* Line chart styling */
-    .line-chart{position:relative;background:linear-gradient(to bottom,rgba(37,99,235,.10) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
+    .line-chart{position:relative;background:linear-gradient(to bottom,rgba(37,99,235,.10) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:14px;display:flex;align-items:end;justify-content:space-between}
     .line-chart svg{position:absolute;inset:0;width:100%;height:100%}
     .chart-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
-    .point-value{background:#2563eb;color:#fff;padding:5px 10px;border-radius:18px;font-size:12px;font-weight:700;min-width:52px}
+    .point-value{background:#2563eb;color:#fff;padding:4px 8px;border-radius:16px;font-size:12px;font-weight:700;min-width:48px}
     .point-year{font-size:11px;color:#4b5563;font-weight:600}
 
     /* Bar chart styling */
-    .bar-chart{display:flex;align-items:end;gap:16px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.10) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
+    .bar-chart{display:flex;align-items:end;gap:14px;padding:14px;background:linear-gradient(to top,rgba(16,185,129,.10) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
     .bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
-    .bar{background:linear-gradient(to top,#10b981,#34d399);border-radius:6px 6px 0 0;width:100%;min-height:18px;position:relative}
-    .bar-value{position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:3px 6px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
+    .bar{background:linear-gradient(to top,#10b981,#34d399);border-radius:6px 6px 0 0;width:100%;min-height:16px;position:relative}
+    .bar-value{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:3px 6px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
     .bar-year{font-size:11px;color:#4b5563;font-weight:600}
 
     /* Table styling */
-    .rent-table .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:12px;border-bottom:1px solid #e2e8f0;align-items:center}
+    .rent-table .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:10px;border-bottom:1px solid #e2e8f0;align-items:center}
     .rent-table .table-header{background:#f8fafc;font-weight:700;color:#374151;font-size:13px}
     .rent-table .table-cell{font-size:13px;color:#111;font-weight:600}
     .cagr-highlight{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;padding:3px 6px;border-radius:10px;font-weight:700;text-align:center}
@@ -217,9 +217,9 @@
       <!-- RIGHT: hero copy/CTA -->
       <section class="panel-copy" aria-labelledby="copy-title">
         <div class="copy-card">
-          <span class="copy-eyebrow">Assistant</span>
-          <h2 id="copy-title" class="copy-title">Tailored to Your Expertise</h2>
-          <p class="copy-sub">Delegate complex tasks in natural language to your domain‑specific assistant. IcebergIC turns raw filings into decisions—fast.</p>
+          <span class="copy-eyebrow">IcebergIC</span>
+          <h2 id="copy-title" class="copy-title">Support Your Basis</h2>
+          <p class="copy-sub">Use natural language search to find the comps you need</p>
           <a class="copy-cta" href="#how">Explore IcebergIC →</a>
         </div>
       </section>
@@ -281,7 +281,18 @@
     const q     = sel => document.querySelector(sel);
     function schedule(fn, ms){ const id = setTimeout(fn, ms); timers.push(id); }
     function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
-    function toNumber(s){ if(typeof s!=="string") return Number(s); return Number(s.replace(/[$,%\s,]/g,"")); }
+    function toNumber(s){ if(typeof s!=="string") return Number(s); return Number(s.replace(/[$,%\\s,]/g,"")); }
+
+    /* ---------- bar scaling helper ---------- */
+    function scaleBarHeights(data){
+      const nums = data.map(d => toNumber(d.value));
+      const min = Math.min(...nums), max = Math.max(...nums);
+      const span = Math.max(1, max - min);
+      return data.map(d => {
+        const h = 25 + ((toNumber(d.value) - min) / span) * (95 - 25); // 25%..95%
+        return { ...d, height: h };
+      });
+    }
 
     /* ---------- viz builders ---------- */
     function createLineChart(data){
@@ -298,40 +309,42 @@
             </div>`).join('')}
         </div>`;
     }
-    function createBarChart(data){
+    function createBarChart(data, title){
+      const scaled = scaleBarHeights(data);
       return `
         <div class="bar-chart">
-          ${data.map(i=>`
+          ${scaled.map(i=>`
             <div class="bar-item">
-              <div class="bar" style="height:${i.height}%;">
+              <div class="bar" style="height:${i.height.toFixed(1)}%;">
                 <div class="bar-value">${i.value}</div>
               </div>
               <div class="bar-year">${i.year}</div>
             </div>`).join('')}
         </div>`;
     }
-    function createTable(data){
+    function createTable(data, title){
       return `
         <div class="rent-table">
           <div class="table-row table-header"><div>Year</div><div>Rent/SF</div><div>Growth</div></div>
           ${data.slice(0,4).map((item,i)=>{
             const base=toNumber(data[0].value), val=toNumber(item.value);
             const g=i===0?'Baseline':'+'+(((val/base)-1)*100).toFixed(1)+'%';
-            return `<div class="table-row">
-              <div class="table-cell">${item.year}</div>
-              <div class="table-cell">${item.value}</div>
-              <div class="table-cell">${g}</div>
-            </div>`;
+            return `
+              <div class="table-row">
+                <div class="table-cell">${item.year}</div>
+                <div class="table-cell">${item.value}</div>
+                <div class="table-cell">${g}</div>
+              </div>`;
           }).join('')}
           <div class="table-row" style="background:#fef3c7;">
             <div class="table-cell" style="font-weight:700;">CAGR</div>
             <div class="table-cell cagr-highlight">${data[4].cagr}</div>
-            <div class="table-cell" style="font-weight:700;">2022-2025</div>
+            <div class="table-cell"></div>
           </div>
         </div>`;
     }
 
-    /* ---------- measure tallest scenario once, lock heights ---------- */
+    /* ---------- measure tallest scenario once, lock heights (then compress ~25%) ---------- */
     function measureScenarioHeight(html){
       const probe = document.createElement('div');
       probe.className = 'demo-container';
@@ -343,10 +356,8 @@
       probe.style.height='auto';
       probe.innerHTML = `
         <div class="prompt-text" style="opacity:1;transform:none">X</div>
-        <div class="upload-area" style="opacity:1;transform:none">
-          <div class="document-item">X</div>
-        </div>
-        <button class="analyze-button" style="opacity:1;transform:none;min-height:48px">Analyze</button>
+        <div class="upload-area" style="opacity:1;transform:none"><div class="document-item">X</div></div>
+        <button class="analyze-button" style="opacity:1;transform:none;min-height:46px">Analyze</button>
         <div class="results-panel" style="opacity:1;transform:none">
           <div class="chart-title">Title</div>
           <div class="chart-container" id="__probe_chart__">${html}</div>
@@ -361,8 +372,8 @@
     function computeAndLockHeights(){
       const htmls = scenarios.map(s =>
         s.type==='line' ? createLineChart(s.data) :
-        s.type==='bar'  ? createBarChart(s.data)  :
-                          createTable(s.data)
+        s.type==='bar'  ? createBarChart(s.data, s.title) :
+                          createTable(s.data, s.title)
       );
       let maxDemo = 0, maxViz = 0;
       htmls.forEach(h => {
@@ -370,16 +381,17 @@
         maxDemo = Math.max(maxDemo, m.demoH);
         maxViz  = Math.max(maxViz,  m.vizH);
       });
-      // cushions + minimums
-      maxDemo = Math.max(420, maxDemo + 8);
-      maxViz  = Math.max(200, maxViz  + 4);
+      // Compress ~25% with minimums + tiny cushions
+      maxDemo = Math.max(360, Math.round(maxDemo * 0.75));
+      maxViz  = Math.max(160, Math.round(maxViz  * 0.75));
+
       document.documentElement.style.setProperty('--demo-h', `${maxDemo}px`);
       document.documentElement.style.setProperty('--viz-h',  `${maxViz}px`);
     }
 
     /* ---------- flow ---------- */
     function resetDemo(){
-      clearTimers();
+      timers.forEach(clearTimeout); timers = [];
       const typing = byId('typingIndicator'); if (typing) typing.style.display='none';
       const btn = byId('analyzeBtn');
       if (btn){
@@ -434,8 +446,8 @@
         const cc = byId('chartContainer');
         if (cc){
           cc.innerHTML = (s2.type==='line') ? createLineChart(s2.data)
-                     : (s2.type==='bar')  ? createBarChart(s2.data)
-                                          : createTable(s2.data);
+                     : (s2.type==='bar')  ? createBarChart(s2.data, s2.title)
+                                          : createTable(s2.data, s2.title);
         }
         const panel = byId('resultsPanel'); if (panel){ panel.style.opacity='1'; panel.style.transform='translateY(0)'; }
       }, step*4.5);
@@ -447,7 +459,7 @@
       const btn = byId('analyzeBtn');
       if (btn){
         btn.onclick = () => {
-          clearTimers();
+          timers.forEach(clearTimeout); timers = [];
           btn.style.background='#1d4ed8';
           btn.setAttribute('aria-busy','true');
           const btnText = byId('btnText'); if (btnText) btnText.textContent='Processing...';
@@ -461,8 +473,8 @@
             const cc = byId('chartContainer');
             if (cc){
               cc.innerHTML = (s3.type==='line') ? createLineChart(s3.data)
-                         : (s3.type==='bar')  ? createBarChart(s3.data)
-                                              : createTable(s3.data);
+                         : (s3.type==='bar')  ? createBarChart(s3.data, s3.title)
+                                              : createTable(s3.data, s3.title);
             }
             const panel = byId('resultsPanel'); if (panel){ panel.style.opacity='1'; panel.style.transform='translateY(0)'; }
           }, rm?0:800);
@@ -475,8 +487,8 @@
       try {
         computeAndLockHeights();
       } catch (e){
-        document.documentElement.style.setProperty('--demo-h', '520px');
-        document.documentElement.style.setProperty('--viz-h',  '240px');
+        document.documentElement.style.setProperty('--demo-h', '420px');
+        document.documentElement.style.setProperty('--viz-h',  '180px');
         console && console.warn && console.warn('Sizing fallback:', e);
       } finally {
         setTimeout(startDemo, 300);
