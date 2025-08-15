@@ -245,6 +245,71 @@
     .reit-table td{padding:8px 6px;text-align:center;border-bottom:1px solid #e2e8f0;font-weight:600}
     .reit-table .ticker-col{background:#fef9f3;font-weight:700;color:#d97706}
     .reit-table .metric-highlight{background:linear-gradient(135deg,#10b981,#34d399);color:#fff;border-radius:6px;padding:4px 2px;font-weight:700}
+
+    /* ===== Fourth split (IcebergBENCHMARK) — swapped like IR ===== */
+    .split-benchmark{
+      padding:64px 20px 120px; /* extra bottom spacing */
+      background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%);
+    }
+    .split-benchmark .split-inner{
+      max-width:var(--maxw); margin:0 auto;
+      display:grid; grid-template-columns:0.95fr 1.05fr; /* hero left, demo right */
+      gap:28px; align-items:center;
+    }
+    .split-benchmark .panel-copy{ display:flex; justify-content:flex-end; }
+    .split-benchmark .panel-demo{ display:flex; justify-content:center; transform:translateX(3%); }
+
+    .copy-card.benchmark{
+      background:#111213;color:#fff;border-radius:20px;
+      padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);
+      box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px
+    }
+
+    .demo-container.benchmark{
+      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
+      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
+      height:var(--demo2-h);
+      display:grid; grid-template-rows:auto auto auto 1fr; align-content:start;
+    }
+    .prompt-text.benchmark{ margin-bottom:12px; opacity:1; transform:none }
+    .upload-area.benchmark{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:12px;text-align:center;margin-bottom:12px;opacity:1;transform:none}
+    .benchmark-button{
+      width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;
+      padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;
+      margin-bottom:12px;min-height:46px;white-space:nowrap
+    }
+    .benchmark-results{
+      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;
+      height:100%; display:grid; grid-template-rows:auto 1fr; overflow:hidden
+    }
+    .benchmark-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
+    .benchmark-output{
+      height:var(--viz2-h); overflow:hidden; background:#fff;border-radius:10px;
+      padding:14px;border:1px solid #eef2f6; font-size:13px; color:#111; line-height:1.4
+    }
+
+    /* Benchmark chart styling */
+    .benchmark-line-chart{
+      position:relative; height:100%; width:100%;
+      background:linear-gradient(to bottom,rgba(37,99,235,.08) 0%,rgba(37,99,235,.03) 100%);
+      border-radius:10px; padding:16px; display:flex; align-items:end; justify-content:space-between;
+    }
+    .benchmark-line-chart svg{position:absolute;inset:0;width:100%;height:100%}
+    .benchmark-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .benchmark-point-value{background:#2563eb;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px}
+    .benchmark-point-bench{background:#10b981;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px;margin-top:2px}
+    .benchmark-point-year{font-size:10px;color:#4b5563;font-weight:600;margin-top:2px}
+
+    .benchmark-bar-chart{
+      height:100%; width:100%; display:flex; align-items:end; gap:12px; padding:16px;
+      background:linear-gradient(to top,rgba(16,185,129,.08) 0%,rgba(16,185,129,.03) 100%);
+      border-radius:10px;
+    }
+    .benchmark-bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .benchmark-bars{display:flex;gap:4px;align-items:end;height:120px}
+    .benchmark-bar-portfolio{background:linear-gradient(to top,#2563eb,#3b82f6);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
+    .benchmark-bar-bench{background:linear-gradient(to top,#10b981,#34d399);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
+    .benchmark-bar-year{font-size:10px;color:#4b5563;font-weight:600}
     .split-ir .split-inner{
       max-width:var(--maxw); margin:0 auto;
       display:grid; grid-template-columns:0.95fr 1.05fr; /* hero left, demo right */
