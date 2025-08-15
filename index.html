@@ -1,529 +1,98 @@
-function startDemo() {
-      const scenario = scenarios[currentLoop % scenarios.length];
-      
-      // Update ALL content at the same time, before any animations
-      document.getElementById('promptText').textContent = scenario.prompt;
-      document.querySelector('.doc-icon').textContent = scenario.icon;
-      document.getElementById('docName').textContent = scenario.document;
-      
-      // Pre-generate the chart content so it's ready
-      let chartHTML = '';
-      if (scenario.type === 'line') {
-        chartHTML = createLineChart(scenario.data, scenario.title);
-      } else if (scenario.type === 'bar') {
-        chartHTML = createBarChart(scenario.data, scenario.title);
-      } else if (scenario.type === 'table') {
-        chartHTML = createTable(scenario.data, scenario.title);
-      }
-      
-      // Clear previous chart and prepare new one (but keep it hidden)
-      document.getElementById('chartContainer').innerHTML = chartHTML;
-      
-      // Step 1: Show prompt (500ms delay)
-      setTimeout(() => {
-        document.getElementById('promptText').style.opacity = '1';
-        document.getElementById('promptText').style.transform = 'translateY(0)';
-      }, 500);
-
-      // Step 2: Show upload area (1500<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Iceberg — AI‑Powered Real Estate Intelligence</title>
 
-  <!-- Serif for headline, sans for UI/body -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#0b0b0b;       /* deep charcoal */
-      --text:#f6f6f6;     /* near-white text */
-      --muted:#bdbdbd;    /* subheadline color */
-      --btn-bg:#ffffff;   /* CTA background */
-      --btn-text:#0b0b0b; /* CTA text */
-      --maxw:1220px;
+      --bg:#0b0b0b; --text:#f6f6f6; --muted:#bdbdbd;
+      --btn-bg:#ffffff; --btn-text:#0b0b0b; --maxw:1240px;
+      --accent:#2563eb; --radius:24px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{
-      margin:0; background:var(--bg); color:var(--text);
-      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    }
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
     /* ===== Sticky Top Navigation ===== */
-    .nav-wrap{
-      position:sticky; top:0; z-index:50;
-      background:rgba(11,11,11,.92);
-      backdrop-filter:saturate(140%) blur(6px);
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-    .nav{
-      height:72px; display:flex; align-items:center; justify-content:space-between;
-      max-width:var(--maxw); margin:0 auto; padding:0 40px;
-    }
-    .brand{font-weight:600; font-size:20px; letter-spacing:.2px}
-    .menu{display:flex; gap:28px}
-    
-    /* ===== Dropdown Menu Items ===== */
-    .menu-item{
-      position:relative;
-    }
-    .menu-item > a{
-      color:var(--text); text-decoration:none; font-weight:500; font-size:15px;
-      opacity:.92; transition:opacity .2s ease; display:flex; align-items:center; gap:4px;
-    }
-    .menu-item > a:hover{opacity:.7}
-    .menu-item > a::after{
-      content:"▼"; font-size:10px; opacity:.6; transition:transform .2s ease;
-    }
-    .menu-item:hover > a::after{
-      transform:rotate(180deg);
-    }
-    
-    /* ===== Dropdown Panel ===== */
-    .dropdown{
-      position:absolute; top:100%; left:50%; transform:translateX(-50%);
-      background:rgba(11,11,11,.95); backdrop-filter:blur(12px);
-      border:1px solid rgba(255,255,255,.08); border-radius:12px;
-      padding:16px 0; min-width:200px; margin-top:8px;
-      opacity:0; visibility:hidden; pointer-events:none;
-      transition:opacity .2s ease, visibility .2s ease, transform .2s ease;
-      transform:translateX(-50%) translateY(-8px);
-      box-shadow:0 12px 32px rgba(0,0,0,.4);
-    }
-    .menu-item:hover .dropdown{
-      opacity:1; visibility:visible; pointer-events:auto;
-      transform:translateX(-50%) translateY(0);
-    }
-    .dropdown a{
-      display:block; padding:8px 20px; color:var(--text); text-decoration:none;
-      font-size:14px; font-weight:400; opacity:.85; transition:all .15s ease;
-    }
-    .dropdown a:hover{
-      opacity:1; background:rgba(255,255,255,.05);
+    .nav-wrap{position:sticky;top:0;z-index:50;background:rgba(11,11,11,.92);backdrop-filter:saturate(140%) blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav{height:72px;display:flex;align-items:center;justify-content:space-between;max-width:var(--maxw);margin:0 auto;padding:0 28px}
+    .brand{font-weight:600;font-size:20px;letter-spacing:.2px}
+    .menu{display:flex;gap:24px}
+    .menu-item{position:relative}
+    .menu-item>a{color:var(--text);text-decoration:none;font-weight:500;font-size:15px;opacity:.92;transition:opacity .2s ease;display:flex;align-items:center;gap:4px}
+    .menu-item>a:hover{opacity:.7}
+    .menu-item>a::after{content:"▼";font-size:10px;opacity:.6;transition:transform .2s ease}
+    .menu-item:hover>a::after{transform:rotate(180deg)}
+    .dropdown{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-8px);background:rgba(11,11,11,.95);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 0;min-width:200px;margin-top:6px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,visibility .2s ease,transform .2s ease;box-shadow:0 12px 32px rgba(0,0,0,.4)}
+    .menu-item:hover .dropdown{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+    .dropdown a{display:block;padding:8px 16px;color:var(--text);text-decoration:none;font-size:14px;font-weight:400;opacity:.85;transition:all .15s ease}
+    .dropdown a:hover{opacity:1;background:rgba(255,255,255,.05)}
+
+    /* ===== Hero (top) ===== */
+    .hero{min-height:calc(90vh - 72px);display:flex;align-items:center;justify-content:center;padding:72px 20px 24px;position:relative;overflow:hidden}
+    .hero::before{content:"";position:absolute;inset:-20% -20% 0 -20%;background:radial-gradient(60% 60% at 50% 35%, rgba(255,255,255,.06), transparent 65%),radial-gradient(50% 50% at 50% 100%, rgba(255,255,255,.03), transparent 60%);pointer-events:none;mix-blend-mode:screen;opacity:.6}
+    .hero-inner{position:relative;width:100%;max-width:880px;text-align:center}
+    .headline{font-family:"Playfair Display",Georgia,serif;font-weight:700;line-height:1.06;font-size:clamp(42px,7vw,84px);margin:0 0 14px}
+    .sub{font-size:clamp(16px,2.2vw,20px);color:var(--muted);margin:0 0 22px}
+    .cta{display:inline-block;padding:12px 18px;border-radius:12px;background:var(--btn-bg);color:var(--btn-text);text-decoration:none;font-weight:600;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 24px rgba(0,0,0,.35);transition:transform .06s ease, opacity .2s ease, box-shadow .2s ease}
+    .cta:hover{transform:translateY(1px);opacity:.97;box-shadow:0 12px 28px rgba(0,0,0,.4)}
+
+    /* ===== Split Demo Section (half page, tighter) ===== */
+    .split{padding:64px 20px 96px;background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%)}
+    .split-inner{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1.05fr 0.95fr;gap:28px;align-items:center}
+    .panel-demo{display:flex;justify-content:center;transform:translateX(-3%)} /* off-center nudge */
+    .panel-copy{display:flex;justify-content:flex-start}
+    .copy-card{background:rgba(255,255,255,.08);color:#121212;border-radius:20px;padding:22px 22px 24px;background:#111213;/* dark card */border:1px solid rgba(255,255,255,.06);box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px}
+    .copy-eyebrow{display:inline-block;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#a9afba;margin-bottom:.4rem}
+    .copy-title{font-family:"Playfair Display",Georgia,serif;color:#fff;font-size:clamp(30px,3.5vw,44px);line-height:1.08;margin:0 0 .5rem}
+    .copy-sub{color:#cfd5de;font-size:clamp(14px,1.4vw,16px);line-height:1.5;margin:0 0 .9rem}
+    .copy-cta{display:inline-block;background:#2563eb;color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 14px}
+
+    /* ===== Demo Card (left) – your original visual, tightened) ===== */
+    .demo-container{background:#fff;border-radius:22px;padding:34px;width:min(680px,100%);box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden}
+    .prompt-text{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#111;line-height:1.24;margin-bottom:20px;opacity:0;transform:translateY(30px);transition:.5s}
+    .upload-area{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:18px;text-align:center;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:.5s .2s}
+    .document-item{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;color:#374151}
+    .doc-icon{font-size:18px}
+    .analyze-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s ease;opacity:0;transform:translateY(30px);margin-bottom:16px}
+    .results-panel{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:22px;opacity:0;transform:translateY(20px);transition:.45s .6s}
+    .chart-title{font-size:16px;font-weight:700;color:#111;margin-bottom:12px;text-align:center}
+    .line-chart{position:relative;height:180px;background:linear-gradient(to bottom,rgba(37,99,235,.10) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
+    .line-chart svg{position:absolute;inset:0;width:100%;height:100%}
+    .chart-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .point-value{background:#2563eb;color:#fff;padding:5px 10px;border-radius:18px;font-size:12px;font-weight:700;min-width:52px}
+    .point-year{font-size:11px;color:#4b5563;font-weight:600}
+    .bar-chart{display:flex;align-items:end;height:180px;gap:16px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.10) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
+    .bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .bar{background:linear-gradient(to top,#10b981,#34d399);border-radius:6px 6px 0 0;width:100%;min-height:18px;position:relative}
+    .bar-value{position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:3px 6px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
+    .rent-table{background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0}
+    .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:12px;border-bottom:1px solid #e2e8f0;align-items:center}
+    .table-header{background:#f8fafc;font-weight:700;color:#374151;font-size:13px}
+    .table-cell{font-size:13px;color:#111;font-weight:600}
+    .cagr-highlight{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;padding:3px 6px;border-radius:10px;font-weight:700;text-align:center}
+    .typing-indicator{display:none;align-items:center;gap:8px;color:#4b5563;font-style:italic;margin-top:10px}
+    .typing-dots{display:flex;gap:4px}
+    .typing-dots span{width:6px;height:6px;background:#6b7280;border-radius:50%;animation:typingBounce 1.4s infinite ease-in-out}
+    .typing-dots span:nth-child(1){animation-delay:-.32s}.typing-dots span:nth-child(2){animation-delay:-.16s}
+    .reset-indicator{position:absolute;top:12px;right:12px;background:rgba(37,99,235,.1);color:#2563eb;padding:6px 10px;border-radius:14px;font-size:11px;font-weight:600;opacity:0}
+
+    @keyframes typingBounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .split-inner{grid-template-columns:1fr;gap:18px}
+      .panel-demo{transform:none}
+      .copy-card{max-width:unset}
     }
 
-    /* ===== Hero ===== */
-    .hero{
-      min-height:calc(100vh - 72px);
-      display:flex; align-items:center; justify-content:center;
-      padding:72px 24px 64px; position:relative; overflow:hidden;
-    }
-    .hero::before{
-      content:""; position:absolute; inset:-20% -20% 0 -20%;
-      background:
-        radial-gradient(60% 60% at 50% 35%, rgba(255,255,255,.06), transparent 65%),
-        radial-gradient(50% 50% at 50% 100%, rgba(255,255,255,.03), transparent 60%);
-      pointer-events:none; mix-blend-mode:screen; opacity:.6;
-    }
-    .hero-inner{position:relative; width:100%; max-width:860px; text-align:center}
-    .headline{
-      font-family:"Playfair Display", Georgia, serif; font-weight:700; line-height:1.06;
-      font-size:clamp(44px, 7vw, 84px); margin:0 0 18px; letter-spacing:.2px;
-    }
-    .sub{
-      font-size:clamp(16px, 2.2vw, 20px); color:var(--muted); margin:0 0 32px;
-    }
-    .cta{
-      display:inline-block; padding:14px 22px; border-radius:12px;
-      background:var(--btn-bg); color:var(--btn-text);
-      text-decoration:none; font-weight:600;
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 10px 24px rgba(0,0,0,.35);
-      transition:transform .06s ease, opacity .2s ease, box-shadow .2s ease;
-    }
-    .cta:hover{ transform:translateY(1px); opacity:.97; box-shadow:0 12px 28px rgba(0,0,0,.4) }
-    .cta:active{ transform:translateY(2px); opacity:.94 }
-
-    /* ===== Demo Section ===== */
-    .demo-section {
-      padding: 120px 40px;
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    }
-    
-    .demo-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-    
-    .demo-text {
-      padding-right: 40px;
-    }
-    
-    .demo-title {
-      font-size: 48px;
-      font-weight: 800;
-      margin-bottom: 24px;
-      color: #1a1a1a;
-      font-family: "Playfair Display", Georgia, serif;
-      line-height: 1.1;
-    }
-    
-    .demo-subtitle {
-      font-size: 20px;
-      color: #6b7280;
-      line-height: 1.6;
-      margin-bottom: 32px;
-    }
-
-    .demo-features {
-      list-style: none;
-      padding: 0;
-    }
-
-    .demo-features li {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      color: #374151;
-      font-weight: 500;
-    }
-
-    .demo-features li::before {
-      content: "✓";
-      background: #10b981;
-      color: white;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .demo-container {
-      background: white;
-      border-radius: 24px;
-      padding: 48px;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .prompt-text {
-      font-size: 28px;
-      font-weight: 700;
-      color: #1a1a1a;
-      line-height: 1.2;
-      margin-bottom: 32px;
-      text-align: left;
-      opacity: 0;
-      animation: fadeInSlide 1s ease-out 0.5s forwards;
-    }
-
-    .upload-area {
-      background: #f8f9fa;
-      border: 3px dashed #e0e0e0;
-      border-radius: 16px;
-      padding: 24px;
-      text-align: center;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeInSlide 1s ease-out 1.5s forwards;
-    }
-
-    .document-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #374151;
-    }
-
-    .doc-icon {
-      font-size: 20px;
-    }
-
-    .analyze-button {
-      width: 100%;
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 16px;
-      padding: 18px 32px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      opacity: 0;
-      animation: fadeInSlide 1s ease-out 2.5s forwards;
-      margin-bottom: 24px;
-    }
-
-    .results-panel {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 32px;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: showResults 1s ease-out 4.5s forwards;
-    }
-
-    .chart-container {
-      margin-bottom: 24px;
-    }
-
-    .chart-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    /* Line Chart for Cap Rates */
-    .line-chart {
-      position: relative;
-      height: 200px;
-      background: linear-gradient(to bottom, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
-      border-radius: 12px;
-      padding: 20px;
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-    }
-
-    .line-chart svg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .chart-point {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .point-value {
-      background: #2563eb;
-      color: white;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 700;
-      min-width: 60px;
-    }
-
-    .point-year {
-      font-size: 12px;
-      color: #6b7280;
-      font-weight: 600;
-    }
-
-    /* Bar Chart for Value Comps */
-    .bar-chart {
-      display: flex;
-      align-items: end;
-      height: 200px;
-      gap: 20px;
-      padding: 20px;
-      background: linear-gradient(to top, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
-      border-radius: 12px;
-    }
-
-    .bar-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .bar {
-      background: linear-gradient(to top, #10b981, #34d399);
-      border-radius: 6px 6px 0 0;
-      width: 100%;
-      min-height: 20px;
-      position: relative;
-      animation: barGrow 1s ease-out;
-    }
-
-    .bar-value {
-      position: absolute;
-      top: -30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #10b981;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .bar-year {
-      font-size: 12px;
-      color: #6b7280;
-      font-weight: 600;
-    }
-
-    /* Table for Rent Comps */
-    .rent-table {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #e2e8f0;
-    }
-
-    .table-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      padding: 16px;
-      border-bottom: 1px solid #e2e8f0;
-      align-items: center;
-    }
-
-    .table-row:last-child {
-      border-bottom: none;
-    }
-
-    .table-header {
-      background: #f8fafc;
-      font-weight: 700;
-      color: #374151;
-      font-size: 14px;
-    }
-
-    .table-cell {
-      font-size: 14px;
-      color: #1a1a1a;
-      font-weight: 600;
-    }
-
-    .cagr-highlight {
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .typing-indicator {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      color: #6b7280;
-      font-style: italic;
-      margin-top: 16px;
-    }
-
-    .typing-dots {
-      display: flex;
-      gap: 4px;
-    }
-
-    .typing-dots span {
-      width: 6px;
-      height: 6px;
-      background: #6b7280;
-      border-radius: 50%;
-      animation: typingBounce 1.4s infinite ease-in-out;
-    }
-
-    .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
-    .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
-
-    .reset-indicator {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(37, 99, 235, 0.1);
-      color: #2563eb;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      opacity: 0;
-      animation: pulseIndicator 0.5s ease-out 8s forwards;
-    }
-
-    /* Reduced motion accessibility */
-    @media (prefers-reduced-motion: reduce) {
-      * { 
-        animation: none !important; 
-        transition: none !important; 
-      }
-    }
-
-    /* Responsive typography */
-    .prompt-text { 
-      font-size: clamp(20px, 4vw, 28px); 
-    }
-    
-    .demo-container { 
-      padding: clamp(20px, 4vw, 48px); 
-    }
-
-    /* Better color contrast */
-    .point-year, .bar-year {
-      font-size: 12px;
-      color: #4b5563; /* Darker for better contrast */
-      font-weight: 600;
-    }
-
-    .typing-indicator {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      color: #4b5563; /* Better contrast */
-      font-style: italic;
-      margin-top: 16px;
-    }
-
-    /* Focus styles for accessibility */
-    .analyze-button:focus-visible {
-      outline: 2px solid #2563eb;
-      outline-offset: 2px;
-    }
-
-    /* Smooth transitions for all demo elements */
-    .demo-container * {
-      transition: opacity 0.5s ease, transform 0.5s ease, background-color 0.3s ease;
-    }
-
-    /* ===== Mobile tweaks ===== */
-    @media (max-width:900px){
-      .menu{gap:20px}
-      .nav{padding:0 20px}
-      .dropdown{min-width:180px}
-      .demo-section{padding:80px 20px}
-      .demo-content{
-        grid-template-columns: 1fr;
-        gap: 40px;
-        text-align: center;
-      }
-      .demo-text{
-        padding-right: 0;
-      }
-      .demo-container{padding:32px}
-    }
-    @media (max-width:640px){
-      .nav{height:64px}
-      .menu{display:none}
-      .hero{padding-top:56px}
-      .demo-section{padding:60px 16px}
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important;transition:none!important}
     }
   </style>
 </head>
@@ -537,52 +106,34 @@ function startDemo() {
         <div class="menu-item">
           <a href="#">IcebergIC</a>
           <div class="dropdown">
-            <a href="#">Value Comps</a>
-            <a href="#">Cap Rate Intel</a>
-            <a href="#">Occupancy Trends</a>
-            <a href="#">NOI and OpEx Comps</a>
-            <a href="#">Growth Rates</a>
+            <a href="#">Value Comps</a><a href="#">Cap Rate Intel</a><a href="#">Occupancy Trends</a><a href="#">NOI and OpEx Comps</a><a href="#">Growth Rates</a>
           </div>
         </div>
-        
         <div class="menu-item">
           <a href="#">IcebergIR</a>
           <div class="dropdown">
-            <a href="#">Memo Narrative</a>
-            <a href="#">FAQ Prep</a>
-            <a href="#">Market Commentary</a>
+            <a href="#">Memo Narrative</a><a href="#">FAQ Prep</a><a href="#">Market Commentary</a>
           </div>
         </div>
-        
         <div class="menu-item">
           <a href="#">IcebergREIT</a>
           <div class="dropdown">
-            <a href="#">Portfolio Composition</a>
-            <a href="#">Valuation Analysis</a>
-            <a href="#">Peer Comparison</a>
+            <a href="#">Portfolio Composition</a><a href="#">Valuation Analysis</a><a href="#">Peer Comparison</a>
           </div>
         </div>
-        
         <div class="menu-item">
           <a href="#">IcebergBENCHMARK</a>
-          <div class="dropdown">
-            <a href="#">Underwriting Checks</a>
-            <a href="#">Actuals Comparisons</a>
-          </div>
+          <div class="dropdown"><a href="#">Underwriting Checks</a><a href="#">Actuals Comparisons</a></div>
         </div>
-        
         <div class="menu-item">
           <a href="#">IcebergCUSTOM</a>
-          <div class="dropdown">
-            <a href="#">API Integration</a>
-            <a href="#">Private Iceberg Tool</a>
-          </div>
+          <div class="dropdown"><a href="#">API Integration</a><a href="#">Private Iceberg Tool</a></div>
         </div>
       </nav>
     </header>
   </div>
 
-  <!-- Hero -->
+  <!-- Top hero -->
   <main class="hero">
     <div class="hero-inner">
       <h1 class="headline">AI‑Powered Real Estate Intelligence</h1>
@@ -591,273 +142,159 @@ function startDemo() {
     </div>
   </main>
 
-  <!-- Live Demo Section -->
-  <section class="demo-section">
-    <div class="demo-header">
-      <h2 class="demo-title">See Iceberg in Action</h2>
-      <p class="demo-subtitle">Watch real-time analysis of data center markets with instant insights and professional visualizations</p>
-    </div>
-    
-    <div class="demo-container" id="demoContainer">
-      <div class="reset-indicator" id="resetIndicator">🔄 Live Demo</div>
-      
-      <div class="prompt-text" id="promptText">
-        Analyze US data center cap rate trends
-      </div>
-      
-      <div class="upload-area" id="uploadArea">
-        <div class="document-item">
-          <span class="doc-icon">📊</span>
-          <span id="docName">US_DataCenter_CapRates.xlsx</span>
-        </div>
-      </div>
-      
-      <button class="analyze-button" id="analyzeBtn">
-        <span id="btnText">Analyze with IcebergIC</span>
-      </button>
+  <!-- Split half‑page: left demo, right copy -->
+  <section class="split">
+    <div class="split-inner">
+      <!-- LEFT: demo/graphic -->
+      <section class="panel-demo">
+        <div class="demo-container" id="demoContainer" aria-live="polite">
+          <div class="reset-indicator" id="resetIndicator">🔄 Live Demo</div>
 
-      <div class="typing-indicator" id="typingIndicator">
-        <span>Processing data</span>
-        <div class="typing-dots">
-          <span></span>
-          <span></span>
-          <span></span>
+          <div class="prompt-text" id="promptText">Analyze US data center cap rate trends</div>
+
+          <div class="upload-area" id="uploadArea" role="region" aria-label="Uploaded document">
+            <div class="document-item">
+              <span class="doc-icon">📊</span>
+              <span id="docName">US_DataCenter_CapRates.xlsx</span>
+            </div>
+          </div>
+
+          <button class="analyze-button" id="analyzeBtn" type="button" aria-controls="resultsPanel">
+            <span id="btnText">Analyze with IcebergIC</span>
+          </button>
+
+          <div class="typing-indicator" id="typingIndicator" role="status" aria-live="polite">
+            <span>Processing data</span>
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+          </div>
+
+          <div class="results-panel" id="resultsPanel">
+            <div class="chart-container" id="chartContainer"><!-- dynamic --></div>
+          </div>
         </div>
-      </div>
-      
-      <div class="results-panel" id="resultsPanel">
-        <div class="chart-container" id="chartContainer">
-          <!-- Chart content will be dynamically inserted -->
+      </section>
+
+      <!-- RIGHT: hero copy/CTA -->
+      <section class="panel-copy" aria-labelledby="copy-title">
+        <div class="copy-card">
+          <span class="copy-eyebrow">Assistant</span>
+          <h2 id="copy-title" class="copy-title">Tailored to Your Expertise</h2>
+          <p class="copy-sub">Delegate complex tasks in natural language to your domain‑specific assistant. IcebergIC turns raw filings into decisions—fast.</p>
+          <a class="copy-cta" href="#how">Explore IcebergIC →</a>
         </div>
-      </div>
+      </section>
     </div>
   </section>
 
+  <!-- JavaScript at the end to avoid any early rendering glitches -->
   <script>
     let currentLoop = 0;
     let timers = [];
-
     const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function schedule(fn, ms) {
-      const id = setTimeout(fn, ms);
-      timers.push(id);
-    }
-    
-    function clearTimers() {
-      timers.forEach(clearTimeout);
-      timers = [];
-    }
-
-    function toNumber(s) {
-      // "$1,846" -> 1846 ; "3.2%" -> 3.2
-      if (typeof s !== 'string') return Number(s);
-      return Number(s.replace(/[$,%\s,]/g, ''));
-    }
+    function schedule(fn, ms){ const id = setTimeout(fn, ms); timers.push(id); }
+    function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+    function toNumber(s){ if(typeof s!=="string") return Number(s); return Number(s.replace(/[$,%\\s,]/g,"")); }
 
     const scenarios = [
-      {
-        prompt: "Analyze US data center cap rate trends",
-        document: "US_DataCenter_CapRates.xlsx",
-        icon: "📈",
-        type: "line",
-        title: "US Data Center Cap Rates (2022-2025)",
-        data: [
-          { year: "2022", value: "4.2%" },
-          { year: "2023", value: "4.1%" },
-          { year: "2024", value: "3.3%" },
-          { year: "2025", value: "3.2%" }
-        ]
-      },
-      {
-        prompt: "Compare NoVa data center value comps",
-        document: "NoVa_ValueComps_Analysis.xlsx", 
-        icon: "💰",
-        type: "bar",
-        title: "Northern Virginia Value per SF",
-        data: [
-          { year: "2022", value: "$1,364", height: 25 },
-          { year: "2023", value: "$1,310", height: 20 },
-          { year: "2024", value: "$1,846", height: 70 },
-          { year: "2025", value: "$2,051", height: 95 }
-        ]
-      },
-      {
-        prompt: "Generate Chicago rent comp analysis",
-        document: "Chicago_RentComps_Q4.xlsx",
-        icon: "🏢", 
-        type: "table",
-        title: "Chicago Data Center Rent Analysis",
-        data: [
-          { year: "2022", value: "$92.76" },
-          { year: "2023", value: "$96.89" },
-          { year: "2024", value: "$99.12" },
-          { year: "2025", value: "$103.01" },
-          { cagr: "3.6% CAGR" }
-        ]
-      }
+      { prompt:"Analyze US data center cap rate trends", document:"US_DataCenter_CapRates.xlsx", icon:"📈", type:"line", title:"US Data Center Cap Rates (2022-2025)", data:[{year:"2022",value:"4.2%"},{year:"2023",value:"4.1%"},{year:"2024",value:"3.3%"},{year:"2025",value:"3.2%"}]},
+      { prompt:"Compare NoVa data center value comps", document:"NoVa_ValueComps_Analysis.xlsx", icon:"💰", type:"bar", title:"Northern Virginia Value per SF", data:[{year:"2022",value:"$1,364",height:25},{year:"2023",value:"$1,310",height:20},{year:"2024",value:"$1,846",height:70},{year:"2025",value:"$2,051",height:95}]},
+      { prompt:"Generate Chicago rent comp analysis", document:"Chicago_RentComps_Q4.xlsx", icon:"🏢", type:"table", title:"Chicago Data Center Rent Analysis", data:[{year:"2022",value:"$92.76"},{year:"2023",value:"$96.89"},{year:"2024",value:"$99.12"},{year:"2025",value:"$103.01"},{cagr:"3.6% CAGR"}]}
     ];
 
-    function createLineChart(data, title) {
+    function createLineChart(data,title){
       return `
         <div class="chart-title">${title}</div>
         <div class="line-chart">
           <svg>
-            <path d="M 80 40 L 220 50 L 360 100 L 500 120" 
-                  stroke="#2563eb" 
-                  stroke-width="3" 
-                  fill="none" />
+            <path d="M 80 40 L 220 50 L 360 100 L 500 120" stroke="#2563eb" stroke-width="3" fill="none"></path>
           </svg>
-          ${data.map((point, i) => `
+          ${data.map(p=>`
             <div class="chart-point">
-              <div class="point-value">${point.value}</div>
-              <div class="point-year">${point.year}</div>
-            </div>
-          `).join('')}
-        </div>
-      `;
+              <div class="point-value">${p.value}</div>
+              <div class="point-year">${p.year}</div>
+            </div>`).join('')}
+        </div>`;
     }
-
-    function createBarChart(data, title) {
+    function createBarChart(data,title){
       return `
         <div class="chart-title">${title}</div>
         <div class="bar-chart">
-          ${data.map(item => `
+          ${data.map(i=>`
             <div class="bar-item">
-              <div class="bar" style="height: ${item.height}%;">
-                <div class="bar-value">${item.value}</div>
+              <div class="bar" style="height:${i.height}%;">
+                <div class="bar-value">${i.value}</div>
               </div>
-              <div class="bar-year">${item.year}</div>
-            </div>
-          `).join('')}
-        </div>
-      `;
+              <div class="bar-year">${i.year}</div>
+            </div>`).join('')}
+        </div>`;
     }
-
-    function createTable(data, title) {
+    function createTable(data,title){
       return `
         <div class="chart-title">${title}</div>
         <div class="rent-table">
-          <div class="table-row table-header">
-            <div>Year</div><div>Rent/SF</div><div>Growth</div>
-          </div>
-          ${data.slice(0,4).map((item,i) => {
-            const base = toNumber(data[0].value);
-            const val = toNumber(item.value);
-            const growth = i===0 ? 'Baseline' : '+'+(((val/base)-1)*100).toFixed(1)+'%';
-            return `
-              <div class="table-row">
-                <div class="table-cell">${item.year}</div>
-                <div class="table-cell">${item.value}</div>
-                <div class="table-cell">${growth}</div>
-              </div>`;
-          }).join('')}
-          <div class="table-row" style="background:#fef3c7;">
-            <div class="table-cell" style="font-weight:700;">CAGR</div>
-            <div class="table-cell cagr-highlight">${data[4].cagr}</div>
-            <div class="table-cell" style="font-weight:700;">2022-2025</div>
-          </div>
+          <div class="table-row table-header"><div>Year</div><div>Rent/SF</div><div>Growth</div></div>
+          ${data.slice(0,4).map((item,i)=>{const base=toNumber(data[0].value);const val=toNumber(item.value);const g=i===0?'Baseline':'+'+(((val/base)-1)*100).toFixed(1)+'%';return `
+            <div class="table-row"><div class="table-cell">${item.year}</div><div class="table-cell">${item.value}</div><div class="table-cell">${g}</div></div>`;}).join('')}
+          <div class="table-row" style="background:#fef3c7;"><div class="table-cell" style="font-weight:700;">CAGR</div><div class="table-cell cagr-highlight">${data[4].cagr}</div><div class="table-cell" style="font-weight:700;">2022-2025</div></div>
         </div>`;
     }
 
-    function resetDemo() {
+    function resetDemo(){
       clearTimers();
-      const c = document.getElementById('demoContainer');
-      
-      // Explicit state reset
-      document.getElementById('typingIndicator').style.display = 'none';
-      const btn = document.getElementById('analyzeBtn');
-      btn.style.background = '#2563eb';
-      btn.setAttribute('aria-busy', 'false');
-      document.getElementById('btnText').textContent = 'Analyze with IcebergIC';
-      document.getElementById('resetIndicator').style.opacity = '0';
-      document.getElementById('chartContainer').innerHTML = '';
-      document.getElementById('resultsPanel').style.opacity = '0';
-      document.getElementById('resultsPanel').style.transform = 'translateY(20px)';
-      document.getElementById('promptText').style.opacity = '0';
-      document.getElementById('promptText').style.transform = 'translateY(30px)';
-      document.getElementById('uploadArea').style.opacity = '0';
-      document.getElementById('uploadArea').style.transform = 'translateY(30px)';
-      document.getElementById('analyzeBtn').style.opacity = '0';
-      document.getElementById('analyzeBtn').style.transform = 'translateY(30px)';
-
-      setTimeout(() => {
-        startDemo();
-      }, rm ? 0 : 500);
+      document.getElementById('typingIndicator').style.display='none';
+      const btn=document.getElementById('analyzeBtn');
+      btn.style.background='#2563eb'; btn.setAttribute('aria-busy','false');
+      document.getElementById('btnText').textContent='Analyze with IcebergIC';
+      document.getElementById('resetIndicator').style.opacity='0';
+      document.getElementById('chartContainer').innerHTML='';
+      document.getElementById('resultsPanel').style.opacity='0';
+      document.getElementById('resultsPanel').style.transform='translateY(20px)';
+      ['promptText','uploadArea','analyzeBtn'].forEach(id=>{const el=document.getElementById(id); el.style.opacity='0'; el.style.transform='translateY(30px)';});
+      setTimeout(startDemo, rm?0:250);
     }
 
-    function startDemo() {
+    function startDemo(){
       const s = scenarios[currentLoop % scenarios.length];
 
-      // Update content immediately
+      // update all content BEFORE any animations
       document.getElementById('promptText').textContent = s.prompt;
       document.querySelector('.doc-icon').textContent = s.icon;
       document.getElementById('docName').textContent = s.document;
 
-      const step = rm ? 0 : 1000;
+      const step = rm ? 0 : 900;
 
-      schedule(() => {
-        const el = document.getElementById('promptText');
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-      }, step * 0.5);
+      // Step 1: show prompt (500ms)
+      schedule(()=>{const el=document.getElementById('promptText'); el.style.opacity='1'; el.style.transform='translateY(0)';}, step*0.5);
 
-      schedule(() => {
-        const el = document.getElementById('uploadArea');
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-      }, step * 1.5);
+      // Step 2: show upload area (1.5s)
+      schedule(()=>{const el=document.getElementById('uploadArea'); el.style.opacity='1'; el.style.transform='translateY(0)';}, step*1.5);
 
-      schedule(() => {
-        const el = document.getElementById('analyzeBtn');
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-      }, step * 2.5);
+      // Step 3: show button (2.5s)
+      schedule(()=>{const el=document.getElementById('analyzeBtn'); el.style.opacity='1'; el.style.transform='translateY(0)';}, step*2.5);
 
-      schedule(() => {
-        const btn = document.getElementById('analyzeBtn');
-        btn.style.background = '#1d4ed8';
-        btn.setAttribute('aria-busy', 'true');
-        document.getElementById('btnText').textContent = 'Processing...';
-        document.getElementById('typingIndicator').style.display = 'flex';
-      }, step * 3.5);
+      // Step 4: processing (3.5s)
+      schedule(()=>{const btn=document.getElementById('analyzeBtn'); btn.style.background='#1d4ed8'; btn.setAttribute('aria-busy','true'); document.getElementById('btnText').textContent='Processing...'; document.getElementById('typingIndicator').style.display='flex';}, step*3.5);
 
-      schedule(() => {
-        document.getElementById('typingIndicator').style.display = 'none';
-        const btn = document.getElementById('analyzeBtn');
-        document.getElementById('btnText').textContent = 'Analysis Complete ✓';
-        btn.style.background = '#10b981';
-        btn.setAttribute('aria-busy', 'false');
+      // Step 5: results (4.5s)
+      schedule(()=>{
+        document.getElementById('typingIndicator').style.display='none';
+        const btn=document.getElementById('analyzeBtn'); document.getElementById('btnText').textContent='Analysis Complete ✓'; btn.style.background='#10b981'; btn.setAttribute('aria-busy','false');
+        let html=''; if(s.type==='line') html=createLineChart(s.data,s.title); else if(s.type==='bar') html=createBarChart(s.data,s.title); else html=createTable(s.data,s.title);
+        document.getElementById('chartContainer').innerHTML=html;
+        const panel=document.getElementById('resultsPanel'); panel.style.opacity='1'; panel.style.transform='translateY(0)';
+      }, step*4.5);
 
-        // Build chart/table
-        let html = '';
-        if (s.type === 'line') {
-          html = createLineChart(s.data, s.title);
-        } else if (s.type === 'bar') {
-          html = createBarChart(s.data, s.title);
-        } else {
-          html = createTable(s.data, s.title);
-        }
-        document.getElementById('chartContainer').innerHTML = html;
+      // Show loop indicator and loop
+      schedule(()=>{document.getElementById('resetIndicator').style.opacity='0.85';}, step*7.5);
+      schedule(()=>{currentLoop++; resetDemo();}, step*9);
 
-        const panel = document.getElementById('resultsPanel');
-        panel.style.opacity = '1';
-        panel.style.transform = 'translateY(0)';
-      }, step * 4.5);
-
-      schedule(() => {
-        document.getElementById('resetIndicator').style.opacity = '0.8';
-      }, step * 7.5);
-
-      schedule(() => {
-        currentLoop++;
-        resetDemo();
-      }, step * 9);
+      // click to fast-forward
+      document.getElementById('analyzeBtn').onclick=()=>{clearTimers(); const btn=document.getElementById('analyzeBtn'); btn.style.background='#1d4ed8'; btn.setAttribute('aria-busy','true'); document.getElementById('btnText').textContent='Processing...'; document.getElementById('typingIndicator').style.display='flex'; setTimeout(()=>{document.getElementById('typingIndicator').style.display='none'; btn.style.background='#10b981'; btn.setAttribute('aria-busy','false'); document.getElementById('btnText').textContent='Analysis Complete ✓'; let html=''; if(s.type==='line') html=createLineChart(s.data,s.title); else if(s.type==='bar') html=createBarChart(s.data,s.title); else html=createTable(s.data,s.title); document.getElementById('chartContainer').innerHTML=html; const panel=document.getElementById('resultsPanel'); panel.style.opacity='1'; panel.style.transform='translateY(0)';}, rm?0:800);};
     }
 
-    // Start the demo
-    setTimeout(startDemo, 1000);
+    // kick off after first paint
+    window.addEventListener('load', ()=> setTimeout(startDemo, 300));
   </script>
-
 </body>
 </html>
