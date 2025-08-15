@@ -22,34 +22,58 @@
     }
     
     *{box-sizing:border-box}
-    html,body{height:100%; margin:0; padding:0;}
+    html{
+      height:100%; margin:0; padding:0;
+      scroll-behavior: smooth; /* Smooth scrolling for navigation */
+    }
     body{
+      height:100%; margin:0; padding:0;
       background:var(--bg);color:var(--text);
       font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
       -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+      overflow-x: hidden; /* Prevent horizontal scroll from transforms */
     }
 
     /* ===== Sticky Top Navigation ===== */
     .nav-wrap{position:sticky;top:0;z-index:50;background:rgba(11,11,11,.92);backdrop-filter:saturate(140%) blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
     .nav{height:72px;display:flex;align-items:center;justify-content:space-between;max-width:var(--maxw);margin:0 auto;padding:0 28px}
-    .brand{font-weight:600;font-size:20px;letter-spacing:.2px}
+    
+    /* ===== Logo Styles ===== */
+    .brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:20px;letter-spacing:.2px}
+    .logo{width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+    .logo svg{width:100%;height:100%}
+    
     .menu{display:flex;gap:24px}
     .menu-item{position:relative}
     .menu-item>a{color:var(--text);text-decoration:none;font-weight:500;font-size:15px;opacity:.92;transition:opacity .2s ease;display:flex;align-items:center;gap:4px}
     .menu-item>a:hover{opacity:.7}
     .menu-item>a::after{content:"▼";font-size:10px;opacity:.6;transition:transform .2s ease}
     .menu-item:hover>a::after{transform:rotate(180deg)}
+    
+    /* Hide dropdown arrow for Team link */
+    .menu-item.no-dropdown>a::after{display:none}
+    
     .dropdown{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-8px);background:rgba(11,11,11,.95);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 0;min-width:200px;margin-top:6px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,visibility .2s ease,transform .2s ease;box-shadow:0 12px 32px rgba(0,0,0,.4)}
-    .menu-item:hover .dropdown{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+    
+    /* Keyboard-friendly dropdowns */
+    .menu-item:hover .dropdown,
+    .menu-item:focus-within .dropdown{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+    
     .dropdown a{display:block;padding:8px 16px;color:var(--text);text-decoration:none;font-size:14px;font-weight:400;opacity:.85;transition:all .15s ease}
     .dropdown a:hover{opacity:1;background:rgba(255,255,255,.05)}
 
-    /* ===== Top Hero - FIXED HEIGHT ===== */
+    /* ===== Top Hero - FIXED VIEWPORT ===== */
     .hero{
-      height:100vh;
-      display:flex;align-items:center;justify-content:center;
-      padding:72px 20px 24px;position:relative;overflow:hidden;
+      min-height: calc(100dvh - 72px);   /* subtract sticky nav */
+      padding: 72px 20px 0;               /* trim bottom padding to zero */
+      display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden;
     }
+    /* Fallback for older browsers */
+    @supports not (height: 100dvh) {
+      .hero { min-height: calc(100vh - 72px); }
+    }
+    
     .hero::before{content:"";position:absolute;inset:-20% -20% 0 -20%;background:radial-gradient(60% 60% at 50% 35%, rgba(255,255,255,.06), transparent 65%),radial-gradient(50% 50% at 50% 100%, rgba(255,255,255,.03), transparent 60%);pointer-events:none;mix-blend-mode:screen;opacity:.6}
     .hero-inner{position:relative;width:100%;max-width:880px;text-align:center}
     .headline{font-family:"Playfair Display",Georgia,serif;font-weight:700;line-height:1.06;font-size:clamp(42px,7vw,84px);margin:0 0 14px}
@@ -58,7 +82,10 @@
     .cta:hover{transform:translateY(1px);opacity:.97;box-shadow:0 12px 28px rgba(0,0,0,.4)}
 
     /* ===== Split Demo Section Base ===== */
-    .split{padding:64px 20px 96px;}
+    .split{
+      padding:64px 20px 96px;
+      scroll-margin-top: 84px; /* keeps section titles out from under nav */
+    }
     .split-inner{max-width:var(--maxw);margin:0 auto;display:grid;gap:28px;align-items:center}
     .panel-demo{display:flex;justify-content:center;}
     .panel-copy{display:flex;}
@@ -70,180 +97,224 @@
     .copy-sub{color:#cfd5de;font-size:clamp(14px,1.4vw,16px);line-height:1.5;margin:0 0 .9rem}
     .copy-cta{display:inline-block;background:#2563eb;color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 14px}
 
-    /* ===== Demo Container Shared Styles ===== */
+    /* ===== Demo Container Shared Styles - DARK THEME ===== */
     .demo-container{
-      background:#fff;border-radius:22px;padding:28px;width:min(680px,100%);
-      box-shadow:0 22px 70px rgba(0,0,0,.18);position:relative;overflow:hidden;
+      background:#1f1f1f;border-radius:22px;padding:28px;width:min(680px,100%);
+      box-shadow:0 22px 70px rgba(0,0,0,.4);position:relative;overflow:hidden;
       height: var(--demo-h);
       display: grid;
       grid-template-rows: auto auto auto 1fr;
       align-content: start;
+      border:1px solid rgba(255,255,255,.08);
     }
 
-    /* ===== Section-Specific Layouts ===== */
+    /* ===== Section-Specific Layouts - DARK THEME ===== */
     
     /* IcebergIC - demo left, copy right */
-    .split.ic{background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%)}
+    .split.ic{background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%)}
     .split.ic .split-inner{grid-template-columns:1.05fr 0.95fr;}
     .split.ic .panel-demo{transform:translateX(-3%);}
     .split.ic .panel-copy{justify-content:flex-start;}
 
     /* IcebergIR - copy left, demo right */
-    .split.ir{background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%)}
+    .split.ir{background:linear-gradient(180deg,#0f0f0f 0%, #1a1a1a 100%)}
     .split.ir .split-inner{grid-template-columns:0.95fr 1.05fr;}
     .split.ir .panel-copy{justify-content:flex-end;}
     .split.ir .panel-demo{transform:translateX(3%);}
 
     /* IcebergREIT - demo left, copy right */
-    .split.reit{background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%)}
+    .split.reit{background:linear-gradient(135deg,#161616 0%,#0b0b0b 100%)}
     .split.reit .split-inner{grid-template-columns:1.05fr 0.95fr;}
     .split.reit .panel-demo{transform:translateX(-3%);}
     .split.reit .panel-copy{justify-content:flex-start;}
 
     /* IcebergBENCHMARK - copy left, demo right */
-    .split.benchmark{background:linear-gradient(180deg,#e9edf3 0%, #f6f7fa 100%)}
+    .split.benchmark{background:linear-gradient(180deg,#0b0b0b 0%, #161616 100%)}
     .split.benchmark .split-inner{grid-template-columns:0.95fr 1.05fr;}
     .split.benchmark .panel-copy{justify-content:flex-end;}
     .split.benchmark .panel-demo{transform:translateX(3%);}
 
     /* IcebergCUSTOM - demo left, copy right */
-    .split.custom{background:linear-gradient(135deg,#f6f7fa 0%,#e9edf3 100%); padding-bottom:120px;}
+    .split.custom{background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%); padding-bottom:120px;}
     .split.custom .split-inner{grid-template-columns:1.05fr 0.95fr;}
     .split.custom .panel-demo{transform:translateX(-3%);}
     .split.custom .panel-copy{justify-content:flex-start;}
 
-    /* ===== IcebergIC Demo Styles ===== */
-    .prompt-text{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#111;line-height:1.24;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:.5s}
-    .upload-area{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:16px;text-align:center;margin-bottom:12px;opacity:0;transform:translateY(30px);transition:.5s .2s}
-    .document-item{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;color:#374151}
+    /* ===== IcebergIC Demo Styles - DARK THEME ===== */
+    .prompt-text{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#f6f6f6;line-height:1.24;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:.5s}
+    .upload-area{background:#161616;border:2px dashed rgba(255,255,255,.15);border-radius:14px;padding:16px;text-align:center;margin-bottom:12px;opacity:0;transform:translateY(30px);transition:.5s .2s}
+    .document-item{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;color:#bdbdbd}
     .doc-icon{font-size:18px}
     .analyze-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s ease;opacity:0;transform:translateY(30px);margin-bottom:12px;min-height:46px;white-space:nowrap}
-    .typing-indicator{display:none;align-items:center;gap:8px;color:#4b5563;font-style:italic;margin-top:8px;min-height:20px}
+    .typing-indicator{display:none;align-items:center;gap:8px;color:#9ca3af;font-style:italic;margin-top:8px;min-height:20px}
     .typing-dots{display:flex;gap:4px}
     .typing-dots span{width:6px;height:6px;background:#6b7280;border-radius:50%;animation:typingBounce 1.4s infinite ease-in-out}
     .typing-dots span:nth-child(1){animation-delay:-.32s}.typing-dots span:nth-child(2){animation-delay:-.16s}
 
     .results-panel{
-      background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:18px;
+      background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:18px;
       opacity:0;transform:translateY(20px);transition:.45s .6s;
       height: 100%;
       display: grid;
       grid-template-rows: auto 1fr;
       overflow: hidden;
+      min-height: 220px; /* Reduce layout shift */
     }
-    .chart-title{font-size:16px;font-weight:700;color:#111;margin-bottom:10px;text-align:center}
+    .chart-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:10px;text-align:center}
     .chart-container{
       height: var(--viz-h);
       display:flex;align-items:center;justify-content:center;overflow:hidden;
+      min-height: 160px; /* Reduce layout shift */
     }
 
     /* Visuals respect reserved space */
     .line-chart, .bar-chart{ height:100%; width:100%; }
     .rent-table{ height:100%; overflow:auto; }
 
-    /* Line chart styling */
-    .line-chart{position:relative;background:linear-gradient(to bottom,rgba(37,99,235,.10) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:14px;display:flex;align-items:end;justify-content:space-between}
+    /* Line chart styling - DARK THEME */
+    .line-chart{position:relative;background:linear-gradient(to bottom,rgba(37,99,235,.15) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:14px;display:flex;align-items:end;justify-content:space-between}
     .line-chart svg{position:absolute;inset:0;width:100%;height:100%}
     .chart-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
     .point-value{background:#2563eb;color:#fff;padding:4px 8px;border-radius:16px;font-size:12px;font-weight:700;min-width:48px}
-    .point-year{font-size:11px;color:#4b5563;font-weight:600}
+    .point-year{font-size:11px;color:#9ca3af;font-weight:600}
 
-    /* Bar chart styling */
-    .bar-chart{display:flex;align-items:end;gap:14px;padding:14px;background:linear-gradient(to top,rgba(16,185,129,.10) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
+    /* Bar chart styling - DARK THEME */
+    .bar-chart{display:flex;align-items:end;gap:14px;padding:14px;background:linear-gradient(to top,rgba(16,185,129,.15) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
     .bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
     .bar{background:linear-gradient(to top,#10b981,#34d399);border-radius:6px 6px 0 0;width:100%;min-height:16px;position:relative}
     .bar-value{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:3px 6px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
-    .bar-year{font-size:11px;color:#4b5563;font-weight:600}
+    .bar-year{font-size:11px;color:#9ca3af;font-weight:600}
 
-    /* Table styling */
-    .rent-table .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:10px;border-bottom:1px solid #e2e8f0;align-items:center}
-    .rent-table .table-header{background:#f8fafc;font-weight:700;color:#374151;font-size:13px}
-    .rent-table .table-cell{font-size:13px;color:#111;font-weight:600}
+    /* Table styling - DARK THEME */
+    .rent-table .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:10px;border-bottom:1px solid rgba(255,255,255,.1);align-items:center}
+    .rent-table .table-header{background:#0f0f0f;font-weight:700;color:#f6f6f6;font-size:13px}
+    .rent-table .table-cell{font-size:13px;color:#e5e7eb;font-weight:600}
     .cagr-highlight{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;padding:3px 6px;border-radius:10px;font-weight:700;text-align:center}
 
     @keyframes typingBounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
 
-    /* ===== IcebergIR Demo Styles ===== */
+    /* ===== IcebergIR Demo Styles - DARK THEME ===== */
     .demo-container.ir{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
-    .prompt-text.ir{margin-bottom:12px;opacity:1;transform:none}
+    .prompt-text.ir{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
     .ir-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
-    .ir-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
-    .ir-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
-    .ir-output{height:var(--viz2-h);overflow:auto;background:#fff;border-radius:10px;padding:14px;border:1px solid #eef2f6;font-size:14px;color:#111;line-height:1.6}
+    .ir-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .ir-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
+    .ir-output{height:var(--viz2-h);overflow:auto;background:#0f0f0f;border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.08);font-size:14px;color:#e5e7eb;line-height:1.6}
     .ir-output ul{margin:0 0 0 18px;padding:0}
     .ir-output li{margin:6px 0}
-    .ir-cursor{display:inline-block;width:8px;height:1em;vertical-align:-2px;background:#111;animation:blink .9s steps(1,end) infinite}
+    .ir-cursor{display:inline-block;width:8px;height:1em;vertical-align:-2px;background:#f6f6f6;animation:blink .9s steps(1,end) infinite}
     @keyframes blink{50%{opacity:0}}
 
-    /* ===== IcebergREIT Demo Styles ===== */
+    /* ===== IcebergREIT Demo Styles - DARK THEME ===== */
     .demo-container.reit{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
-    .prompt-text.reit{margin-bottom:12px;opacity:1;transform:none}
+    .prompt-text.reit{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
     .reit-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
-    .reit-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
-    .reit-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
-    .reit-output{height:var(--viz2-h);overflow:auto;background:#fff;border-radius:10px;padding:14px;border:1px solid #eef2f6;font-size:13px;color:#111;line-height:1.4}
+    .reit-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .reit-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
+    .reit-output{height:var(--viz2-h);overflow:auto;background:#0f0f0f;border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.08);font-size:13px;color:#e5e7eb;line-height:1.4}
 
-    /* REIT comparison table styling */
+    /* REIT comparison table styling - DARK THEME */
     .reit-table{width:100%;border-collapse:collapse;font-size:13px}
-    .reit-table th{background:#f8fafc;padding:8px 6px;text-align:center;font-weight:700;color:#374151;border-bottom:2px solid #e2e8f0}
-    .reit-table td{padding:8px 6px;text-align:center;border-bottom:1px solid #e2e8f0;font-weight:600}
-    .reit-table .ticker-col{background:#fef9f3;font-weight:700;color:#d97706}
+    .reit-table th{background:#161616;padding:8px 6px;text-align:center;font-weight:700;color:#f6f6f6;border-bottom:2px solid rgba(255,255,255,.1)}
+    .reit-table td{padding:8px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600}
+    .reit-table .ticker-col{background:#1a1a1a;font-weight:700;color:#fbbf24}
     .reit-table .metric-highlight{background:linear-gradient(135deg,#10b981,#34d399);color:#fff;border-radius:6px;padding:4px 2px;font-weight:700}
 
-    /* ===== IcebergBENCHMARK Demo Styles ===== */
+    /* ===== IcebergBENCHMARK Demo Styles - DARK THEME ===== */
     .demo-container.benchmark{height:var(--demo2-h);grid-template-rows:auto auto auto 1fr;}
-    .prompt-text.benchmark{margin-bottom:12px;opacity:1;transform:none}
-    .upload-area.benchmark{background:#f8f9fa;border:2px dashed #e1e5ea;border-radius:14px;padding:12px;text-align:center;margin-bottom:12px;opacity:1;transform:none}
+    .prompt-text.benchmark{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
+    .upload-area.benchmark{background:#161616;border:2px dashed rgba(255,255,255,.15);border-radius:14px;padding:12px;text-align:center;margin-bottom:12px;opacity:1;transform:none}
     .benchmark-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
-    .benchmark-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
-    .benchmark-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
-    .benchmark-output{height:var(--viz2-h);overflow:hidden;background:#fff;border-radius:10px;padding:14px;border:1px solid #eef2f6;font-size:13px;color:#111;line-height:1.4}
+    .benchmark-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .benchmark-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
+    .benchmark-output{height:var(--viz2-h);overflow:hidden;background:#0f0f0f;border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.08);font-size:13px;color:#e5e7eb;line-height:1.4}
 
-    /* Benchmark chart styling */
-    .benchmark-line-chart{position:relative;height:100%;width:100%;background:linear-gradient(to bottom,rgba(37,99,235,.08) 0%,rgba(37,99,235,.03) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
+    /* Benchmark chart styling - DARK THEME */
+    .benchmark-line-chart{position:relative;height:100%;width:100%;background:linear-gradient(to bottom,rgba(37,99,235,.12) 0%,rgba(37,99,235,.04) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
     .benchmark-line-chart svg{position:absolute;inset:0;width:100%;height:100%}
     .benchmark-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
     .benchmark-point-value{background:#2563eb;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px}
     .benchmark-point-bench{background:#10b981;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px;margin-top:2px}
-    .benchmark-point-year{font-size:10px;color:#4b5563;font-weight:600;margin-top:2px}
+    .benchmark-point-year{font-size:10px;color:#9ca3af;font-weight:600;margin-top:2px}
 
-    .benchmark-bar-chart{height:100%;width:100%;display:flex;align-items:end;gap:12px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.08) 0%,rgba(16,185,129,.03) 100%);border-radius:10px}
+    .benchmark-bar-chart{height:100%;width:100%;display:flex;align-items:end;gap:12px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.12) 0%,rgba(16,185,129,.04) 100%);border-radius:10px}
     .benchmark-bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
     .benchmark-bars{display:flex;gap:4px;align-items:end;height:120px}
     .benchmark-bar-portfolio{background:linear-gradient(to top,#2563eb,#3b82f6);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
     .benchmark-bar-bench{background:linear-gradient(to top,#10b981,#34d399);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
-    .benchmark-bar-year{font-size:10px;color:#4b5563;font-weight:600}
+    .benchmark-bar-year{font-size:10px;color:#9ca3af;font-weight:600}
 
-    /* ===== IcebergCUSTOM Demo Styles ===== */
+    /* ===== IcebergCUSTOM Demo Styles - DARK THEME ===== */
     .demo-container.custom{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
-    .prompt-text.custom{margin-bottom:12px;opacity:1;transform:none}
+    .prompt-text.custom{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
     .custom-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
-    .custom-results{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
-    .custom-title{font-size:16px;font-weight:700;color:#111;margin-bottom:8px;text-align:center}
-    .custom-output{height:var(--viz2-h);overflow:auto;background:#fff;border-radius:10px;padding:16px;border:1px solid #eef2f6;font-size:13px;color:#111;line-height:1.5}
+    .custom-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .custom-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
+    .custom-output{height:var(--viz2-h);overflow:auto;background:#0f0f0f;border-radius:10px;padding:16px;border:1px solid rgba(255,255,255,.08);font-size:13px;color:#e5e7eb;line-height:1.5}
     .checklist{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .check{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#f9fafb;font-weight:600}
-    .progress{height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-top:12px}
+    .check{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:#1a1a1a;font-weight:600;color:#e5e7eb}
+    .progress{height:10px;background:#333;border-radius:6px;overflow:hidden;margin-top:12px}
     .progress > div{height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#10b981)}
+
+    /* ===== Team Section ===== */
+    .split.team{background:linear-gradient(135deg,#161616 0%,#0b0b0b 100%); padding:80px 20px 60px;}
+    .split.team .split-inner{grid-template-columns:1fr; text-align:center; gap:40px;}
+    .team-header{margin-bottom:40px}
+    .team-title{font-family:"Playfair Display",Georgia,serif;font-size:clamp(36px,5vw,56px);font-weight:700;color:#f6f6f6;margin-bottom:16px}
+    .team-subtitle{font-size:clamp(16px,2vw,20px);color:#9ca3af;max-width:600px;margin:0 auto}
+    .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;max-width:900px;margin:0 auto}
+    .team-member{background:#1f1f1f;border-radius:20px;padding:32px 24px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 32px rgba(0,0,0,.25)}
+    .team-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#10b981);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#fff}
+    .team-name{font-size:24px;font-weight:700;color:#f6f6f6;margin-bottom:8px}
+    .team-role{font-size:16px;color:#2563eb;font-weight:600;margin-bottom:12px}
+    .team-bio{font-size:14px;color:#9ca3af;line-height:1.5}
+
+    /* ===== Footer Section ===== */
+    .footer{background:#0b0b0b;border-top:1px solid rgba(255,255,255,.06);padding:60px 20px 40px}
+    .footer-inner{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:start}
+    .footer-section h4{font-size:18px;font-weight:700;color:#f6f6f6;margin-bottom:20px}
+    .footer-section p, .footer-section a{font-size:14px;color:#9ca3af;line-height:1.6;text-decoration:none}
+    .footer-section a:hover{color:#2563eb}
+    .footer-contact{display:flex;flex-direction:column;gap:8px}
+    .footer-bottom{margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);text-align:center;color:#6b7280;font-size:14px}
+
+    /* Modal Styles */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+    .modal.active{display:flex}
+    .modal-content{background:#1f1f1f;border-radius:20px;padding:40px;max-width:500px;width:100%;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .modal-header{text-align:center;margin-bottom:32px}
+    .modal-title{font-family:"Playfair Display",Georgia,serif;font-size:28px;font-weight:700;color:#f6f6f6;margin-bottom:8px}
+    .modal-subtitle{color:#9ca3af;font-size:16px}
+    .modal-close{position:absolute;top:20px;right:20px;background:none;border:none;color:#9ca3af;font-size:24px;cursor:pointer;padding:8px}
+    .modal-close:hover{color:#f6f6f6}
+    .form-group{margin-bottom:20px}
+    .form-label{display:block;margin-bottom:8px;font-weight:600;color:#f6f6f6;font-size:14px}
+    .form-input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:#161616;color:#f6f6f6;font-size:14px}
+    .form-input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+    .form-textarea{min-height:100px;resize:vertical}
+    .form-submit{width:100%;background:#2563eb;color:#fff;border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s}
+    .form-submit:hover{background:#1d4ed8}
+    .form-submit:disabled{background:#374151;cursor:not-allowed}
 
     /* ===== Responsive Design ===== */
     @media (max-width:980px){
       .split-inner{grid-template-columns:1fr!important;gap:18px}
       .panel-demo{transform:none!important}
       .copy-card{max-width:unset}
-      .hero{height:auto;min-height:100vh;padding:72px 20px 48px;}
+      .hero{min-height:calc(100dvh - 72px);padding:72px 20px 0;}
     }
 
     @media (max-width:640px){
       .nav{padding:0 20px}
       .menu{gap:16px}
-      .hero{padding:60px 16px 32px;}
+      .hero{padding:60px 16px 0;}
       .split{padding:48px 16px 64px;}
     }
 
     /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       *{animation:none!important;transition:none!important}
+      html{scroll-behavior:auto;}
     }
   </style>
 </head>
@@ -252,33 +323,52 @@
   <!-- Sticky Nav -->
   <div class="nav-wrap">
     <header class="nav">
-      <div class="brand"><img src="logo.png" alt="" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;background:#0f1115;padding:3px;margin-right:8px;">Iceberg</div>
+      <div class="brand">
+        <div class="logo">
+          <svg viewBox="0 0 32 32" fill="none">
+            <!-- Water surface -->
+            <path d="M2 20 C8 18, 12 22, 18 20 C24 18, 28 22, 30 20 L30 30 L2 30 Z" fill="#0891b2"/>
+            <!-- Iceberg above water -->
+            <path d="M14 8 L18 8 L20 16 L12 16 Z" fill="#e5e7eb"/>
+            <!-- Iceberg below water (larger, subtle) -->
+            <path d="M10 16 L22 16 L24 28 L8 28 Z" fill="#0c4a6e" opacity="0.6"/>
+            <!-- Data visualization dots below water -->
+            <circle cx="13" cy="22" r="1" fill="#2563eb" opacity="0.8"/>
+            <circle cx="16" cy="24" r="1" fill="#10b981" opacity="0.8"/>
+            <circle cx="19" cy="23" r="1" fill="#f59e0b" opacity="0.8"/>
+          </svg>
+        </div>
+        <span>Iceberg</span>
+      </div>
       <nav class="menu" aria-label="Primary">
         <div class="menu-item">
-          <a href="#">IcebergIC</a>
+          <a href="#icebergic">IcebergIC</a>
           <div class="dropdown">
             <a href="#">Value Comps</a><a href="#">Cap Rate Intel</a><a href="#">Occupancy Trends</a><a href="#">NOI and OpEx Comps</a><a href="#">Growth Rates</a>
           </div>
         </div>
         <div class="menu-item">
-          <a href="#">IcebergIR</a>
+          <a href="#icebergir">IcebergIR</a>
           <div class="dropdown">
             <a href="#">Memo Narrative</a><a href="#">FAQ Prep</a><a href="#">Market Commentary</a>
           </div>
         </div>
         <div class="menu-item">
-          <a href="#">IcebergREIT</a>
+          <a href="#icebergreit">IcebergREIT</a>
           <div class="dropdown">
             <a href="#">Portfolio Composition</a><a href="#">Valuation Analysis</a><a href="#">Peer Comparison</a>
           </div>
         </div>
         <div class="menu-item">
-          <a href="#">IcebergBENCHMARK</a>
+          <a href="#icebergbenchmark">IcebergBENCHMARK</a>
           <div class="dropdown"><a href="#">Underwriting Checks</a><a href="#">Actuals Comparisons</a></div>
         </div>
         <div class="menu-item">
-          <a href="#">IcebergCUSTOM</a>
+          <a href="#icebergcustom">IcebergCUSTOM</a>
           <div class="dropdown"><a href="#">API Integration</a><a href="#">Private Iceberg Tool</a></div>
+        </div>
+        <div class="menu-item no-dropdown">
+          <a href="#team">Team</a>
         </div>
       </nav>
     </header>
@@ -289,12 +379,12 @@
     <div class="hero-inner">
       <h1 class="headline">AI‑Powered Real Estate Intelligence</h1>
       <p class="sub">Domain‑specific AI intelligence and tools for managers, investors, brokers, and analysts.</p>
-      <a class="cta" href="#signup">Request a Demo</a>
+      <a class="cta" href="#" onclick="openDemoModal(event)">Request a Demo</a>
     </div>
   </main>
 
   <!-- SECTION 1: IcebergIC -->
-  <section class="split ic">
+  <section class="split ic" id="icebergic">
     <div class="split-inner">
       <!-- LEFT: demo -->
       <section class="panel-demo">
@@ -330,11 +420,118 @@
           <span class="copy-eyebrow">IcebergIC</span>
           <h2 id="copy-title" class="copy-title">Support Your Basis</h2>
           <p class="copy-sub">Use natural language search to find the comps you need</p>
-          <a class="copy-cta" href="#how">Request a Demo →</a>
+          <a class="copy-cta" href="#" onclick="openDemoModal(event)">Explore IcebergIC →</a>
         </div>
       </section>
     </div>
   </section>
+
+  <!-- TEAM SECTION -->
+  <section class="split team" id="team">
+    <div class="split-inner">
+      <div class="team-header">
+        <h2 class="team-title">Meet the Team</h2>
+        <p class="team-subtitle">Real estate professionals building the next generation of AI-powered industry tools.</p>
+      </div>
+      
+      <div class="team-grid">
+        <div class="team-member">
+          <div class="team-avatar">P</div>
+          <h3 class="team-name">Patrick Smith</h3>
+          <p class="team-role">Founder & CEO</p>
+          <p class="team-bio">Former real estate analyst with 10+ years at top investment firms. Built Iceberg to solve the data analysis challenges he faced daily.</p>
+        </div>
+        
+        <div class="team-member">
+          <div class="team-avatar">A</div>
+          <h3 class="team-name">Alex Johnson</h3>
+          <p class="team-role">Co-founder & CTO</p>
+          <p class="team-bio">AI/ML engineer from top tech companies. Specializes in natural language processing and real estate data architecture.</p>
+        </div>
+        
+        <div class="team-member">
+          <div class="team-avatar">M</div>
+          <h3 class="team-name">Maria Rodriguez</h3>
+          <p class="team-role">Head of Product</p>
+          <p class="team-bio">Product leader with deep real estate domain expertise. Ensures Iceberg solves real problems for industry professionals.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <div class="footer-contact">
+          <p>Email: <a href="mailto:patrick@icebergre.ai">patrick@icebergre.ai</a></p>
+          <p>Phone: <a href="tel:+1234567890">(123) 456-7890</a></p>
+          <p>San Francisco, CA</p>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Products</h4>
+        <p><a href="#icebergic">IcebergIC</a> - Intelligence & Comps</p>
+        <p><a href="#icebergir">IcebergIR</a> - Investor Relations</p>
+        <p><a href="#icebergreit">IcebergREIT</a> - REIT Analysis</p>
+        <p><a href="#icebergbenchmark">IcebergBENCHMARK</a> - Performance</p>
+        <p><a href="#icebergcustom">IcebergCUSTOM</a> - Private Deploy</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Company</h4>
+        <p><a href="#team">Team</a></p>
+        <p><a href="#" onclick="openDemoModal(event)">Request Demo</a></p>
+        <p><a href="mailto:patrick@icebergre.ai">Contact Us</a></p>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2025 Iceberg AI. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Demo Request Modal -->
+  <div class="modal" id="demoModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeDemoModal()">&times;</button>
+      <div class="modal-header">
+        <h3 class="modal-title">Request a Demo</h3>
+        <p class="modal-subtitle">See Iceberg in action for your real estate workflow</p>
+      </div>
+      
+      <form id="demoForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="form-group">
+          <label class="form-label" for="name">Full Name *</label>
+          <input class="form-input" type="text" id="name" name="name" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="email">Email *</label>
+          <input class="form-input" type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="company">Company</label>
+          <input class="form-input" type="text" id="company" name="company">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="role">Role</label>
+          <input class="form-input" type="text" id="role" name="role" placeholder="e.g. Real Estate Analyst, Portfolio Manager">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="message">What interests you most about Iceberg?</label>
+          <textarea class="form-input form-textarea" id="message" name="message" placeholder="Tell us about your use case..."></textarea>
+        </div>
+        
+        <button class="form-submit" type="submit">Request Demo</button>
+      </form>
+    </div>
+  </div>
 
   <!-- SECTION 2: IcebergIR -->
   <section class="split ir" id="icebergir">
@@ -346,7 +543,7 @@
           <span class="copy-eyebrow">IcebergIR</span>
           <h2 id="copy-title-ir" class="copy-title">Draft Faster. Explain Better.</h2>
           <p class="copy-sub">Turn complex data into crisp summary and narrative for board meetings, IC memos or investor FAQs.</p>
-          <a class="copy-cta" href="#signup">Request a Demo →</a>
+          <a class="copy-cta" href="#" onclick="openDemoModal(event)">Explore IcebergIR →</a>
         </div>
       </section>
 
@@ -395,7 +592,7 @@
           <span class="copy-eyebrow">IcebergREIT</span>
           <h2 id="copy-title-reit" class="copy-title">Dynamically Value and Analyze REITs</h2>
           <p class="copy-sub">Dynamically value and compare REITs in real time.</p>
-          <a class="copy-cta" href="#signup">Request a Demo →</a>
+          <a class="copy-cta" href="#" onclick="openDemoModal(event)">Explore IcebergREIT →</a>
         </div>
       </section>
 
@@ -412,7 +609,7 @@
           <span class="copy-eyebrow">IcebergBENCHMARK</span>
           <h2 id="copy-title-benchmark" class="copy-title">Confirm Your Performance</h2>
           <p class="copy-sub">Compare your actuals or deal assumptions to institutional performance benchmarks.</p>
-          <a class="copy-cta" href="#signup">Request a Demo →</a>
+          <a class="copy-cta" href="#" onclick="openDemoModal(event)">Explore IcebergBENCHMARK →</a>
         </div>
       </section>
 
@@ -468,7 +665,7 @@
           <span class="copy-eyebrow">IcebergCUSTOM</span>
           <h2 id="copy-title-custom" class="copy-title">Private White Label Iceberg Tool for your Organization</h2>
           <p class="copy-sub">Iceberg's AI‑powered — but for your own organization's data.</p>
-          <a class="copy-cta" href="#signup">Request a Demo →</a>
+          <a class="copy-cta" href="#" onclick="openDemoModal(event)">Explore IcebergCUSTOM →</a>
         </div>
       </section>
 
@@ -542,29 +739,18 @@
       });
     }
 
-    
     function createLineChart(data){
-      const N = data.length;
-      const x = i => (i/(N-1))*100;
-      const toNum = s => parseFloat(String(s).replace(/[$,%\s,]/g,''));
-      const vals = data.map(d => toNum(d.value));
-      const min = Math.min(...vals), max = Math.max(...vals)||1;
-      const y = v => 70 - ((toNum(v)-min)/(max-min))*40; // 70..30
-        
-      const dPath = data.map((d,i)=>`${x(i)},${y(d.value)}`).join(' L ');
       return `
         <div class="line-chart">
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M ${dPath}" stroke="#2563eb" stroke-width="3" fill="none"></path>
+          <svg>
+            <path d="M 80 40 L 220 50 L 360 100 L 500 120"
+                  stroke="#2563eb" stroke-width="3" fill="none"></path>
           </svg>
           ${data.map(p=>`
             <div class="chart-point">
               <div class="point-value">${p.value}</div>
               <div class="point-year">${p.year}</div>
             </div>`).join('')}
-        </div>`;
-    }
-
         </div>`;
     }
     function createBarChart(data, title){
@@ -977,15 +1163,29 @@
     function benchmarkSchedule(fn, ms){ const id = setTimeout(fn, ms); benchmarkTimers.push(id); }
     function benchmarkClear(){ benchmarkTimers.forEach(clearTimeout); benchmarkTimers = []; }
 
+    // IMPROVED: Full-width responsive line chart
     function createBenchmarkLineChart(scenario){
       const { portfolio, benchmark, years } = scenario.data;
+      const N = portfolio.length;
+      const x = i => (i/(N-1))*100;           // 0..100%
+      
+      // Convert percentages to numbers and scale to 30-70 range for nice visual
+      const toNum = s => parseFloat(s.replace(/[%]/g,''));
+      const scale = arr => {
+        const vals = arr.map(toNum);
+        const min = Math.min(...vals), max = Math.max(...vals)||1;
+        return vals.map(v => 70 - ((v - min)/(max - min))*40); // 70(top) .. 30(bottom)
+      };
+      
+      const yP = scale(portfolio);
+      const yB = scale(benchmark);
+      const path = ys => ys.map((y,i)=>`${x(i)},${y}`).join(' L ');
+      
       return `
         <div class="benchmark-line-chart">
-          <svg>
-            <path d="M 60 80 L 140 70 L 220 100 L 300 50"
-                  stroke="#2563eb" stroke-width="2" fill="none"></path>
-            <path d="M 60 100 L 140 90 L 220 80 L 300 70"
-                  stroke="#10b981" stroke-width="2" fill="none"></path>
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M ${path(yP)}" stroke="#2563eb" stroke-width="2" fill="none"/>
+            <path d="M ${path(yB)}" stroke="#10b981" stroke-width="2" fill="none"/>
           </svg>
           ${years.map((year, i) => `
             <div class="benchmark-point">
@@ -1188,81 +1388,82 @@
       customSchedule(startCustom, 2000);
     });
 
+    /* ===================== Modal & Form Handling ===================== */
+    
+    function openDemoModal(event) {
+      event.preventDefault();
+      document.getElementById('demoModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeDemoModal() {
+      document.getElementById('demoModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Close modal on background click
+    document.addEventListener('click', function(event) {
+      const modal = document.getElementById('demoModal');
+      if (event.target === modal) {
+        closeDemoModal();
+      }
+    });
+    
+    // Close modal on escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeDemoModal();
+      }
+    });
+    
+    // Form submission handling
+    document.getElementById('demoForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(this);
+      const submitButton = this.querySelector('.form-submit');
+      
+      // Update button state
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending...';
+      
+      // Submit to Formspree
+      fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          // Success
+          submitButton.textContent = 'Demo Requested ✓';
+          submitButton.style.background = '#10b981';
+          
+          // Reset form after delay
+          setTimeout(() => {
+            this.reset();
+            closeDemoModal();
+            submitButton.disabled = false;
+            submitButton.textContent = 'Request Demo';
+            submitButton.style.background = '#2563eb';
+          }, 2000);
+        } else {
+          throw new Error('Form submission failed');
+        }
+      }).catch(error => {
+        // Error
+        submitButton.textContent = 'Error - Try Again';
+        submitButton.style.background = '#dc2626';
+        submitButton.disabled = false;
+        
+        setTimeout(() => {
+          submitButton.textContent = 'Request Demo';
+          submitButton.style.background = '#2563eb';
+        }, 3000);
+      });
+    });
+
   </script>
-
-  <!-- SIGN UP / REQUEST DEMO -->
-  <section class="split" id="signup" style="background:linear-gradient(180deg,#0b0b0b 0%, #161616 100%); padding:72px 20px 120px;">
-    <div class="split-inner" style="grid-template-columns:1fr;">
-      <div class="demo-container" style="max-width:720px;margin:0 auto;">
-        <h3 class="chart-title" style="font-size:22px;">Request a Demo</h3>
-        <form id="signupForm" action="https://formspree.io/f/your_form_id" method="POST" style="display:grid;gap:12px;">
-          <input type="hidden" name="_subject" value="Iceberg Demo Request" />
-          <label style="display:grid;gap:6px;color:#e5e7eb;">
-            <span>Name</span>
-            <input name="name" required placeholder="Your name" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f0f0f;color:#fff">
-          </label>
-          <label style="display:grid;gap:6px;color:#e5e7eb;">
-            <span>Email</span>
-            <input name="email" type="email" required placeholder="you@company.com" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f0f0f;color:#fff">
-          </label>
-          <label style="display:grid;gap:6px;color:#e5e7eb;">
-            <span>Company</span>
-            <input name="company" placeholder="Company" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f0f0f;color:#fff">
-          </label>
-          <label style="display:grid;gap:6px;color:#e5e7eb;">
-            <span>What would you like to do with Iceberg?</span>
-            <textarea name="message" rows="4" placeholder="A few details..." style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f0f0f;color:#fff"></textarea>
-          </label>
-          <button class="analyze-button" type="submit" style="opacity:1;transform:none">Send Request</button>
-          <div class="typing-indicator" id="formThanks" style="display:none">Thanks — we’ll get back to you shortly.</div>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- TEAM -->
-  <section class="split" id="team" style="background:linear-gradient(135deg,#161616 0%,#0b0b0b 100%);">
-    <div class="split-inner" style="grid-template-columns:1fr;">
-      <div style="max-width:980px;margin:0 auto;">
-        <h3 class="chart-title" style="font-size:22px;margin-bottom:18px;">Team</h3>
-        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;">
-          <div class="copy-card" style="text-align:center;">
-            <img src="logo.png" alt="" style="width:64px;height:64px;border-radius:50%;margin-bottom:10px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));background:#0f1115;padding:8px;">
-            <div style="font-weight:800;">Patrick Browne</div>
-            <div style="color:#a9afba;font-size:14px;margin-top:2px;">Founder</div>
-            <div style="color:#cfd5de;font-size:13px;margin-top:8px;">Building ICEBERG AI for institutional‑grade real estate data and analysis.</div>
-          </div>
-          <div class="copy-card" style="text-align:center;">
-            <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 10px;background:#0f1115;display:flex;align-items:center;justify-content:center;font-weight:800;">AI</div>
-            <div style="font-weight:800;">Advisors</div>
-            <div style="color:#a9afba;font-size:14px;margin-top:2px;">Product & Data</div>
-            <div style="color:#cfd5de;font-size:13px;margin-top:8px;">Bench of product, ML, and RE experts helping guide the roadmap.</div>
-          </div>
-          <div class="copy-card" style="text-align:center;">
-            <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 10px;background:#0f1115;display:flex;align-items:center;justify-content:center;font-weight:800;">YOU</div>
-            <div style="font-weight:800;">Design Partners</div>
-            <div style="color:#a9afba;font-size:14px;margin-top:2px;">Beta Cohort</div>
-            <div style="color:#cfd5de;font-size:13px;margin-top:8px;">We’re partnering with early users on real workflows. Want in?</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer style="padding:32px 20px;border-top:1px solid rgba(255,255,255,.08);background:#0b0b0b;color:#cfd5de;">
-    <div class="split-inner" style="grid-template-columns:1fr;">
-      <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <img src="logo.png" alt="Iceberg" style="width:28px;height:28px;border-radius:50%;background:#0f1115;padding:4px;">
-          <strong>Iceberg</strong>
-        </div>
-        <div style="display:flex;gap:18px;align-items:center;">
-          <a href="mailto:patrick@icebergre.ai" style="color:#e5e7eb;text-decoration:none;">patrick@icebergre.ai</a>
-          <a href="#signup" style="color:#93c5fd;text-decoration:none;">Request a demo</a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
 </body>
 </html>
