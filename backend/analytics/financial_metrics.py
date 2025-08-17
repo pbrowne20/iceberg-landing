@@ -2,22 +2,42 @@ from dataclasses import dataclass
 import pandas as pd
 import re
 
-def _pick(df, preferred_names, patterns):
-    # exact
-    for n in preferred_names:
-        if n in df.columns:
-            return n
-    # case-insensitive
-    lower = {c.lower(): c for c in df.columns}
-    for n in preferred_names:
-        if n.lower() in lower:
-            return lower[n.lower()]
-    # regex
-    regs = [re.compile(p, re.I) for p in patterns]
-    for c in df.columns:
-        if any(r.search(c) for r in regs):
-            return c
-    raise KeyError(f"Could not find any of {preferred_names} / {patterns} in {list(df.columns)}")
+def _norm(s: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", str(s).lower())
+
+def _pick_by_tokens(df: pd.DataFrame, must_tokens=(), any_tokens=()):
+    """
+    Return the first column whose normalized name contains all must_tokens
+    and at least one any_tokens (if provided). Fall back to any that has any_tokens.
+    """
+    cols = list(df.columns)
+    norm = {c: _norm(c) for c in cols}
+
+    # hard prefer: all must_tokens present
+    best = [c for c in cols if all(t in norm[c] for t in must_tokens) and (not any_tokens or any(t in norm[c] for t in any_tokens))]
+    if best:
+        return best[0]
+
+    # fallback: any of any_tokens
+    if any_tokens:
+        best = [c for c in cols if any(t in norm[c] for t in any_tokens)]
+        if best:
+            return best[0]
+
+    raise KeyError(f"Could not find a column with tokens must={must_tokens}, any={any_tokens}. Known: {cols}")
+
+def _maybe_sort(df: pd.DataFrame) -> pd.DataFrame:
+    cols = { _norm(c): c for c in df.columns }
+    year = None
+    qtr  = None
+    for k in cols:
+        if ("fiscal" in k and "year" in k) or k == "year" or k == "fy":
+            year = cols[k]
+        if ("fiscal" in k and "quart" in k) or k in ("quarter", "qtr"):
+            qtr = cols[k]
+    if year and qtr:
+        return df.sort_values([year, qtr])
+    return df
 
 @dataclass
 class NOISFSummary:
@@ -27,28 +47,18 @@ class NOISFSummary:
     units: str = "$MM per kSF"
 
 def noi_per_sf_summary(q: pd.DataFrame) -> NOISFSummary:
-    noi_col = _pick(q,
-        ["Same_Store_Net_Operating_Income","SSNOI","SameStoreNOI","ss_noi","ssnoi_cash"],
-        [r"(same|ss).*store.*noi", r"\bnoi\b"]
-    )
-    sf_col = _pick(q,
-        ["Rentable_SF","Rentable SF","Total_SF","Total SF","Square_Feet","SF"],
-        [r"rentable.*(sf|sq|square)", r"(total|rentable).*(sf|sq|square)"]
-    )
-
-    # Sort if we can find year/quarter; otherwise use file order
+    # NOI — prefer same-store NOI, but accept anything with "noi"
+    noi_col = None
     try:
-        year_col = _pick(q,
-            ["fiscal_year","Fiscal_Year","Fiscal Year","Year","year"],
-            [r"fiscal.*year", r"^year$"]
-        )
-        qtr_col = _pick(q,
-            ["fiscal_quarter","Fiscal_Quarter","Fiscal Quarter","Quarter","Qtr","quarter","qtr"],
-            [r"fiscal.*quart", r"\bq(tr)?\b", r"\bquarter\b"]
-        )
-        q_sorted = q.sort_values([year_col, qtr_col])
+        noi_col = _pick_by_tokens(q, must_tokens=("noi",), any_tokens=("samestore","ss"))
     except Exception:
-        q_sorted = q
+        noi_col = _pick_by_tokens(q, must_tokens=("noi",))
+
+    # Square feet — prefer rentable, accept rsf/rba/sf/sqft/gla
+    try_tok = ("rentable", "rsf", "rba", "squarefeet", "sqft", "sf", "gla")
+    sf_col = _pick_by_tokens(q, any_tokens=try_tok)
+
+    q_sorted = _maybe_sort(q)
 
     cur = q_sorted.tail(1)
     cur_noi_mm = float(cur[noi_col].iloc[0]) / 1e6
