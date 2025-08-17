@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import pandas as pd
+from .columns import resolve  # <-- add this import
 
 @dataclass
 class NOISFSummary:
@@ -9,10 +10,13 @@ class NOISFSummary:
     units: str = "$MM per kSF"
 
 def noi_per_sf_summary(q: pd.DataFrame) -> NOISFSummary:
-    # Adjust these names or plug in your alias resolver as needed
-    noi_col = "Same_Store_Net_Operating_Income"
-    sf_col  = "Rentable_SF"
-    q_sorted = q.sort_values(["fiscal_year","fiscal_quarter"])
+    # Resolve columns against your CSV headers
+    noi_col   = resolve(q, "Same_Store_Net_Operating_Income", domain="quarterly")
+    sf_col    = resolve(q, "Rentable_SF", domain="quarterly")
+    year_col  = resolve(q, "fiscal_year", domain="quarterly")
+    qtr_col   = resolve(q, "fiscal_quarter", domain="quarterly")
+
+    q_sorted = q.sort_values([year_col, qtr_col])
     cur = q_sorted.tail(1)
     cur_noi_mm = cur[noi_col].iloc[0] / 1e6
     cur_sf_k   = cur[sf_col].iloc[0] / 1e3
