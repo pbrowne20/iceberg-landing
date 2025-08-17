@@ -1,30 +1,30 @@
 "use client";
 import { useState } from "react";
 
-type NLQResponse = {
-  answer?: string;
-  code?: string;
-  result?: any;
-  error?: string;
-  available_intents?: string[];
-  plan?: any;
-};
+const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || "";
 
 export default function NLQ() {
   const [q, setQ] = useState("");
-  const [resp, setResp] = useState<NLQResponse | null>(null);
+  const [resp, setResp] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
   async function ask() {
     setLoading(true);
-    const r = await fetch("/api/nlq", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ q })
-    });
-    const data = await r.json();
-    setResp(data);
-    setLoading(false);
+    setErr(null);
+    try {
+      const r = await fetch(`${BACKEND}/api/nlq`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ q }),
+      });
+      const data = await r.json();
+      setResp(data);
+    } catch (e: any) {
+      setErr(e?.message || "Request failed");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
