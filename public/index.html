@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iceberg — AI‑Powered Real Estate Intelligence</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b0b0b; --text:#f6f6f6; --muted:#bdbdbd;
+      --btn-bg:#ffffff; --btn-text:#0b0b0b; --maxw:1240px;
+      --accent:#2563eb;
+      /* Auto-locked by JS on load (fallbacks below) */
+      --demo-h: 420px;   /* overall demo card height (compressed) */
+      --viz-h:  180px;   /* reserved infographic area (compressed) */
+      /* Second section static vars */
+      --demo2-h: 440px;  /* increased height for IcebergIR */
+      --viz2-h:  200px;  /* increased height for text content */
+    }
+    
+    *{box-sizing:border-box}
+    html{
+      height:100%; margin:0; padding:0;
+      scroll-behavior: smooth; /* Smooth scrolling for navigation */
+    }
+    body{
+      height:100%; margin:0; padding:0;
+      background:var(--bg);color:var(--text);
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+      overflow-x: hidden; /* Prevent horizontal scroll from transforms */
+    }
+
+    /* ===== Sticky Top Navigation ===== */
+    .nav-wrap{position:sticky;top:0;z-index:50;background:rgba(11,11,11,.92);backdrop-filter:saturate(140%) blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav{height:72px;display:flex;align-items:center;justify-content:space-between;max-width:var(--maxw);margin:0 auto;padding:0 28px}
+    
+    /* ===== Logo Styles ===== */
+    .brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:20px;letter-spacing:.2px}
+    .brand a{text-decoration:none;color:inherit;display:flex;align-items:center;gap:12px;transition:opacity .2s ease}
+    .brand a:hover{opacity:.8}
+    .logo{height:40px;width:40px;display:block;flex-shrink:0}
+    
+    .menu{display:flex;gap:24px}
+    .menu-item{position:relative}
+    .menu-item>a{color:var(--text);text-decoration:none;font-weight:500;font-size:15px;opacity:.92;transition:opacity .2s ease;display:flex;align-items:center;gap:4px}
+    .menu-item>a:hover{opacity:.7}
+    .menu-item>a::after{content:"▼";font-size:10px;opacity:.6;transition:transform .2s ease}
+    .menu-item:hover>a::after{transform:rotate(180deg)}
+    
+    /* Hide dropdown arrow for Team link */
+    .menu-item.no-dropdown>a::after{display:none}
+    
+    .dropdown{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(-8px);background:rgba(11,11,11,.95);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 0;min-width:200px;margin-top:6px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,visibility .2s ease,transform .2s ease;box-shadow:0 12px 32px rgba(0,0,0,.4)}
+    
+    /* Keyboard-friendly dropdowns */
+    .menu-item:hover .dropdown,
+    .menu-item:focus-within .dropdown{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+    
+    .dropdown a{display:block;padding:8px 16px;color:var(--text);text-decoration:none;font-size:14px;font-weight:400;opacity:.85;transition:all .15s ease}
+    .dropdown a:hover{opacity:1;background:rgba(255,255,255,.05)}
+
+    /* ===== Top Hero - FIXED VIEWPORT ===== */
+    .hero{
+      min-height: calc(100dvh - 72px);   /* subtract sticky nav */
+      padding: 72px 20px 0;               /* trim bottom padding to zero */
+      display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden;
+    }
+    /* Fallback for older browsers */
+    @supports not (height: 100dvh) {
+      .hero { min-height: calc(100vh - 72px); }
+    }
+    
+    .hero::before{content:"";position:absolute;inset:-20% -20% 0 -20%;background:radial-gradient(60% 60% at 50% 35%, rgba(255,255,255,.06), transparent 65%),radial-gradient(50% 50% at 50% 100%, rgba(255,255,255,.03), transparent 60%);pointer-events:none;mix-blend-mode:screen;opacity:.6}
+    .hero-inner{position:relative;width:100%;max-width:880px;text-align:center}
+    .headline{font-family:"Playfair Display",Georgia,serif;font-weight:700;line-height:1.06;font-size:clamp(42px,7vw,84px);margin:0 0 14px}
+    .sub{font-size:clamp(16px,2.2vw,20px);color:var(--muted);margin:0 0 22px}
+    .cta{display:inline-block;padding:12px 18px;border-radius:12px;background:var(--btn-bg);color:var(--btn-text);text-decoration:none;font-weight:600;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 24px rgba(0,0,0,.35);transition:transform .06s ease, opacity .2s ease, box-shadow .2s ease}
+    .cta:hover{transform:translateY(1px);opacity:.97;box-shadow:0 12px 28px rgba(0,0,0,.4)}
+
+    /* ===== Split Demo Section Base ===== */
+    .split{
+      padding:64px 20px 96px;
+      scroll-margin-top: 84px; /* keeps section titles out from under nav */
+    }
+    .split-inner{max-width:var(--maxw);margin:0 auto;display:grid;gap:28px;align-items:center}
+    .panel-demo{display:flex;justify-content:center;}
+    .panel-copy{display:flex;}
+    
+    /* ===== Copy Card Shared Styles ===== */
+    .copy-card{background:#111213;color:#fff;border-radius:20px;padding:22px 22px 24px;border:1px solid rgba(255,255,255,.06);box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:520px}
+    .copy-eyebrow{display:inline-block;font-size:.8rem;letter-spacing:.08em;color:#a9afba;margin-bottom:.4rem}
+    .copy-title{font-family:"Playfair Display",Georgia,serif;font-size:clamp(30px,3.5vw,44px);line-height:1.08;margin:0 0 .5rem}
+    .copy-sub{color:#cfd5de;font-size:clamp(14px,1.4vw,16px);line-height:1.5;margin:0 0 .9rem}
+    .copy-cta{display:inline-block;background:#2563eb;color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 14px}
+
+    /* ===== Demo Container Shared Styles - DARK THEME ===== */
+    .demo-container{
+      background:#1f1f1f;border-radius:22px;padding:28px;width:min(680px,100%);
+      box-shadow:0 22px 70px rgba(0,0,0,.4);position:relative;overflow:hidden;
+      height: var(--demo-h);
+      display: grid;
+      grid-template-rows: auto auto auto 1fr;
+      align-content: start;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    /* ===== Section-Specific Layouts - DARK THEME ===== */
+    
+    /* IcebergIC - demo left, copy right */
+    .split.ic{background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%)}
+    .split.ic .split-inner{grid-template-columns:1.05fr 0.95fr;}
+    .split.ic .panel-demo{transform:translateX(-3%);}
+    .split.ic .panel-copy{justify-content:flex-start;}
+
+    /* IcebergIR - copy left, demo right */
+    .split.ir{background:linear-gradient(180deg,#0f0f0f 0%, #1a1a1a 100%)}
+    .split.ir .split-inner{grid-template-columns:0.95fr 1.05fr;}
+    .split.ir .panel-copy{justify-content:flex-end;}
+    .split.ir .panel-demo{transform:translateX(3%);}
+
+    /* IcebergREIT - demo left, copy right */
+    .split.reit{background:linear-gradient(135deg,#161616 0%,#0b0b0b 100%)}
+    .split.reit .split-inner{grid-template-columns:1.05fr 0.95fr;}
+    .split.reit .panel-demo{transform:translateX(-3%);}
+    .split.reit .panel-copy{justify-content:flex-start;}
+
+    /* IcebergBENCHMARK - copy left, demo right */
+    .split.benchmark{background:linear-gradient(180deg,#0b0b0b 0%, #161616 100%)}
+    .split.benchmark .split-inner{grid-template-columns:0.95fr 1.05fr;}
+    .split.benchmark .panel-copy{justify-content:flex-end;}
+    .split.benchmark .panel-demo{transform:translateX(3%);}
+
+    /* IcebergCUSTOM - demo left, copy right */
+    .split.custom{background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%); padding-bottom:120px;}
+    .split.custom .split-inner{grid-template-columns:1.05fr 0.95fr;}
+    .split.custom .panel-demo{transform:translateX(-3%);}
+    .split.custom .panel-copy{justify-content:flex-start;}
+
+    /* ===== IcebergIC Demo Styles - DARK THEME ===== */
+    .prompt-text{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:#f6f6f6;line-height:1.24;margin-bottom:16px;opacity:0;transform:translateY(30px);transition:.5s}
+    .upload-area{background:#161616;border:2px dashed rgba(255,255,255,.15);border-radius:14px;padding:16px;text-align:center;margin-bottom:12px;opacity:0;transform:translateY(30px);transition:.5s .2s}
+    .document-item{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;color:#bdbdbd}
+    .doc-icon{font-size:18px}
+    .analyze-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s ease;opacity:0;transform:translateY(30px);margin-bottom:12px;min-height:46px;white-space:nowrap}
+    .typing-indicator{display:none;align-items:center;gap:8px;color:#9ca3af;font-style:italic;margin-top:8px;min-height:20px}
+    .typing-dots{display:flex;gap:4px}
+    .typing-dots span{width:6px;height:6px;background:#6b7280;border-radius:50%;animation:typingBounce 1.4s infinite ease-in-out}
+    .typing-dots span:nth-child(1){animation-delay:-.32s}.typing-dots span:nth-child(2){animation-delay:-.16s}
+
+    .results-panel{
+      background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:18px;
+      opacity:0;transform:translateY(20px);transition:.45s .6s;
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+      min-height: 220px; /* Reduce layout shift */
+    }
+    .chart-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:10px;text-align:center}
+    .chart-container{
+      height: var(--viz-h);
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+      min-height: 160px; /* Reduce layout shift */
+    }
+
+    /* Visuals respect reserved space */
+    .line-chart, .bar-chart{ height:100%; width:100%; }
+    .rent-table{ height:100%; overflow:auto; }
+
+    /* Line chart styling - DARK THEME */
+    .line-chart{position:relative;background:linear-gradient(to bottom,rgba(37,99,235,.15) 0%,rgba(37,99,235,.05) 100%);border-radius:10px;padding:14px;display:flex;align-items:end;justify-content:space-between}
+    .line-chart svg{position:absolute;inset:0;width:100%;height:100%}
+    .chart-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .point-value{background:#2563eb;color:#fff;padding:4px 8px;border-radius:16px;font-size:12px;font-weight:700;min-width:48px}
+    .point-year{font-size:11px;color:#9ca3af;font-weight:600}
+
+    /* Bar chart styling - DARK THEME */
+    .bar-chart{display:flex;align-items:end;gap:14px;padding:14px;background:linear-gradient(to top,rgba(16,185,129,.15) 0%,rgba(16,185,129,.05) 100%);border-radius:10px}
+    .bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .bar{background:linear-gradient(to top,#10b981,#34d399);border-radius:6px 6px 0 0;width:100%;min-height:16px;position:relative}
+    .bar-value{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:3px 6px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
+    .bar-year{font-size:11px;color:#9ca3af;font-weight:600}
+
+    /* Table styling - DARK THEME */
+    .rent-table .table-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:10px;border-bottom:1px solid rgba(255,255,255,.1);align-items:center}
+    .rent-table .table-header{background:#0f0f0f;font-weight:700;color:#f6f6f6;font-size:13px}
+    .rent-table .table-cell{font-size:13px;color:#e5e7eb;font-weight:600}
+    .cagr-highlight{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;padding:3px 6px;border-radius:10px;font-weight:700;text-align:center}
+
+    @keyframes typingBounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+
+    /* ===== IcebergIR Demo Styles - DARK THEME ===== */
+    .demo-container.ir{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
+    .prompt-text.ir{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
+    .ir-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
+    .ir-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .ir-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
+    .ir-output{height:var(--viz2-h);overflow:auto;background:#0f0f0f;border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.08);font-size:14px;color:#e5e7eb;line-height:1.6}
+    .ir-output ul{margin:0 0 0 18px;padding:0}
+    .ir-output li{margin:6px 0}
+    .ir-cursor{display:inline-block;width:8px;height:1em;vertical-align:-2px;background:#f6f6f6;animation:blink .9s steps(1,end) infinite}
+    @keyframes blink{50%{opacity:0}}
+
+    /* ===== IcebergREIT Demo Styles - DARK THEME ===== */
+    .demo-container.reit{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
+    .prompt-text.reit{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
+    .reit-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
+    .reit-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .reit-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
+    .reit-output{height:var(--viz2-h);overflow:auto;background:#0f0f0f;border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.08);font-size:13px;color:#e5e7eb;line-height:1.4}
+
+    /* REIT comparison table styling - DARK THEME */
+    .reit-table{width:100%;border-collapse:collapse;font-size:13px}
+    .reit-table th{background:#161616;padding:8px 6px;text-align:center;font-weight:700;color:#f6f6f6;border-bottom:2px solid rgba(255,255,255,.1)}
+    .reit-table td{padding:8px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600}
+    .reit-table .ticker-col{background:#1a1a1a;font-weight:700;color:#fbbf24}
+    .reit-table .metric-highlight{background:linear-gradient(135deg,#10b981,#34d399);color:#fff;border-radius:6px;padding:4px 2px;font-weight:700}
+
+    /* ===== IcebergBENCHMARK Demo Styles - DARK THEME ===== */
+    .demo-container.benchmark{height:var(--demo2-h);grid-template-rows:auto auto auto 1fr;}
+    .prompt-text.benchmark{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
+    .upload-area.benchmark{background:#161616;border:2px dashed rgba(255,255,255,.15);border-radius:14px;padding:12px;text-align:center;margin-bottom:12px;opacity:1;transform:none}
+    .benchmark-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
+    .benchmark-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .benchmark-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
+    .benchmark-output{height:var(--viz2-h);overflow:hidden;background:#0f0f0f;border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.08);font-size:13px;color:#e5e7eb;line-height:1.4}
+
+    /* Benchmark chart styling - DARK THEME */
+    .benchmark-line-chart{position:relative;height:100%;width:100%;background:linear-gradient(to bottom,rgba(37,99,235,.12) 0%,rgba(37,99,235,.04) 100%);border-radius:10px;padding:16px;display:flex;align-items:end;justify-content:space-between}
+    .benchmark-line-chart svg{position:absolute;inset:0;width:100%;height:100%}
+    .benchmark-point{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .benchmark-point-value{background:#2563eb;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px}
+    .benchmark-point-bench{background:#10b981;color:#fff;padding:2px 6px;border-radius:12px;font-size:11px;font-weight:700;min-width:36px;margin-top:2px}
+    .benchmark-point-year{font-size:10px;color:#9ca3af;font-weight:600;margin-top:2px}
+
+    .benchmark-bar-chart{height:100%;width:100%;display:flex;align-items:end;gap:12px;padding:16px;background:linear-gradient(to top,rgba(16,185,129,.12) 0%,rgba(16,185,129,.04) 100%);border-radius:10px}
+    .benchmark-bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .benchmark-bars{display:flex;gap:4px;align-items:end;height:120px}
+    .benchmark-bar-portfolio{background:linear-gradient(to top,#2563eb,#3b82f6);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
+    .benchmark-bar-bench{background:linear-gradient(to top,#10b981,#34d399);border-radius:4px 4px 0 0;width:16px;min-height:8px;position:relative}
+    .benchmark-bar-year{font-size:10px;color:#9ca3af;font-weight:600}
+
+    /* ===== IcebergCUSTOM Demo Styles - DARK THEME ===== */
+    .demo-container.custom{height:var(--demo2-h);grid-template-rows:auto auto 1fr;}
+    .prompt-text.custom{margin-bottom:12px;opacity:1;transform:none;color:#f6f6f6;}
+    .custom-button{width:100%;background:#2563eb;color:#fff;border:none;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:12px;min-height:46px;white-space:nowrap}
+    .custom-results{background:#161616;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;height:100%;display:grid;grid-template-rows:auto 1fr;overflow:hidden}
+    .custom-title{font-size:16px;font-weight:700;color:#f6f6f6;margin-bottom:8px;text-align:center}
+    .custom-output{height:var(--viz2-h);overflow:auto;background:#0f0f0f;border-radius:10px;padding:16px;border:1px solid rgba(255,255,255,.08);font-size:13px;color:#e5e7eb;line-height:1.5}
+    .checklist{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .check{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:#1a1a1a;font-weight:600;color:#e5e7eb}
+    .progress{height:10px;background:#333;border-radius:6px;overflow:hidden;margin-top:12px}
+    .progress > div{height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#10b981)}
+
+    /* ===== Team Section ===== */
+    .split.team{background:linear-gradient(135deg,#161616 0%,#0b0b0b 100%); padding:80px 20px 60px;}
+    .split.team .split-inner{grid-template-columns:1fr; text-align:center; gap:40px;}
+    .team-header{margin-bottom:40px}
+    .team-title{font-family:"Playfair Display",Georgia,serif;font-size:clamp(36px,5vw,56px);font-weight:700;color:#f6f6f6;margin-bottom:16px}
+    .team-subtitle{font-size:clamp(16px,2vw,20px);color:#9ca3af;max-width:600px;margin:0 auto}
+    .team-grid{display:flex;justify-content:center;max-width:900px;margin:0 auto}
+    .team-member{background:#1f1f1f;border-radius:20px;padding:32px 24px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 32px rgba(0,0,0,.25);max-width:350px}
+    .team-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#10b981);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#fff}
+    .team-name{font-size:24px;font-weight:700;color:#f6f6f6;margin-bottom:8px}
+    .team-role{font-size:16px;color:#2563eb;font-weight:600;margin-bottom:12px}
+    .team-bio{font-size:14px;color:#9ca3af;line-height:1.5}}
+    .team-title{font-family:"Playfair Display",Georgia,serif;font-size:clamp(36px,5vw,56px);font-weight:700;color:#f6f6f6;margin-bottom:16px}
+    .team-subtitle{font-size:clamp(16px,2vw,20px);color:#9ca3af;max-width:600px;margin:0 auto}
+    .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;max-width:900px;margin:0 auto}
+    .team-member{background:#1f1f1f;border-radius:20px;padding:32px 24px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 32px rgba(0,0,0,.25)}
+    .team-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#10b981);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#fff}
+    .team-name{font-size:24px;font-weight:700;color:#f6f6f6;margin-bottom:8px}
+    .team-role{font-size:16px;color:#2563eb;font-weight:600;margin-bottom:12px}
+    .team-bio{font-size:14px;color:#9ca3af;line-height:1.5}
+
+    /* ===== Footer Section ===== */
+    .footer{background:#0b0b0b;border-top:1px solid rgba(255,255,255,.06);padding:60px 20px 40px}
+    .footer-inner{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:start}
+    .footer-section h4{font-size:18px;font-weight:700;color:#f6f6f6;margin-bottom:20px}
+    .footer-section p, .footer-section a{font-size:14px;color:#9ca3af;line-height:1.6;text-decoration:none}
+    .footer-section a:hover{color:#2563eb}
+    .footer-contact{display:flex;flex-direction:column;gap:8px}
+    .footer-bottom{margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);text-align:center;color:#6b7280;font-size:14px}
+
+    /* Modal Styles */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+    .modal.active{display:flex}
+    .modal-content{background:#1f1f1f;border-radius:20px;padding:40px;max-width:500px;width:100%;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .modal-header{text-align:center;margin-bottom:32px}
+    .modal-title{font-family:"Playfair Display",Georgia,serif;font-size:28px;font-weight:700;color:#f6f6f6;margin-bottom:8px}
+    .modal-subtitle{color:#9ca3af;font-size:16px}
+    .modal-close{position:absolute;top:20px;right:20px;background:none;border:none;color:#9ca3af;font-size:24px;cursor:pointer;padding:8px}
+    .modal-close:hover{color:#f6f6f6}
+    .form-group{margin-bottom:20px}
+    .form-label{display:block;margin-bottom:8px;font-weight:600;color:#f6f6f6;font-size:14px}
+    .form-input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:#161616;color:#f6f6f6;font-size:14px}
+    .form-input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+    .form-textarea{min-height:100px;resize:vertical}
+    .form-submit{width:100%;background:#2563eb;color:#fff;border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s}
+    .form-submit:hover{background:#1d4ed8}
+    .form-submit:disabled{background:#374151;cursor:not-allowed}
+
+    /* ===== Responsive Design ===== */
+    @media (max-width:980px){
+      .split-inner{grid-template-columns:1fr!important;gap:18px}
+      .panel-demo{transform:none!important}
+      .copy-card{max-width:unset}
+      .hero{min-height:calc(100dvh - 72px);padding:72px 20px 0;}
+    }
+
+    @media (max-width:640px){
+      .nav{padding:0 20px}
+      .menu{gap:16px}
+      .hero{padding:60px 16px 0;}
+      .split{padding:48px 16px 64px;}
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important;transition:none!important}
+      html{scroll-behavior:auto;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Nav -->
+  <div class="nav-wrap">
+    <header class="nav">
+      <div class="brand">
+        <a href="#" style="display:flex;align-items:center;gap:12px;">
+          <svg class="logo" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Iceberg outline only -->
+            <path d="M50 10 L70 50 L30 50 Z" fill="none" stroke="#ffffff" stroke-width="2"/>
+            
+            <!-- Water surface waves -->
+            <path d="M5 50 Q15 47, 25 50 T45 50 T65 50 T85 50 T95 50" 
+                  stroke="#ffffff" stroke-width="2" fill="none"/>
+            
+            <!-- REAI Text -->
+            <text x="50" y="80" 
+                  font-family="Arial, sans-serif" 
+                  font-size="20" 
+                  font-weight="bold" 
+                  text-anchor="middle" 
+                  fill="#ffffff"
+                  letter-spacing="2">REAI</text>
+          </svg>
+          <span>Iceberg</span>
+        </a>
+      </div>
+      <nav class="menu" aria-label="Primary">
+        <div class="menu-item">
+          <a href="#icebergic">IcebergIC</a>
+          <div class="dropdown">
+            <a href="#">Value Comps</a><a href="#">Cap Rate Intel</a><a href="#">Occupancy Trends</a><a href="#">NOI and OpEx Comps</a><a href="#">Growth Rates</a>
+          </div>
+        </div>
+        <div class="menu-item">
+          <a href="#icebergir">IcebergIR</a>
+          <div class="dropdown">
+            <a href="#">Memo Narrative</a><a href="#">FAQ Prep</a><a href="#">Market Commentary</a>
+          </div>
+        </div>
+        <div class="menu-item">
+          <a href="https://iceberg-reit-demo-7soe.vercel.app/reit" target="_blank">IcebergREIT</a>
+          <div class="dropdown">
+            <a href="https://iceberg-reit-demo-7soe.vercel.app/reit" target="_blank">Portfolio Composition</a>
+            <a href="https://iceberg-reit-demo-7soe.vercel.app/reit" target="_blank">Valuation Analysis</a>
+            <a href="https://iceberg-reit-demo-7soe.vercel.app/reit" target="_blank">Peer Comparison</a>
+          </div>
+        </div>
+        <div class="menu-item">
+          <a href="#icebergbenchmark">IcebergBENCHMARK</a>
+          <div class="dropdown"><a href="#">Underwriting Checks</a><a href="#">Actuals Comparisons</a></div>
+        </div>
+        <div class="menu-item">
+          <a href="#icebergcustom">IcebergCUSTOM</a>
+          <div class="dropdown"><a href="#">API Integration</a><a href="#">Private Iceberg Tool</a></div>
+        </div>
+        <div class="menu-item no-dropdown">
+          <a href="#team">Team</a>
+        </div>
+      </nav>
+    </header>
+  </div>
+
+  <!-- Top hero -->
+  <main class="hero">
+    <div class="hero-inner">
+      <h1 class="headline">AI‑Powered Real Estate Intelligence</h1>
+      <p class="sub">Domain‑specific AI intelligence and tools for managers, investors, brokers, and analysts.</p>
+      <a
+  class="cta"
+  href="https://iceberg-real-estate-ai-9zpjw4irhtdagyzmwttj7b.streamlit.app/"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  🚀 Open ICEBERG Demo
+</a>
+
+    </div>
+  </main>
+
+  <!-- SECTION 1: IcebergIC -->
+  <section class="split ic" id="icebergic">
+    <div class="split-inner">
+      <!-- LEFT: demo -->
+      <section class="panel-demo">
+        <div class="demo-container" id="demoContainer" aria-live="polite">
+          <div class="prompt-text" id="promptText">Analyze US data center cap rate trends</div>
+
+          <div class="upload-area" id="uploadArea" role="region" aria-label="Uploaded document">
+            <div class="document-item">
+              <span class="doc-icon">📊</span>
+              <span id="docName">US_DataCenter_CapRates.xlsx</span>
+            </div>
+          </div>
+
+          <button class="analyze-button" id="analyzeBtn" type="button" aria-controls="resultsPanel">
+            <span id="btnText">Analyze with IcebergIC</span>
+          </button>
+
+          <div class="typing-indicator" id="typingIndicator" role="status" aria-live="polite">
+            <span>Processing data</span>
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+          </div>
+
+          <div class="results-panel" id="resultsPanel">
+            <div class="chart-title" id="chartTitle"></div>
+            <div class="chart-container" id="chartContainer"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: hero copy -->
+      <section class="panel-copy" aria-labelledby="copy-title">
+        <div class="copy-card">
+          <span class="copy-eyebrow">IcebergIC</span>
+          <h2 id="copy-title" class="copy-title">Support Your Basis</h2>
+          <p class="copy-sub">Use natural language search to find the comps you need</p>
+          <a class="copy-cta" href="#" onclick="openDemoModal(event)">Explore IcebergIC →</a>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- SECTION 2: IcebergIR -->
+  <section class="split ir" id="icebergir">
+    <div class="split-inner">
+
+      <!-- LEFT: hero copy -->
+      <section class="panel-copy" aria-labelledby="copy-title-ir">
+        <div class="copy-card">
+          <span class="copy-eyebrow">IcebergIR</span>
+          <h2 id="copy-title-ir" class="copy-title">Draft Faster. Explain Better.</h2>
+          <p class="copy-sub">Turn complex data into crisp summary and narrative for board meetings, IC memos or investor FAQs.</p>
+          <a class="copy-cta" href="#" onclick="openDemoModal(event)">Explore IcebergIR →</a>
+        </div>
+      </section>
+
+      <!-- RIGHT: text-only demo -->
+      <section class="panel-demo">
+        <div class="demo-container ir" id="irDemo" aria-live="polite">
+          <div class="prompt-text ir" id="irPrompt">Write me 2 bullet points on NOI growth over the last 3 years</div>
+
+          <button class="ir-button" id="irBtn" type="button">
+            <span id="irBtnText">Generate with IcebergIR</span>
+          </button>
+
+          <div class="ir-results">
+            <div class="ir-title">Draft</div>
+            <div class="ir-output" id="irOutput"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+  <!-- SECTION 3: IcebergREIT -->
+  <section class="split reit" id="icebergreit">
+    <div class="split-inner">
+
+      <!-- LEFT: table demo -->
+      <section class="panel-demo">
+        <div class="demo-container reit" id="reitDemo" aria-live="polite">
+          <div class="prompt-text reit" id="reitPrompt">Compare NOI per sq ft across office REITs by market</div>
+
+          <button class="reit-button" id="reitBtn" type="button">
+            <span id="reitBtnText">Analyze with IcebergREIT</span>
+          </button>
+
+          <div class="reit-results">
+            <div class="reit-title">REIT Portfolio Comparison</div>
+            <div class="reit-output" id="reitOutput"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: hero copy -->
+      <section class="panel-copy" aria-labelledby="copy-title-reit">
+        <div class="copy-card">
+          <span class="copy-eyebrow">IcebergREIT</span>
+          <h2 id="copy-title-reit" class="copy-title">Dynamically Value and Analyze REITs</h2>
+          <p class="copy-sub">Dynamically value and compare REITs in real time.</p>
+          <a class="copy-cta" href="https://iceberg-reit-demo-7soe.vercel.app/reit" target="_blank">Explore IcebergREIT →</a>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+  <!-- SECTION 4: IcebergBENCHMARK -->
+  <section class="split benchmark" id="icebergbenchmark">
+    <div class="split-inner">
+
+      <!-- LEFT: hero copy -->
+      <section class="panel-copy" aria-labelledby="copy-title-benchmark">
+        <div class="copy-card">
+          <span class="copy-eyebrow">IcebergBENCHMARK</span>
+          <h2 id="copy-title-benchmark" class="copy-title">Confirm Your Performance</h2>
+          <p class="copy-sub">Compare your actuals or deal assumptions to institutional performance benchmarks.</p>
+          <a class="copy-cta" href="#" onclick="openDemoModal(event)">Explore IcebergBENCHMARK →</a>
+        </div>
+      </section>
+
+      <!-- RIGHT: benchmark demo -->
+      <section class="panel-demo">
+        <div class="demo-container benchmark" id="benchmarkDemo" aria-live="polite">
+          <div class="prompt-text benchmark" id="benchmarkPrompt">Compare portfolio occupancy vs institutional benchmarks</div>
+
+          <div class="upload-area benchmark" role="region" aria-label="Uploaded documents">
+            <div class="document-item">
+              <span class="doc-icon">📊</span>
+              <span id="benchmarkDocName">Portfolio_Occupancy.xlsx</span>
+            </div>
+          </div>
+
+          <button class="benchmark-button" id="benchmarkBtn" type="button">
+            <span id="benchmarkBtnText">Benchmark with IcebergBENCHMARK</span>
+          </button>
+
+          <div class="benchmark-results">
+            <div class="benchmark-title" id="benchmarkTitle">Portfolio vs Benchmark Comparison</div>
+            <div class="benchmark-output" id="benchmarkOutput"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+  <!-- SECTION 5: IcebergCUSTOM -->
+  <section class="split custom" id="icebergcustom">
+    <div class="split-inner">
+
+      <!-- LEFT: setup demo -->
+      <section class="panel-demo">
+        <div class="demo-container custom" id="customDemo" aria-live="polite">
+          <div class="prompt-text custom" id="customPrompt">Provision a private, white‑label Iceberg for my org</div>
+
+          <button class="custom-button" id="customBtn" type="button">
+            <span id="customBtnText">Provision Private Iceberg</span>
+          </button>
+
+          <div class="custom-results">
+            <div class="custom-title" id="customTitle">Private Iceberg Setup</div>
+            <div class="custom-output" id="customOutput"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: hero copy -->
+      <section class="panel-copy" aria-labelledby="copy-title-custom">
+        <div class="copy-card">
+          <span class="copy-eyebrow">IcebergCUSTOM</span>
+          <h2 id="copy-title-custom" class="copy-title">Private White Label Iceberg Tool for your Organization</h2>
+          <p class="copy-sub">Iceberg's AI‑powered — but for your own organization's data.</p>
+          <a class="copy-cta" href="#" onclick="openDemoModal(event)">Explore IcebergCUSTOM →</a>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+  <!-- TEAM SECTION -->
+  <section class="split team" id="team">
+    <div class="split-inner">
+      <div class="team-header">
+        <h2 class="team-title">Meet the Team</h2>
+        <p class="team-subtitle">Real estate professionals building the next generation of AI-powered industry tools.</p>
+      </div>
+      
+      <div class="team-grid">
+        <div class="team-member">
+          <div class="team-avatar">P</div>
+          <h3 class="team-name">Patrick Browne</h3>
+          <p class="team-role">Founder & CEO</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <div class="footer-contact">
+          <p>Email: <a href="mailto:patrick@icebergre.ai">patrick@icebergre.ai</a></p>
+          <p>Phone: <a href="tel:+15162970386">(516) 297-0386</a></p>
+          <p>New York, NY</p>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Products</h4>
+        <p><a href="#icebergic">IcebergIC</a> - Intelligence & Comps</p>
+        <p><a href="#icebergir">IcebergIR</a> - Investor Relations</p>
+        <p><a href="#icebergreit">IcebergREIT</a> - REIT Analysis</p>
+        <p><a href="#icebergbenchmark">IcebergBENCHMARK</a> - Performance</p>
+        <p><a href="#icebergcustom">IcebergCUSTOM</a> - Private Deploy</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Company</h4>
+        <p><a href="#team">Team</a></p>
+        <p><a href="#" onclick="openDemoModal(event)">Request Demo</a></p>
+        <p><a href="mailto:patrick@icebergre.ai">Contact Us</a></p>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2025 Iceberg AI. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Demo Request Modal -->
+  <div class="modal" id="demoModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeDemoModal()">&times;</button>
+      <div class="modal-header">
+        <h3 class="modal-title">Request a Demo</h3>
+        <p class="modal-subtitle">See Iceberg in action for your real estate workflow</p>
+      </div>
+      
+      <form id="demoForm" action="https://formspree.io/f/xwpqygnr" method="POST">
+        <div class="form-group">
+          <label class="form-label" for="name">Full Name *</label>
+          <input class="form-input" type="text" id="name" name="name" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="email">Email *</label>
+          <input class="form-input" type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="company">Company</label>
+          <input class="form-input" type="text" id="company" name="company">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="role">Role</label>
+          <input class="form-input" type="text" id="role" name="role" placeholder="e.g. Real Estate Analyst, Portfolio Manager">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="message">What interests you most about Iceberg?</label>
+          <textarea class="form-input form-textarea" id="message" name="message" placeholder="Tell us about your use case..."></textarea>
+        </div>
+        
+        <button class="form-submit" type="submit">Request Demo</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    /* ===================== Section 1: IcebergIC (charts) ===================== */
+
+    let currentLoop = 0;
+    let timers = [];
+    const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const scenarios = [
+      {
+        prompt: "Analyze US data center cap rate trends",
+        document: "US_DataCenter_CapRates.xlsx",
+        icon: "📈",
+        type: "line",
+        title: "US Data Center Cap Rates (2022-2025)",
+        data: [
+          { year: "2022", value: "4.2%" },
+          { year: "2023", value: "4.1%" },
+          { year: "2024", value: "3.3%" },
+          { year: "2025", value: "3.2%" }
+        ]
+      },
+      {
+        prompt: "Compare NoVa data center value comps",
+        document: "NoVa_ValueComps_Analysis.xlsx",
+        icon: "💰",
+        type: "bar",
+        title: "Northern Virginia Value per SF",
+        data: [
+          { year: "2022", value: "$1,364", height: 25 },
+          { year: "2023", value: "$1,310", height: 20 },
+          { year: "2024", value: "$1,846", height: 70 },
+          { year: "2025", value: "$2,051", height: 95 }
+        ]
+      },
+      {
+        prompt: "Generate Chicago rent comp analysis",
+        document: "Chicago_RentComps_Q4.xlsx",
+        icon: "🏢",
+        type: "table",
+        title: "Chicago Data Center Rent Analysis",
+        data: [
+          { year: "2022", value: "$92.76" },
+          { year: "2023", value: "$96.89" },
+          { year: "2024", value: "$99.12" },
+          { year: "2025", value: "$103.01" },
+          { cagr: "3.6% CAGR" }
+        ]
+      }
+    ];
+
+    const byId  = id => document.getElementById(id);
+    const q     = sel => document.querySelector(sel);
+    function schedule(fn, ms){ const id = setTimeout(fn, ms); timers.push(id); }
+    function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+    function toNumber(s){ if(typeof s!=="string") return Number(s); return Number(s.replace(/[$,%\\s,]/g,"")); }
+
+    function scaleBarHeights(data){
+      const nums = data.map(d => toNumber(d.value));
+      const min = Math.min(...nums), max = Math.max(...nums);
+      const span = Math.max(1, max - min);
+      return data.map(d => {
+        const h = 25 + ((toNumber(d.value) - min) / span) * (95 - 25); // 25%..95%
+        return { ...d, height: h };
+      });
+    }
+
+    function createLineChart(data){
+      return `
+        <div class="line-chart">
+          <svg>
+            <path d="M 80 40 L 220 50 L 360 100 L 500 120"
+                  stroke="#2563eb" stroke-width="3" fill="none"></path>
+          </svg>
+          ${data.map(p=>`
+            <div class="chart-point">
+              <div class="point-value">${p.value}</div>
+              <div class="point-year">${p.year}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+    function createBarChart(data, title){
+      const scaled = scaleBarHeights(data);
+      return `
+        <div class="bar-chart">
+          ${scaled.map(i=>`
+            <div class="bar-item">
+              <div class="bar" style="height:${i.height.toFixed(1)}%;">
+                <div class="bar-value">${i.value}</div>
+              </div>
+              <div class="bar-year">${i.year}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+    function createTable(data, title){
+      return `
+        <div class="rent-table">
+          <div class="table-row table-header"><div>Year</div><div>Rent/SF</div><div>Growth</div></div>
+          ${data.slice(0,4).map((item,i)=>{
+            const base=toNumber(data[0].value), val=toNumber(item.value);
+            const g=i===0?'Baseline':'+'+(((val/base)-1)*100).toFixed(1)+'%';
+            return `
+              <div class="table-row">
+                <div class="table-cell">${item.year}</div>
+                <div class="table-cell">${item.value}</div>
+                <div class="table-cell">${g}</div>
+              </div>`;
+          }).join('')}
+          <div class="table-row" style="background:#fef3c7;">
+            <div class="table-cell" style="font-weight:700;">CAGR</div>
+            <div class="table-cell cagr-highlight">${data[4].cagr}</div>
+            <div class="table-cell"></div>
+          </div>
+        </div>`;
+    }
+
+    function measureScenarioHeight(html){
+      const probe = document.createElement('div');
+      probe.className = 'demo-container';
+      probe.style.position='absolute';
+      probe.style.visibility='hidden';
+      probe.style.pointerEvents='none';
+      probe.style.inset='0';
+      probe.style.height='auto';
+      probe.innerHTML = `
+        <div class="prompt-text" style="opacity:1;transform:none">X</div>
+        <div class="upload-area" style="opacity:1;transform:none"><div class="document-item">X</div></div>
+        <button class="analyze-button" style="opacity:1;transform:none;min-height:46px">Analyze</button>
+        <div class="results-panel" style="opacity:1;transform:none">
+          <div class="chart-title">Title</div>
+          <div class="chart-container" id="__probe_chart__">${html}</div>
+        </div>`;
+      document.body.appendChild(probe);
+      const demoH = probe.offsetHeight;
+      const vizH  = probe.querySelector('#__probe_chart__').offsetHeight;
+      probe.remove();
+      return { demoH, vizH };
+    }
+
+    function computeAndLockHeights(){
+      const htmls = scenarios.map(s =>
+        s.type==='line' ? createLineChart(s.data) :
+        s.type==='bar'  ? createBarChart(s.data, s.title) :
+                          createTable(s.data, s.title)
+      );
+      let maxDemo = 0, maxViz = 0;
+      htmls.forEach(h => {
+        const m = measureScenarioHeight(h);
+        maxDemo = Math.max(maxDemo, m.demoH);
+        maxViz  = Math.max(maxViz,  m.vizH);
+      });
+      maxDemo = Math.max(360, Math.round(maxDemo * 0.75));
+      maxViz  = Math.max(160, Math.round(maxViz  * 0.75));
+      document.documentElement.style.setProperty('--demo-h', `${maxDemo}px`);
+      document.documentElement.style.setProperty('--viz-h',  `${maxViz}px`);
+    }
+
+    function resetDemo(){
+      timers.forEach(clearTimeout); timers = [];
+      const typing = byId('typingIndicator'); if (typing) typing.style.display='none';
+      const btn = byId('analyzeBtn');
+      if (btn){
+        btn.style.background='#2563eb';
+        btn.setAttribute('aria-busy','false');
+        const btnText = byId('btnText'); if (btnText) btnText.textContent='Analyze with IcebergIC';
+      }
+      ['promptText','uploadArea','analyzeBtn'].forEach(id=>{
+        const el = byId(id); if(!el) return;
+        el.style.opacity='0'; el.style.transform='translateY(30px)';
+      });
+      const panel = byId('resultsPanel');
+      if (panel){ panel.style.opacity='0'; panel.style.transform='translateY(20px)'; }
+      const ct = byId('chartTitle');     if (ct) ct.textContent='';
+      const cc = byId('chartContainer'); if (cc) cc.innerHTML='';
+      setTimeout(startDemo, rm?0:250);
+    }
+
+    function startDemo(){
+      const s = scenarios[currentLoop % scenarios.length];
+
+      const p = byId('promptText'); if (p) p.textContent = s.prompt;
+      const i = q('.doc-icon');     if (i) i.textContent = s.icon;
+      const n = byId('docName');    if (n) n.textContent = s.document;
+      const t = byId('chartTitle'); if (t) t.textContent = s.title;
+
+      const step = rm ? 0 : 900;
+
+      schedule(()=>{ const el=byId('promptText'); if(el){ el.style.opacity='1'; el.style.transform='translateY(0)'; } }, step*0.5);
+      schedule(()=>{ const el=byId('uploadArea'); if(el){ el.style.opacity='1'; el.style.transform='translateY(0)'; } }, step*1.5);
+      schedule(()=>{ const el=byId('analyzeBtn'); if(el){ el.style.opacity='1'; el.style.transform='translateY(0)'; } }, step*2.5);
+
+      schedule(()=>{
+        const btn = byId('analyzeBtn'); if(!btn) return;
+        btn.style.background='#1d4ed8';
+        btn.setAttribute('aria-busy','true');
+        const btnText = byId('btnText'); if (btnText) btnText.textContent='Processing...';
+        const typing = byId('typingIndicator'); if (typing) typing.style.display='flex';
+      }, step*3.5);
+
+      schedule(()=>{
+        const typing = byId('typingIndicator'); if (typing) typing.style.display='none';
+        const btn = byId('analyzeBtn'); if (btn){
+          btn.style.background='#10b981';
+          btn.setAttribute('aria-busy','false');
+          const btnText = byId('btnText'); if (btnText) btnText.textContent='Analysis Complete ✓';
+        }
+        const s2 = scenarios[currentLoop % scenarios.length];
+        const cc = byId('chartContainer');
+        if (cc){
+          cc.innerHTML = (s2.type==='line') ? createLineChart(s2.data)
+                     : (s2.type==='bar')  ? createBarChart(s2.data, s2.title)
+                                          : createTable(s2.data, s2.title);
+        }
+        const panel = byId('resultsPanel'); if (panel){ panel.style.opacity='1'; panel.style.transform='translateY(0)'; }
+      }, step*4.5);
+
+      schedule(()=>{ currentLoop++; resetDemo(); }, step*9);
+
+      const btn = byId('analyzeBtn');
+      if (btn){
+        btn.onclick = () => {
+          timers.forEach(clearTimeout); timers = [];
+          btn.style.background='#1d4ed8';
+          btn.setAttribute('aria-busy','true');
+          const btnText = byId('btnText'); if (btnText) btnText.textContent='Processing...';
+          const typing = byId('typingIndicator'); if (typing) typing.style.display='flex';
+          setTimeout(()=>{
+            if (typing) typing.style.display='none';
+            btn.style.background='#10b981';
+            btn.setAttribute('aria-busy','false');
+            if (btnText) btnText.textContent='Analysis Complete ✓';
+            const s3 = scenarios[currentLoop % scenarios.length];
+            const cc = byId('chartContainer');
+            if (cc){
+              cc.innerHTML = (s3.type==='line') ? createLineChart(s3.data)
+                         : (s3.type==='bar')  ? createBarChart(s3.data, s3.title)
+                                              : createTable(s3.data, s3.title);
+            }
+            const panel = byId('resultsPanel'); if (panel){ panel.style.opacity='1'; panel.style.transform='translateY(0)'; }
+          }, rm?0:800);
+        };
+      }
+    }
+
+    window.addEventListener('load', () => {
+      try {
+        computeAndLockHeights();
+      } catch (e){
+        document.documentElement.style.setProperty('--demo-h', '420px');
+        document.documentElement.style.setProperty('--viz-h',  '180px');
+        console && console.warn && console.warn('Sizing fallback:', e);
+      } finally {
+        setTimeout(startDemo, 300);
+      }
+    });
+
+
+    /* ===================== Section 2: IcebergIR (text typing) ===================== */
+
+    const irScenario = {
+      prompt: "Write me 2 bullet points on NOI growth over the last 3 years",
+      bullets: [
+        "Strong upward trend: US data center rents per sq ft have increased dramatically from $116 in Q3 2022 to $290 in Q2 2025, representing a 150% increase over the ~3-year period.",
+        "Recent acceleration: The most significant growth occurred in the latest quarters, with rents jumping from $227 to $290 between Q1 and Q2 2025, indicating accelerating demand and tightening supply in the data center market."
+      ]
+    };
+
+    let irTimers = [];
+    const irById = id => document.getElementById(id);
+    function irSchedule(fn, ms){ const id = setTimeout(fn, ms); irTimers.push(id); }
+    function irClear(){ irTimers.forEach(clearTimeout); irTimers = []; }
+
+    function typeText(el, text, speed = 18){
+      return new Promise(resolve=>{
+        el.textContent = "";
+        let i = 0;
+        (function step(){
+          el.textContent += text.charAt(i++);
+          if(i <= text.length){ setTimeout(step, speed); }
+          else resolve();
+        })();
+      });
+    }
+
+    async function typeBullets(container, bullets){
+      container.innerHTML = "<ul></ul>";
+      const ul = container.querySelector('ul');
+      for (const line of bullets){
+        const li = document.createElement('li');
+        ul.appendChild(li);
+        const span = document.createElement('span');
+        li.appendChild(span);
+        const cursor = document.createElement('span');
+        cursor.className = 'ir-cursor';
+        li.appendChild(cursor);
+        await typeText(span, line, 16);
+        cursor.remove();
+        await new Promise(r=>setTimeout(r, 200));
+      }
+    }
+
+    function resetIR(){
+      irClear();
+      const btn = irById('irBtn');
+      const txt = irById('irBtnText');
+      const out = irById('irOutput');
+      if (btn && txt){ btn.style.background = '#2563eb'; txt.textContent = 'Generate with IcebergIR'; }
+      if (out){ out.innerHTML = ''; }
+      irSchedule(startIR, 400);
+    }
+
+    function startIR(){
+      const p = irById('irPrompt'); if (p) p.textContent = irScenario.prompt;
+
+      const btn = irById('irBtn'); const txt = irById('irBtnText');
+      if (btn && txt){
+        btn.onclick = fastForwardIR;
+        btn.style.background = '#1d4ed8';
+        txt.textContent = 'Thinking…';
+      }
+
+      irSchedule(async () => {
+        const out = irById('irOutput'); if (!out) return;
+        await typeBullets(out, irScenario.bullets);
+        if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Draft Complete ✓'; }
+        irSchedule(resetIR, 4000);
+      }, 600);
+    }
+
+    function fastForwardIR(){
+      irClear();
+      const btn = irById('irBtn'); const txt = irById('irBtnText');
+      const out = irById('irOutput');
+      if (btn && txt){ btn.style.background = '#1d4ed8'; txt.textContent = 'Thinking…'; }
+      if (!out) return;
+      out.innerHTML = `<ul>
+        <li>${irScenario.bullets[0]}</li>
+        <li>${irScenario.bullets[1]}</li>
+      </ul>`;
+      if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Draft Complete ✓'; }
+      irSchedule(resetIR, 3000);
+    }
+
+    window.addEventListener('load', () => {
+      irSchedule(startIR, 800);
+    });
+
+
+    /* ===================== Section 3: IcebergREIT (table) ===================== */
+
+    const reitScenarios = [
+      {
+        prompt: "Compare NOI per sq ft across office REITs by market",
+        title: "NOI/SF by Market - Office REITs",
+        data: {
+          headers: ["REIT", "Atlanta", "Dallas", "Florida"],
+          rows: [
+            { ticker: "CUZ", values: ["$22.15", "$19.80", "$24.30"] },
+            { ticker: "PDM", values: ["$18.90", "$21.45", "$17.60"] },
+            { ticker: "HIW", values: ["$20.75", "$23.10", "$19.95"] }
+          ]
+        }
+      }
+    ];
+
+    let reitTimers = [];
+    const reitById = id => document.getElementById(id);
+    function reitSchedule(fn, ms){ const id = setTimeout(fn, ms); reitTimers.push(id); }
+    function reitClear(){ reitTimers.forEach(clearTimeout); reitTimers = []; }
+
+    function createReitTable(scenario){
+      const { headers, rows } = scenario.data;
+      return `
+        <table class="reit-table">
+          <thead>
+            <tr>
+              ${headers.map(h => `<th>${h}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(row => `
+              <tr>
+                <td class="ticker-col">${row.ticker}</td>
+                ${row.values.map((val, i) => `<td class="metric-highlight">${val}</td>`).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function resetReit(){
+      reitClear();
+      const btn = reitById('reitBtn');
+      const txt = reitById('reitBtnText');
+      const out = reitById('reitOutput');
+      
+      if (btn && txt){ btn.style.background = '#2563eb'; txt.textContent = 'Analyze with IcebergREIT'; }
+      if (out){ out.innerHTML = ''; }
+      
+      reitSchedule(startReit, 500);
+    }
+
+    function startReit(){
+      const scenario = reitScenarios[0];
+      
+      const p = reitById('reitPrompt'); 
+      if (p) p.textContent = scenario.prompt;
+
+      const btn = reitById('reitBtn'); 
+      const txt = reitById('reitBtnText');
+      if (btn && txt){
+        btn.onclick = fastForwardReit;
+        btn.style.background = '#1d4ed8';
+        txt.textContent = 'Processing...';
+      }
+
+      reitSchedule(() => {
+        const out = reitById('reitOutput');
+        if (out){
+          out.innerHTML = createReitTable(scenario);
+        }
+        if (btn && txt){ 
+          btn.style.background = '#10b981'; 
+          txt.textContent = 'Analysis Complete ✓'; 
+        }
+        
+        reitSchedule(() => {
+          resetReit();
+        }, 4500);
+      }, 1200);
+    }
+
+    function fastForwardReit(){
+      reitClear();
+      const scenario = reitScenarios[0];
+      const btn = reitById('reitBtn'); 
+      const txt = reitById('reitBtnText');
+      const out = reitById('reitOutput');
+      
+      if (btn && txt){ btn.style.background = '#1d4ed8'; txt.textContent = 'Processing...'; }
+      
+      setTimeout(() => {
+        if (out) out.innerHTML = createReitTable(scenario);
+        if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Analysis Complete ✓'; }
+        
+        reitSchedule(() => {
+          resetReit();
+        }, 3500);
+      }, 300);
+    }
+
+    window.addEventListener('load', () => {
+      reitSchedule(startReit, 1200);
+    });
+
+
+    /* ===================== Section 4: IcebergBENCHMARK (comparison charts) ===================== */
+
+    const benchmarkScenarios = [
+      {
+        prompt: "Compare portfolio occupancy vs institutional benchmarks",
+        document: "Portfolio_Occupancy.xlsx",
+        icon: "📊",
+        title: "Portfolio vs Benchmark Occupancy",
+        type: "line",
+        data: {
+          portfolio: ["84%", "86%", "80%", "89%"],
+          benchmark: ["80%", "82%", "84%", "86%"],
+          years: ["2022", "2023", "2024", "2025"]
+        }
+      },
+      {
+        prompt: "Analyze OpEx per sq ft against market benchmarks",
+        document: "Portfolio_OpEx_Analysis.xlsx", 
+        icon: "💰",
+        title: "Portfolio vs Benchmark OpEx/SF",
+        type: "bar",
+        data: {
+          portfolio: ["$13.20", "$14.80", "$12.50", "$15.60"],
+          benchmark: ["$12.80", "$13.40", "$14.20", "$14.90"],
+          years: ["2022", "2023", "2024", "2025"]
+        }
+      }
+    ];
+
+    let benchmarkCurrentLoop = 0;
+    let benchmarkTimers = [];
+    const benchmarkById = id => document.getElementById(id);
+    function benchmarkSchedule(fn, ms){ const id = setTimeout(fn, ms); benchmarkTimers.push(id); }
+    function benchmarkClear(){ benchmarkTimers.forEach(clearTimeout); benchmarkTimers = []; }
+
+    // IMPROVED: Full-width responsive line chart
+    function createBenchmarkLineChart(scenario){
+      const { portfolio, benchmark, years } = scenario.data;
+      const N = portfolio.length;
+      const x = i => (i/(N-1))*100;           // 0..100%
+      
+      // Convert percentages to numbers and scale to 30-70 range for nice visual
+      const toNum = s => parseFloat(s.replace(/[%]/g,''));
+      const scale = arr => {
+        const vals = arr.map(toNum);
+        const min = Math.min(...vals), max = Math.max(...vals)||1;
+        return vals.map(v => 70 - ((v - min)/(max - min))*40); // 70(top) .. 30(bottom)
+      };
+      
+      const yP = scale(portfolio);
+      const yB = scale(benchmark);
+      const path = ys => ys.map((y,i)=>`${x(i)},${y}`).join(' L ');
+      
+      return `
+        <div class="benchmark-line-chart">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M ${path(yP)}" stroke="#2563eb" stroke-width="2" fill="none"/>
+            <path d="M ${path(yB)}" stroke="#10b981" stroke-width="2" fill="none"/>
+          </svg>
+          ${years.map((year, i) => `
+            <div class="benchmark-point">
+              <div class="benchmark-point-value">${portfolio[i]}</div>
+              <div class="benchmark-point-bench">${benchmark[i]}</div>
+              <div class="benchmark-point-year">${year}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    function createBenchmarkBarChart(scenario){
+      const { portfolio, benchmark, years } = scenario.data;
+      
+      const portfolioNums = portfolio.map(v => parseFloat(v.replace(/[$,%]/g, '')));
+      const benchmarkNums = benchmark.map(v => parseFloat(v.replace(/[$,%]/g, '')));
+      const allNums = [...portfolioNums, ...benchmarkNums];
+      const min = Math.min(...allNums);
+      const max = Math.max(...allNums);
+      const range = max - min;
+      
+      return `
+        <div class="benchmark-bar-chart">
+          ${years.map((year, i) => {
+            const portfolioHeight = 20 + ((portfolioNums[i] - min) / range) * 80;
+            const benchmarkHeight = 20 + ((benchmarkNums[i] - min) / range) * 80;
+            return `
+              <div class="benchmark-bar-group">
+                <div class="benchmark-bars">
+                  <div class="benchmark-bar-portfolio" style="height:${portfolioHeight}%;" title="Portfolio: ${portfolio[i]}"></div>
+                  <div class="benchmark-bar-bench" style="height:${benchmarkHeight}%;" title="Benchmark: ${benchmark[i]}"></div>
+                </div>
+                <div class="benchmark-bar-year">${year}</div>
+              </div>`;
+          }).join('')}
+        </div>`;
+    }
+
+    function resetBenchmark(){
+      benchmarkClear();
+      const btn = benchmarkById('benchmarkBtn');
+      const txt = benchmarkById('benchmarkBtnText');
+      const out = benchmarkById('benchmarkOutput');
+      
+      if (btn && txt){ btn.style.background = '#2563eb'; txt.textContent = 'Benchmark with IcebergBENCHMARK'; }
+      if (out){ out.innerHTML = ''; }
+      
+      benchmarkSchedule(startBenchmark, 500);
+    }
+
+    function startBenchmark(){
+      const scenario = benchmarkScenarios[benchmarkCurrentLoop % benchmarkScenarios.length];
+      
+      const p = benchmarkById('benchmarkPrompt');
+      const docIcon = document.querySelector('#benchmarkDemo .doc-icon');
+      const docName = benchmarkById('benchmarkDocName');
+      const title = benchmarkById('benchmarkTitle');
+      
+      if (p) p.textContent = scenario.prompt;
+      if (docIcon) docIcon.textContent = scenario.icon;
+      if (docName) docName.textContent = scenario.document;
+      if (title) title.textContent = scenario.title;
+
+      const btn = benchmarkById('benchmarkBtn');
+      const txt = benchmarkById('benchmarkBtnText');
+      if (btn && txt){
+        btn.onclick = fastForwardBenchmark;
+        btn.style.background = '#1d4ed8';
+        txt.textContent = 'Processing...';
+      }
+
+      benchmarkSchedule(() => {
+        const out = benchmarkById('benchmarkOutput');
+        if (out){
+          if (scenario.type === 'line') {
+            out.innerHTML = createBenchmarkLineChart(scenario);
+          } else {
+            out.innerHTML = createBenchmarkBarChart(scenario);
+          }
+        }
+        if (btn && txt){ 
+          btn.style.background = '#10b981'; 
+          txt.textContent = 'Benchmark Complete ✓'; 
+        }
+        
+        benchmarkSchedule(() => {
+          benchmarkCurrentLoop++;
+          resetBenchmark();
+        }, 4500);
+      }, 1200);
+    }
+
+    function fastForwardBenchmark(){
+      benchmarkClear();
+      const scenario = benchmarkScenarios[benchmarkCurrentLoop % benchmarkScenarios.length];
+      const btn = benchmarkById('benchmarkBtn');
+      const txt = benchmarkById('benchmarkBtnText');
+      const out = benchmarkById('benchmarkOutput');
+      
+      if (btn && txt){ btn.style.background = '#1d4ed8'; txt.textContent = 'Processing...'; }
+      
+      setTimeout(() => {
+        if (out) {
+          if (scenario.type === 'line') {
+            out.innerHTML = createBenchmarkLineChart(scenario);
+          } else {
+            out.innerHTML = createBenchmarkBarChart(scenario);
+          }
+        }
+        if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Benchmark Complete ✓'; }
+        
+        benchmarkSchedule(() => {
+          benchmarkCurrentLoop++;
+          resetBenchmark();
+        }, 3500);
+      }, 300);
+    }
+
+    window.addEventListener('load', () => {
+      benchmarkSchedule(startBenchmark, 1600);
+    });
+  
+    /* ===================== Section 5: IcebergCUSTOM (private white-label wizard) ===================== */
+
+    const customScenario = {
+      prompt: "Provision a private, white‑label Iceberg for my org",
+      steps: [
+        { title: "Connect Data Sources", body: "<div class='checklist'><div class='check'>✅ Snowflake</div><div class='check'>✅ S3 / CSV</div><div class='check'>✅ Postgres</div><div class='check'>✅ Google Drive</div></div>" },
+        { title: "Enable SSO & Roles", body: "<div class='checklist'><div class='check'>✅ SSO (Okta / Azure AD)</div><div class='check'>✅ Roles & Row‑level Access</div><div class='check'>✅ Audit Logging</div><div class='check'>✅ PII Redaction</div></div>" },
+        { title: "Apply Branding", body: "<div style='display:flex;align-items:center;gap:12px'><div style='width:44px;height:44px;border-radius:10px;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800'>AC</div><div style='font-weight:800;font-size:18px'>Acme Real Estate</div></div><div style='margin-top:8px;color:#374151'>Preview: <em>acme.iceberg.tools</em></div>" },
+        { title: "Deploy", body: "<div>Deploying to <strong>acme.iceberg.tools</strong>…</div><div class='progress'><div id='customProgress'></div></div>" },
+        { title: "All Set", body: "<div style='font-weight:700'>Your Private Iceberg is Ready ✓</div><ul style='margin:8px 0 0 18px'><li>Chat over your own data</li><li>Custom metrics & vocab</li><li>Invite your team</li></ul>" }
+      ]
+    };
+
+    let customTimers = [];
+    function customSchedule(fn, ms){ const id = setTimeout(fn, ms); customTimers.push(id); }
+    function customClear(){ customTimers.forEach(clearTimeout); customTimers = []; }
+    const cById = id => document.getElementById(id);
+
+    function renderCustomStep(idx){
+      const step = customScenario.steps[idx];
+      const out = cById('customOutput');
+      const title = cById('customTitle');
+      if (!out || !title) return;
+      title.textContent = `Private Iceberg Setup — ${step.title}`;
+      out.innerHTML = step.body;
+      if (idx === 3){ // deploy step -> animate progress
+        const bar = out.querySelector('#customProgress');
+        if (bar){
+          let w = 0;
+          const tick = () => { w = Math.min(100, w + 5); bar.style.width = w + '%'; if (w < 100) setTimeout(tick, 80); };
+          tick();
+        }
+      }
+    }
+
+    function resetCustom(){
+      customClear();
+      const btn = cById('customBtn');
+      const txt = cById('customBtnText');
+      const out = cById('customOutput');
+      const title = cById('customTitle');
+      if (btn && txt){ btn.style.background = '#2563eb'; txt.textContent = 'Provision Private Iceberg'; }
+      if (out) out.innerHTML = '';
+      if (title) title.textContent = 'Private Iceberg Setup';
+      customSchedule(startCustom, 700);
+    }
+
+    function startCustom(){
+      const p = cById('customPrompt'); if (p) p.textContent = customScenario.prompt;
+      const btn = cById('customBtn'); const txt = cById('customBtnText');
+      if (btn && txt){
+        btn.onclick = fastForwardCustom;
+        btn.style.background = '#1d4ed8';
+        txt.textContent = 'Provisioning…';
+      }
+
+      // Walk through steps automatically
+      [0,1,2,3,4].forEach((idx, i) => {
+        customSchedule(() => renderCustomStep(idx), 600 + i*1100);
+      });
+
+      customSchedule(() => {
+        if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Private Iceberg Ready ✓'; }
+        customSchedule(resetCustom, 4500);
+      }, 600 + 5*1100);
+    }
+
+    function fastForwardCustom(){
+      customClear();
+      const btn = cById('customBtn'); const txt = cById('customBtnText');
+      if (btn && txt){ btn.style.background = '#1d4ed8'; txt.textContent = 'Provisioning…'; }
+      // Jump straight to final step
+      renderCustomStep(4);
+      if (btn && txt){ btn.style.background = '#10b981'; txt.textContent = 'Private Iceberg Ready ✓'; }
+      customSchedule(resetCustom, 3500);
+    }
+
+    window.addEventListener('load', () => {
+      customSchedule(startCustom, 2000);
+    });
+
+    /* ===================== Modal & Form Handling ===================== */
+    
+    function openDemoModal(event) {
+      event.preventDefault();
+      document.getElementById('demoModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeDemoModal() {
+      document.getElementById('demoModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Close modal on background click
+    document.addEventListener('click', function(event) {
+      const modal = document.getElementById('demoModal');
+      if (event.target === modal) {
+        closeDemoModal();
+      }
+    });
+    
+    // Close modal on escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeDemoModal();
+      }
+    });
+    
+    // Form submission handling
+    document.getElementById('demoForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(this);
+      const submitButton = this.querySelector('.form-submit');
+      
+      // Update button state
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending...';
+      
+      // Submit to Formspree
+      fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          // Success
+          submitButton.textContent = 'Demo Requested ✓';
+          submitButton.style.background = '#10b981';
+          
+          // Reset form after delay
+          setTimeout(() => {
+            this.reset();
+            closeDemoModal();
+            submitButton.disabled = false;
+            submitButton.textContent = 'Request Demo';
+            submitButton.style.background = '#2563eb';
+          }, 2000);
+        } else {
+          throw new Error('Form submission failed');
+        }
+      }).catch(error => {
+        // Error
+        submitButton.textContent = 'Error - Try Again';
+        submitButton.style.background = '#dc2626';
+        submitButton.disabled = false;
+        
+        setTimeout(() => {
+          submitButton.textContent = 'Request Demo';
+          submitButton.style.background = '#2563eb';
+        }, 3000);
+      });
+    });
+
+  </script>
+</body>
+</html>
